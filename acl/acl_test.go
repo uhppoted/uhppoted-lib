@@ -97,6 +97,18 @@ func (m *mock) ClearTimeProfiles(deviceID uint32) (bool, error) {
 	return false, nil
 }
 
+func (m *mock) ClearTaskList(deviceID uint32) (bool, error) {
+	return false, nil
+}
+
+func (m *mock) AddTask(deviceID uint32, task types.Task) (bool, error) {
+	return false, nil
+}
+
+func (m *mock) RefreshTaskList(deviceID uint32) (bool, error) {
+	return false, nil
+}
+
 func (m *mock) RecordSpecialEvents(deviceID uint32, enable bool) (bool, error) {
 	return false, nil
 }
