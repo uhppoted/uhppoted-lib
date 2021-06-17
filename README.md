@@ -1,2 +1,56 @@
+![build](https://github.com/uhppoted/uhppoted-lib/workflows/build/badge.svg)
+
 # uhppoted-lib
-Shared library for common uhppoted functions
+
+Shared library that implements the functionality common to multiple _uhppoted_ sub-projects. In particular:
+
+- ACL (access control lists)
+- TSV encoding and decoding
+- Wrapper functions for invoking functionality across multiple devices.
+
+## Releases
+
+| *Version* | *Description*                                                                             |
+| --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.0    | Added support for time profiles from the extended API                                     |
+| v0.6.12   | Additional validation of bind, broadcast and listen ports when loading configuration      |
+| v0.6.10   | Adds configuration options for initial release of `uhppoted-app-wild-apricot`             |
+| v0.6.8    | Maintenance release for version compatibility with `uhppote-core` `v0.6.8`                |
+| v0.6.7    | Implements `record-special-events` for enabling/disabling door events                     |
+| v0.6.5    | Maintenance release for version compatibility with NodeRED module                         |
+| v0.6.4    | Added support for uhppoted-app-sheets                                                     |
+| v0.6.3    | Added support for `uhppoted-mqtt` ACL API                                                 |
+| v0.6.2    | Added support for `uhppoted-rest` ACL API                                                 |
+| v0.6.1    | Added support for `uhppote-cli` ACL functions                                             |
+| v0.6.0    | Added support for `uhppoted-acl-s3` ACL functions                                         |
+| v0.5.1    | Initial release following restructuring into standalone Go *modules* and *git submodules* |
+
+### Building from source
+
+Assuming you have `Go` and `make` installed:
+
+```
+git clone https://github.com/uhppoted/uhppoted-lib.git
+cd uhppoted-lib
+make build
+```
+
+If you prefer not to use `make`:
+```
+git clone https://github.com/uhppoted/uhppoted-lib.git
+cd uhppoted-lib
+mkdir bin
+go build -o bin ./...
+```
+
+#### Dependencies
+
+| *Dependency*                                             | *Description*                                          |
+| -------------------------------------------------------- | ------------------------------------------------------ |
+| [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation                        |
+| golang.org/x/sys/windows                                 | Support for Windows services                           |
+| golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
+
+## uhppote-api
+
+
