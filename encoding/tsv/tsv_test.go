@@ -15,9 +15,9 @@ var data = map[string][]byte{
 `),
 
 	"tasks": []byte(`Task	Door	From	To	Mon	Tue	Wed	Thurs	Fri	Sat	Sun	Start	Cards
-0	4	2021-04-01	2021-12-31	N	N	Y	N	Y	N	Y	08:30	0
-4	4	2021-04-01	         	Y	Y	Y	N	N	N	Y	09:15	17
-8	3	2021-01-01	2021-12-31	Y	N	Y	Y	N	Y	N	10:45	23
+1	4	2021-04-01	2021-12-31	N	N	Y	N	Y	N	Y	08:30	0
+5	4	2021-04-01	         	Y	Y	Y	N	N	N	Y	09:15	17
+9	3	2021-01-01	2021-12-31	Y	N	Y	Y	N	Y	N	10:45	23
 trigger once	3	2021-01-01	2021-12-31	Y	N	N	N	N	N	Y	07:00	0
 `),
 }
