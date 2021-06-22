@@ -21,6 +21,10 @@ func (m *stub) DeviceList() map[uint32]uhppote.Device {
 	return nil
 }
 
+func (m *stub) ListenAddr() *net.UDPAddr {
+	return nil
+}
+
 func (m *stub) GetDevices() ([]types.Device, error) {
 	return nil, nil
 }
@@ -47,14 +51,6 @@ func (m *stub) GetListener(deviceID uint32) (*types.Listener, error) {
 
 func (m *stub) SetListener(deviceID uint32, address net.UDPAddr) (*types.Result, error) {
 	return nil, nil
-}
-
-func (m *stub) RecordSpecialEvents(deviceID uint32, enable bool) (bool, error) {
-	if m.recordSpecialEvents != nil {
-		return m.recordSpecialEvents(deviceID, enable)
-	}
-
-	return false, fmt.Errorf("Not implemented")
 }
 
 func (m *stub) GetStatus(serialNumber uint32) (*types.Status, error) {
@@ -118,15 +114,19 @@ func (m *stub) ClearTimeProfiles(deviceID uint32) (bool, error) {
 }
 
 func (m *stub) ClearTaskList(deviceID uint32) (bool, error) {
-	return false, nil
+	return false, fmt.Errorf("Not implemented")
 }
 
 func (m *stub) AddTask(deviceID uint32, task types.Task) (bool, error) {
-	return false, nil
+	return false, fmt.Errorf("Not implemented")
 }
 
 func (m *stub) RefreshTaskList(deviceID uint32) (bool, error) {
-	return false, nil
+	return false, fmt.Errorf("Not implemented")
+}
+
+func (m *stub) OpenDoor(deviceID uint32, door uint8) (*types.Result, error) {
+	return nil, nil
 }
 
 func (m *stub) GetEventIndex(deviceID uint32) (*types.EventIndex, error) {
@@ -141,14 +141,14 @@ func (m *stub) GetEvent(deviceID, index uint32) (*types.Event, error) {
 	return nil, nil
 }
 
-func (m *stub) OpenDoor(deviceID uint32, door uint8) (*types.Result, error) {
-	return nil, nil
+func (m *stub) RecordSpecialEvents(deviceID uint32, enable bool) (bool, error) {
+	if m.recordSpecialEvents != nil {
+		return m.recordSpecialEvents(deviceID, enable)
+	}
+
+	return false, fmt.Errorf("Not implemented")
 }
 
 func (m *stub) Listen(listener uhppote.Listener, q chan os.Signal) error {
-	return nil
-}
-
-func (m *stub) ListenAddr() *net.UDPAddr {
 	return nil
 }

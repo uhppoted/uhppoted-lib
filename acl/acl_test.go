@@ -2,6 +2,7 @@ package acl
 
 import (
 	"bytes"
+	"fmt"
 	"net"
 	"os"
 	"testing"
@@ -98,15 +99,15 @@ func (m *mock) ClearTimeProfiles(deviceID uint32) (bool, error) {
 }
 
 func (m *mock) ClearTaskList(deviceID uint32) (bool, error) {
-	return false, nil
+	return false, fmt.Errorf("Not implemented")
 }
 
 func (m *mock) AddTask(deviceID uint32, task types.Task) (bool, error) {
-	return false, nil
+	return false, fmt.Errorf("Not implemented")
 }
 
 func (m *mock) RefreshTaskList(deviceID uint32) (bool, error) {
-	return false, nil
+	return false, fmt.Errorf("Not implemented")
 }
 
 func (m *mock) RecordSpecialEvents(deviceID uint32, enable bool) (bool, error) {

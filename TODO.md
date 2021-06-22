@@ -1,5 +1,11 @@
 ## v0.7.x
 
+### IN PROGRESS
+
+- [ ] Rearchitecture UHPPOTED as an interface+implementation
+- [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
+- [x] `PutTaskList`
+
 ## TODO
 
 - [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
