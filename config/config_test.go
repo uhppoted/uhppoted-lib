@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/uhppoted/uhppote-core/encoding/conf"
+	"github.com/uhppoted/uhppoted-lib/encoding/conf"
 )
 
 var configuration = []byte(`# SYSTEM
