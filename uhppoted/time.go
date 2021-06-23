@@ -45,7 +45,7 @@ type SetTimeResponse struct {
 }
 
 func (u *UHPPOTED) SetTime(request SetTimeRequest) (*SetTimeResponse, error) {
-	u.debug("set-time", fmt.Sprintf("request  %+v", request))
+	u.debug("set-time", fmt.Sprintf("request  %v", request))
 
 	device := uint32(request.DeviceID)
 	result, err := u.UHPPOTE.SetTime(device, time.Time(request.DateTime))
