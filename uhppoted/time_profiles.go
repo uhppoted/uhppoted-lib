@@ -8,17 +8,6 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-type GetTimeProfilesRequest struct {
-	DeviceID uint32
-	From     int
-	To       int
-}
-
-type GetTimeProfilesResponse struct {
-	DeviceID DeviceID            `json:"device-id"`
-	Profiles []types.TimeProfile `json:"profiles"`
-}
-
 func (u *UHPPOTED) GetTimeProfiles(request GetTimeProfilesRequest) (*GetTimeProfilesResponse, error) {
 	u.debug("get-time-profiles", fmt.Sprintf("request  %+v", request))
 
@@ -55,16 +44,6 @@ func (u *UHPPOTED) GetTimeProfiles(request GetTimeProfilesRequest) (*GetTimeProf
 	u.debug("get-time-profiles", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type PutTimeProfilesRequest struct {
-	DeviceID uint32
-	Profiles []types.TimeProfile `json:"profiles"`
-}
-
-type PutTimeProfilesResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Warnings []error  `json:"warnings"`
 }
 
 func (u *UHPPOTED) PutTimeProfiles(request PutTimeProfilesRequest) (*PutTimeProfilesResponse, int, error) {
@@ -157,16 +136,6 @@ func (u *UHPPOTED) PutTimeProfiles(request PutTimeProfilesRequest) (*PutTimeProf
 	return &response, http.StatusOK, nil
 }
 
-type GetTimeProfileRequest struct {
-	DeviceID  uint32
-	ProfileID uint8
-}
-
-type GetTimeProfileResponse struct {
-	DeviceID    DeviceID          `json:"device-id"`
-	TimeProfile types.TimeProfile `json:"time-profile"`
-}
-
 func (u *UHPPOTED) GetTimeProfile(request GetTimeProfileRequest) (*GetTimeProfileResponse, error) {
 	u.debug("get-time-profile", fmt.Sprintf("request  %+v", request))
 
@@ -190,16 +159,6 @@ func (u *UHPPOTED) GetTimeProfile(request GetTimeProfileRequest) (*GetTimeProfil
 	u.debug("get-time-profile", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type PutTimeProfileRequest struct {
-	DeviceID    uint32
-	TimeProfile types.TimeProfile
-}
-
-type PutTimeProfileResponse struct {
-	DeviceID    DeviceID          `json:"device-id"`
-	TimeProfile types.TimeProfile `json:"time-profile"`
 }
 
 func (u *UHPPOTED) PutTimeProfile(request PutTimeProfileRequest) (*PutTimeProfileResponse, error) {
@@ -260,15 +219,6 @@ func (u *UHPPOTED) PutTimeProfile(request PutTimeProfileRequest) (*PutTimeProfil
 	u.debug("put-time-profile", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type ClearTimeProfilesRequest struct {
-	DeviceID uint32
-}
-
-type ClearTimeProfilesResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Cleared  bool     `json:"cleared"`
 }
 
 func (u *UHPPOTED) ClearTimeProfiles(request ClearTimeProfilesRequest) (*ClearTimeProfilesResponse, error) {
