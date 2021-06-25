@@ -2,18 +2,8 @@ package uhppoted
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
 	"time"
 )
-
-type GetTimeRequest struct {
-	DeviceID DeviceID
-}
-
-type GetTimeResponse struct {
-	DeviceID DeviceID       `json:"device-id"`
-	DateTime types.DateTime `json:"date-time"`
-}
 
 func (u *UHPPOTED) GetTime(request GetTimeRequest) (*GetTimeResponse, error) {
 	u.debug("get-time", fmt.Sprintf("request  %+v", request))
@@ -32,16 +22,6 @@ func (u *UHPPOTED) GetTime(request GetTimeRequest) (*GetTimeResponse, error) {
 	u.debug("get-time", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type SetTimeRequest struct {
-	DeviceID DeviceID
-	DateTime types.DateTime
-}
-
-type SetTimeResponse struct {
-	DeviceID DeviceID       `json:"device-id"`
-	DateTime types.DateTime `json:"date-time"`
 }
 
 func (u *UHPPOTED) SetTime(request SetTimeRequest) (*SetTimeResponse, error) {

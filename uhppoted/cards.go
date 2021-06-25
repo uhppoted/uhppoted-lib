@@ -2,18 +2,7 @@ package uhppoted
 
 import (
 	"fmt"
-
-	"github.com/uhppoted/uhppote-core/types"
 )
-
-type GetCardRecordsRequest struct {
-	DeviceID DeviceID
-}
-
-type GetCardRecordsResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Cards    uint32   `json:"cards"`
-}
 
 func (u *UHPPOTED) GetCardRecords(request GetCardRecordsRequest) (*GetCardRecordsResponse, error) {
 	u.debug("get-card-records", fmt.Sprintf("request  %+v", request))
@@ -33,15 +22,6 @@ func (u *UHPPOTED) GetCardRecords(request GetCardRecordsRequest) (*GetCardRecord
 	u.debug("get-card-records", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type GetCardsRequest struct {
-	DeviceID DeviceID
-}
-
-type GetCardsResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Cards    []uint32 `json:"cards"`
 }
 
 func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) {
@@ -81,15 +61,6 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 	return &response, nil
 }
 
-type DeleteCardsRequest struct {
-	DeviceID DeviceID
-}
-
-type DeleteCardsResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Deleted  bool     `json:"deleted"`
-}
-
 func (u *UHPPOTED) DeleteCards(request DeleteCardsRequest) (*DeleteCardsResponse, error) {
 	u.debug("delete-cards", fmt.Sprintf("request  %+v", request))
 
@@ -108,16 +79,6 @@ func (u *UHPPOTED) DeleteCards(request DeleteCardsRequest) (*DeleteCardsResponse
 	u.debug("delete-cards", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type GetCardRequest struct {
-	DeviceID   DeviceID
-	CardNumber uint32
-}
-
-type GetCardResponse struct {
-	DeviceID DeviceID   `json:"device-id"`
-	Card     types.Card `json:"card"`
 }
 
 func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
@@ -145,16 +106,6 @@ func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
 	return &response, nil
 }
 
-type PutCardRequest struct {
-	DeviceID DeviceID
-	Card     types.Card
-}
-
-type PutCardResponse struct {
-	DeviceID DeviceID   `json:"device-id"`
-	Card     types.Card `json:"card"`
-}
-
 func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {
 	u.debug("put-card", fmt.Sprintf("request  %+v", request))
 
@@ -178,17 +129,6 @@ func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {
 	u.debug("put-card", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type DeleteCardRequest struct {
-	DeviceID   DeviceID
-	CardNumber uint32
-}
-
-type DeleteCardResponse struct {
-	DeviceID   DeviceID `json:"device-id"`
-	CardNumber uint32   `json:"card-number"`
-	Deleted    bool     `json:"deleted"`
 }
 
 func (u *UHPPOTED) DeleteCard(request DeleteCardRequest) (*DeleteCardResponse, error) {

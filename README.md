@@ -51,6 +51,6 @@ go build -o bin ./...
 | golang.org/x/sys/windows                                 | Support for Windows services                           |
 | golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
 
-## uhppote-api
+
 
 

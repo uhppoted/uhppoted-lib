@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
 )
@@ -16,13 +15,6 @@ type DeviceSummary struct {
 	DeviceType string `json:"device-type"`
 	Address    net.IP `json:"ip-address"`
 	Port       int    `json:"port"`
-}
-
-type GetDevicesRequest struct {
-}
-
-type GetDevicesResponse struct {
-	Devices map[uint32]DeviceSummary `json:"devices"`
 }
 
 func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, error) {
@@ -79,23 +71,6 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 	u.debug("get-devices", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type GetDeviceRequest struct {
-	DeviceID DeviceID
-}
-
-type GetDeviceResponse struct {
-	DeviceType string           `json:"device-type"`
-	DeviceID   DeviceID         `json:"device-id"`
-	IpAddress  net.IP           `json:"ip-address"`
-	SubnetMask net.IP           `json:"subnet-mask"`
-	Gateway    net.IP           `json:"gateway-address"`
-	MacAddress types.MacAddress `json:"mac-address"`
-	Version    types.Version    `json:"version"`
-	Date       types.Date       `json:"date"`
-	Address    net.UDPAddr      `json:"address"`
-	TimeZone   *time.Location   `json:"timezone,omitempty"`
 }
 
 func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, error) {

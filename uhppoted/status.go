@@ -28,15 +28,6 @@ type StatusEvent struct {
 	Reason     uint8           `json:"reason"`
 }
 
-type GetStatusRequest struct {
-	DeviceID DeviceID
-}
-
-type GetStatusResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Status   Status   `json:"status"`
-}
-
 func (u *UHPPOTED) GetStatus(request GetStatusRequest) (*GetStatusResponse, error) {
 	u.debug("get-status", fmt.Sprintf("request  %+v", request))
 

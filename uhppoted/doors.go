@@ -44,17 +44,6 @@ func (s *ControlState) UnmarshalJSON(bytes []byte) (err error) {
 	return
 }
 
-type GetDoorDelayRequest struct {
-	DeviceID DeviceID
-	Door     uint8
-}
-
-type GetDoorDelayResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Door     uint8    `json:"door"`
-	Delay    uint8    `json:"delay"`
-}
-
 func (u *UHPPOTED) GetDoorDelay(request GetDoorDelayRequest) (*GetDoorDelayResponse, error) {
 	u.debug("get-door-delay", fmt.Sprintf("request  %+v", request))
 
@@ -74,18 +63,6 @@ func (u *UHPPOTED) GetDoorDelay(request GetDoorDelayRequest) (*GetDoorDelayRespo
 	u.debug("get-door-delay", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type SetDoorDelayRequest struct {
-	DeviceID DeviceID
-	Door     uint8
-	Delay    uint8
-}
-
-type SetDoorDelayResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Door     uint8    `json:"door"`
-	Delay    uint8    `json:"delay"`
 }
 
 func (u *UHPPOTED) SetDoorDelay(request SetDoorDelayRequest) (*SetDoorDelayResponse, error) {
@@ -114,17 +91,6 @@ func (u *UHPPOTED) SetDoorDelay(request SetDoorDelayRequest) (*SetDoorDelayRespo
 	return &response, nil
 }
 
-type GetDoorControlRequest struct {
-	DeviceID DeviceID
-	Door     uint8
-}
-
-type GetDoorControlResponse struct {
-	DeviceID DeviceID     `json:"device-id"`
-	Door     uint8        `json:"door"`
-	Control  ControlState `json:"control"`
-}
-
 func (u *UHPPOTED) GetDoorControl(request GetDoorControlRequest) (*GetDoorControlResponse, error) {
 	u.debug("get-door-control", fmt.Sprintf("request  %+v", request))
 
@@ -144,18 +110,6 @@ func (u *UHPPOTED) GetDoorControl(request GetDoorControlRequest) (*GetDoorContro
 	u.debug("get-door-control", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type SetDoorControlRequest struct {
-	DeviceID DeviceID
-	Door     uint8
-	Control  ControlState
-}
-
-type SetDoorControlResponse struct {
-	DeviceID DeviceID     `json:"device-id"`
-	Door     uint8        `json:"door"`
-	Control  ControlState `json:"control"`
 }
 
 func (u *UHPPOTED) SetDoorControl(request SetDoorControlRequest) (*SetDoorControlResponse, error) {
@@ -182,17 +136,6 @@ func (u *UHPPOTED) SetDoorControl(request SetDoorControlRequest) (*SetDoorContro
 	u.debug("set-door-control", fmt.Sprintf("response %+v", response))
 
 	return &response, nil
-}
-
-type OpenDoorRequest struct {
-	DeviceID DeviceID
-	Door     uint8
-}
-
-type OpenDoorResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Door     uint8    `json:"door"`
-	Opened   bool     `json:"opened"`
 }
 
 func (u *UHPPOTED) OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error) {

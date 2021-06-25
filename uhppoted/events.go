@@ -10,41 +10,6 @@ import (
 
 const ROLLOVER = uint32(100000)
 
-type GetEventRangeRequest struct {
-	DeviceID DeviceID
-	Start    *types.DateTime
-	End      *types.DateTime
-}
-
-type GetEventRangeResponse struct {
-	DeviceID DeviceID    `json:"device-id,omitempty"`
-	Dates    *DateRange  `json:"dates,omitempty"`
-	Events   *EventRange `json:"events,omitempty"`
-}
-
-type GetEventRequest struct {
-	DeviceID DeviceID
-	EventID  uint32
-}
-
-type GetEventResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Event    Event    `json:"event"`
-}
-
-// Request definition for record-special-events API
-type RecordSpecialEventsRequest struct {
-	DeviceID DeviceID
-	Enable   bool
-}
-
-// Response definition for record-special-events API
-type RecordSpecialEventsResponse struct {
-	DeviceID DeviceID
-	Enable   bool
-	Updated  bool
-}
-
 type Event struct {
 	Index      uint32         `json:"event-id"`
 	Type       uint8          `json:"event-type"`
