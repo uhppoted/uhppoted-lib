@@ -6,12 +6,14 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 - ACL (access control lists)
 - TSV encoding and decoding
+- _conf_ file marshaling
 - Wrapper functions for invoking functionality across multiple devices.
 
 ## Releases
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.1    | Added support for task list functions from the extended API                               |
 | v0.7.0    | Added support for time profiles from the extended API                                     |
 | v0.6.12   | Additional validation of bind, broadcast and listen ports when loading configuration      |
 | v0.6.10   | Adds configuration options for initial release of `uhppoted-app-wild-apricot`             |

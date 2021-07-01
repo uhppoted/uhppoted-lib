@@ -1,15 +1,12 @@
-## v0.7.x
+## v0.7.1
 
-### IN PROGRESS
-
-- [ ] Rearchitecture UHPPOTED as an interface+implementation
-- [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
+- [x] Rearchitecture UHPPOTED as an interface+implementation
 - [x] `PutTaskList`
 
 ## TODO
 
+- [ ] Commonalise `config` command a la `version`
 - [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
-- [ ] Rearchitecture UHPPOTED as an interface+implementation
 
 1. Rework healthcheck to remove need for IUHPPOTE::DeviceList
 2. Rework healthcheck to remove need for IUHPPOTE::ListenAddr
