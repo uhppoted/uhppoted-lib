@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/encoding/conf"
 )
 
@@ -135,7 +136,7 @@ func TestDefaultConfig(t *testing.T) {
 func TestConfigUnmarshal(t *testing.T) {
 	expected := Config{
 		System: System{
-			BindAddress:         &net.UDPAddr{IP: []byte{192, 168, 1, 100}, Port: 54321, Zone: ""},
+			BindAddress:         &types.BindAddr{IP: []byte{192, 168, 1, 100}, Port: 54321, Zone: ""},
 			BroadcastAddress:    &net.UDPAddr{IP: []byte{192, 168, 1, 255}, Port: 30000, Zone: ""},
 			ListenAddress:       &net.UDPAddr{IP: []byte{192, 168, 1, 100}, Port: 12345, Zone: ""},
 			Timeout:             3750 * time.Millisecond,
@@ -638,7 +639,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 	}
 }
 
-func TestConfigValidateWithBindPort6000(t *testing.T) {
+func TestConfigValidateWithBindPort60000(t *testing.T) {
 	configuration := []byte(`# SYSTEM
 bind.address = 192.168.1.100:60000
 broadcast.address = 192.168.1.255:60000
@@ -646,15 +647,8 @@ listen.address = 192.168.1.100:60001
 `)
 
 	config := NewConfig()
-	if err := conf.Unmarshal(configuration, config); err != nil {
-		t.Fatalf("Unexpected error: %v", err)
-	}
-
-	expected := fmt.Errorf("port 60000 is not a valid port for bind.address")
-
-	err := config.Validate()
-	if err == nil || err.Error() != expected.Error() {
-		t.Errorf("Expected error:%v, got:%v", expected, err)
+	if err := conf.Unmarshal(configuration, config); err == nil {
+		t.Fatalf("Expected error, got: %v", err)
 	}
 }
 

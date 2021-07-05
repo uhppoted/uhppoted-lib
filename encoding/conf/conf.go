@@ -12,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
 )
 
 type Rangeable interface {
@@ -36,6 +38,7 @@ var (
 	tUint64   = reflect.TypeOf(uint64(0))
 	tString   = reflect.TypeOf(string(""))
 	tDuration = reflect.TypeOf(time.Duration(0))
+	pBindAddr = reflect.TypeOf(&types.BindAddr{})
 	pUDPAddr  = reflect.TypeOf(&net.UDPAddr{})
 )
 
@@ -204,7 +207,9 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 				return err
 			}
 
-			f.Set(reflect.ValueOf(p))
+			if p != nil {
+				f.Set(reflect.ValueOf(p))
+			}
 			continue
 		}
 
@@ -212,9 +217,13 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 
 		if f.Kind() == reflect.Struct {
 			if tag == "" {
-				unmarshal(f, "", values)
+				if err := unmarshal(f, "", values); err != nil {
+					return err
+				}
 			} else {
-				unmarshal(f, tag+".", values)
+				if err := unmarshal(f, tag+".", values); err != nil {
+					return err
+				}
 			}
 			continue
 		}
@@ -415,6 +424,12 @@ func iterate(parent string, s reflect.Value, g func(string, interface{}) bool) b
 
 			case tDuration:
 				if !g(tag, time.Duration(int64(f.Int()))) {
+					return false
+				}
+
+			case pBindAddr:
+				addr := fmt.Sprintf("%v", f)
+				if !g(tag, addr) {
 					return false
 				}
 

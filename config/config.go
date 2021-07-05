@@ -14,6 +14,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/encoding/conf"
 	"github.com/uhppoted/uhppoted-lib/monitoring"
 )
@@ -128,14 +129,14 @@ type Config struct {
 }
 
 type System struct {
-	BindAddress         *net.UDPAddr  `conf:"bind.address"`
-	BroadcastAddress    *net.UDPAddr  `conf:"broadcast.address"`
-	ListenAddress       *net.UDPAddr  `conf:"listen.address"`
-	Timeout             time.Duration `conf:"timeout"`
-	HealthCheckInterval time.Duration `conf:"monitoring.healthcheck.interval"`
-	HealthCheckIdle     time.Duration `conf:"monitoring.healthcheck.idle"`
-	HealthCheckIgnore   time.Duration `conf:"monitoring.healthcheck.ignore"`
-	WatchdogInterval    time.Duration `conf:"monitoring.watchdog.interval"`
+	BindAddress         *types.BindAddr `conf:"bind.address"`
+	BroadcastAddress    *net.UDPAddr    `conf:"broadcast.address"`
+	ListenAddress       *net.UDPAddr    `conf:"listen.address"`
+	Timeout             time.Duration   `conf:"timeout"`
+	HealthCheckInterval time.Duration   `conf:"monitoring.healthcheck.interval"`
+	HealthCheckIdle     time.Duration   `conf:"monitoring.healthcheck.idle"`
+	HealthCheckIgnore   time.Duration   `conf:"monitoring.healthcheck.ignore"`
+	WatchdogInterval    time.Duration   `conf:"monitoring.watchdog.interval"`
 }
 
 const ROLLOVER = 100000
@@ -302,8 +303,8 @@ func listify(parent string, s interface{}) []kv {
 }
 
 // Ref. https://stackoverflow.com/questions/23529663/how-to-get-all-addresses-and-masks-from-local-interfaces-in-go
-func DefaultIpAddresses() (net.UDPAddr, net.UDPAddr, net.UDPAddr) {
-	bind := net.UDPAddr{
+func DefaultIpAddresses() (types.BindAddr, net.UDPAddr, net.UDPAddr) {
+	bind := types.BindAddr{
 		IP:   make(net.IP, net.IPv4len),
 		Port: 0,
 		Zone: "",

@@ -1,12 +1,12 @@
-## v0.7.1
+## v0.7.x
 
-- [x] Rearchitecture UHPPOTED as an interface+implementation
-- [x] `PutTaskList`
+### IN PROGRESS
 
-## TODO
-
+- [ ] Replace UHPPOTE parameter from ACL API with IUHPPOTED
 - [ ] Commonalise `config` command a la `version`
 - [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
+
+## TODO
 
 1. Rework healthcheck to remove need for IUHPPOTE::DeviceList
 2. Rework healthcheck to remove need for IUHPPOTE::ListenAddr
