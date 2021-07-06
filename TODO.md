@@ -2,8 +2,8 @@
 
 ### IN PROGRESS
 
+- [x] Commonalise `config` command a la `version`
 - [ ] Replace UHPPOTE parameter from ACL API with IUHPPOTED
-- [ ] Commonalise `config` command a la `version`
 - [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
 
 ## TODO

@@ -2,7 +2,8 @@
 
 ### v0.7.2
 
-1. Reworked `config` to support types.BindAddr
+1. Reworked `config` to support types.BindAddr, types.BroadcastAddr and types.ListenAddr
+2. Implemented shared `config` command
 
 ### v0.7.1
 
