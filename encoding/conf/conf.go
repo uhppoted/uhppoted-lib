@@ -29,17 +29,19 @@ type Unmarshaler interface {
 }
 
 var (
-	tBool     = reflect.TypeOf(bool(false))
-	tByte     = reflect.TypeOf(byte(0))
-	tInt      = reflect.TypeOf(int(0))
-	tUint     = reflect.TypeOf(uint(0))
-	tUint16   = reflect.TypeOf(uint16(0))
-	tUint32   = reflect.TypeOf(uint32(0))
-	tUint64   = reflect.TypeOf(uint64(0))
-	tString   = reflect.TypeOf(string(""))
-	tDuration = reflect.TypeOf(time.Duration(0))
-	pBindAddr = reflect.TypeOf(&types.BindAddr{})
-	pUDPAddr  = reflect.TypeOf(&net.UDPAddr{})
+	tBool          = reflect.TypeOf(bool(false))
+	tByte          = reflect.TypeOf(byte(0))
+	tInt           = reflect.TypeOf(int(0))
+	tUint          = reflect.TypeOf(uint(0))
+	tUint16        = reflect.TypeOf(uint16(0))
+	tUint32        = reflect.TypeOf(uint32(0))
+	tUint64        = reflect.TypeOf(uint64(0))
+	tString        = reflect.TypeOf(string(""))
+	tDuration      = reflect.TypeOf(time.Duration(0))
+	pBindAddr      = reflect.TypeOf(&types.BindAddr{})
+	pBroadcastAddr = reflect.TypeOf(&types.BroadcastAddr{})
+	pListenAddr    = reflect.TypeOf(&types.ListenAddr{})
+	pUDPAddr       = reflect.TypeOf(&net.UDPAddr{})
 )
 
 func Marshal(m interface{}) ([]byte, error) {
@@ -128,6 +130,15 @@ func marshal(s reflect.Value) ([]byte, error) {
 				fmt.Fprintf(&c, "%s = %v\n", tag, f)
 
 			case tDuration:
+				fmt.Fprintf(&c, "%s = %v\n", tag, f)
+
+			case pBindAddr:
+				fmt.Fprintf(&c, "%s = %v\n", tag, f)
+
+			case pBroadcastAddr:
+				fmt.Fprintf(&c, "%s = %v\n", tag, f)
+
+			case pListenAddr:
 				fmt.Fprintf(&c, "%s = %v\n", tag, f)
 
 			case pUDPAddr:
@@ -310,6 +321,33 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 				f.SetInt(int64(d))
 			}
 
+		case pBindAddr:
+			if value, ok := values[tag]; ok {
+				if v, err := types.ResolveBindAddr(value); err != nil {
+					return err
+				} else {
+					f.Set(reflect.ValueOf(v))
+				}
+			}
+
+		case pBroadcastAddr:
+			if value, ok := values[tag]; ok {
+				if v, err := types.ResolveBroadcastAddr(value); err != nil {
+					return err
+				} else {
+					f.Set(reflect.ValueOf(v))
+				}
+			}
+
+		case pListenAddr:
+			if value, ok := values[tag]; ok {
+				if v, err := types.ResolveListenAddr(value); err != nil {
+					return err
+				} else {
+					f.Set(reflect.ValueOf(v))
+				}
+			}
+
 		case pUDPAddr:
 			if value, ok := values[tag]; ok {
 				address, err := net.ResolveUDPAddr("udp", value)
@@ -428,6 +466,18 @@ func iterate(parent string, s reflect.Value, g func(string, interface{}) bool) b
 				}
 
 			case pBindAddr:
+				addr := fmt.Sprintf("%v", f)
+				if !g(tag, addr) {
+					return false
+				}
+
+			case pBroadcastAddr:
+				addr := fmt.Sprintf("%v", f)
+				if !g(tag, addr) {
+					return false
+				}
+
+			case pListenAddr:
 				addr := fmt.Sprintf("%v", f)
 				if !g(tag, addr) {
 					return false

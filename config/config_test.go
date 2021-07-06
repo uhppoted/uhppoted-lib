@@ -136,9 +136,9 @@ func TestDefaultConfig(t *testing.T) {
 func TestConfigUnmarshal(t *testing.T) {
 	expected := Config{
 		System: System{
-			BindAddress:         &types.BindAddr{IP: []byte{192, 168, 1, 100}, Port: 54321, Zone: ""},
-			BroadcastAddress:    &net.UDPAddr{IP: []byte{192, 168, 1, 255}, Port: 30000, Zone: ""},
-			ListenAddress:       &net.UDPAddr{IP: []byte{192, 168, 1, 100}, Port: 12345, Zone: ""},
+			BindAddress:         &types.BindAddr{IP: []byte{192, 168, 1, 100}, Port: 54321},
+			BroadcastAddress:    &types.BroadcastAddr{IP: []byte{192, 168, 1, 255}, Port: 30000},
+			ListenAddress:       &types.ListenAddr{IP: []byte{192, 168, 1, 100}, Port: 12345},
 			Timeout:             3750 * time.Millisecond,
 			HealthCheckInterval: 31 * time.Second,
 			HealthCheckIdle:     67 * time.Second,
@@ -699,15 +699,8 @@ listen.address = 192.168.1.100:60001
 `)
 
 	config := NewConfig()
-	if err := conf.Unmarshal(configuration, config); err != nil {
-		t.Fatalf("Unexpected error: %v", err)
-	}
-
-	expected := fmt.Errorf("port 0 is not a valid port for broadcast.address")
-
-	err := config.Validate()
-	if err == nil || err.Error() != expected.Error() {
-		t.Errorf("Expected error:%v, got:%v", expected, err)
+	if err := conf.Unmarshal(configuration, config); err == nil {
+		t.Fatalf("Expected 'invalid broadcast address port' error, got %v", err)
 	}
 }
 
@@ -718,15 +711,8 @@ listen.address = 192.168.1.100:0
 `)
 
 	config := NewConfig()
-	if err := conf.Unmarshal(configuration, config); err != nil {
-		t.Fatalf("Unexpected error: %v", err)
-	}
-
-	expected := fmt.Errorf("port 0 is not a valid port for listen.address")
-
-	err := config.Validate()
-	if err == nil || err.Error() != expected.Error() {
-		t.Errorf("Expected error:%v, got:%v", expected, err)
+	if err := conf.Unmarshal(configuration, config); err == nil {
+		t.Fatalf("Expected 'invalid listen port' error, got %v", err)
 	}
 }
 

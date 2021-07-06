@@ -129,14 +129,14 @@ type Config struct {
 }
 
 type System struct {
-	BindAddress         *types.BindAddr `conf:"bind.address"`
-	BroadcastAddress    *net.UDPAddr    `conf:"broadcast.address"`
-	ListenAddress       *net.UDPAddr    `conf:"listen.address"`
-	Timeout             time.Duration   `conf:"timeout"`
-	HealthCheckInterval time.Duration   `conf:"monitoring.healthcheck.interval"`
-	HealthCheckIdle     time.Duration   `conf:"monitoring.healthcheck.idle"`
-	HealthCheckIgnore   time.Duration   `conf:"monitoring.healthcheck.ignore"`
-	WatchdogInterval    time.Duration   `conf:"monitoring.watchdog.interval"`
+	BindAddress         *types.BindAddr      `conf:"bind.address"`
+	BroadcastAddress    *types.BroadcastAddr `conf:"broadcast.address"`
+	ListenAddress       *types.ListenAddr    `conf:"listen.address"`
+	Timeout             time.Duration        `conf:"timeout"`
+	HealthCheckInterval time.Duration        `conf:"monitoring.healthcheck.interval"`
+	HealthCheckIdle     time.Duration        `conf:"monitoring.healthcheck.idle"`
+	HealthCheckIgnore   time.Duration        `conf:"monitoring.healthcheck.ignore"`
+	WatchdogInterval    time.Duration        `conf:"monitoring.watchdog.interval"`
 }
 
 const ROLLOVER = 100000
@@ -303,20 +303,20 @@ func listify(parent string, s interface{}) []kv {
 }
 
 // Ref. https://stackoverflow.com/questions/23529663/how-to-get-all-addresses-and-masks-from-local-interfaces-in-go
-func DefaultIpAddresses() (types.BindAddr, net.UDPAddr, net.UDPAddr) {
+func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr) {
 	bind := types.BindAddr{
 		IP:   make(net.IP, net.IPv4len),
 		Port: 0,
 		Zone: "",
 	}
 
-	broadcast := net.UDPAddr{
+	broadcast := types.BroadcastAddr{
 		IP:   make(net.IP, net.IPv4len),
 		Port: 60000,
 		Zone: "",
 	}
 
-	listen := net.UDPAddr{
+	listen := types.ListenAddr{
 		IP:   make(net.IP, net.IPv4len),
 		Port: 60001,
 		Zone: "",
