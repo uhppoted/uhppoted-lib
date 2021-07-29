@@ -36,6 +36,7 @@ var httpdDBFile string = filepath.Join(workdir(), "httpd", "memdb", "db.json")
 var httpdDBACLRules string = filepath.Join(workdir(), "httpd", "acl.grl")
 var httpdDBSystemRules string = filepath.Join(workdir(), "httpd", "system.grl")
 var httpdDBCardRules string = filepath.Join(workdir(), "httpd", "cards.grl")
+var httpdDBDoorRules string = filepath.Join(workdir(), "httpd", "doors.grl")
 var httpdAuditFile string = filepath.Join(workdir(), "httpd", "audit", "audit.log")
 
 func workdir() string {

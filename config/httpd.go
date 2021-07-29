@@ -32,6 +32,7 @@ type HTTPD struct {
 			ACL    string `conf:"acl"`
 			System string `conf:"system"`
 			Cards  string `conf:"cards"`
+			Doors  string `conf:"doors"`
 		} `conf:"rules"`
 	} `conf:"db"`
 	Audit struct {
@@ -77,6 +78,7 @@ func NewHTTPD() *HTTPD {
 				ACL    string `conf:"acl"`
 				System string `conf:"system"`
 				Cards  string `conf:"cards"`
+				Doors  string `conf:"doors"`
 			} `conf:"rules"`
 		}{
 			File: httpdDBFile,
@@ -84,10 +86,12 @@ func NewHTTPD() *HTTPD {
 				ACL    string `conf:"acl"`
 				System string `conf:"system"`
 				Cards  string `conf:"cards"`
+				Doors  string `conf:"doors"`
 			}{
 				ACL:    httpdDBACLRules,
 				System: httpdDBSystemRules,
 				Cards:  httpdDBCardRules,
+				Doors:  httpdDBDoorRules,
 			},
 		},
 		Audit: struct {

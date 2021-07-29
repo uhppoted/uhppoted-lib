@@ -32,5 +32,6 @@ const (
 	httpdDBACLRules      string = "/var/uhppoted/httpd/acl.grl"
 	httpdDBSystemRules   string = "/var/uhppoted/httpd/system.grl"
 	httpdDBCardRules     string = "/var/uhppoted/httpd/cards.grl"
+	httpdDBDoorRules     string = "/var/uhppoted/httpd/doors.grl"
 	httpdAuditFile       string = "/var/uhppoted/httpd/audit/audit.log"
 )

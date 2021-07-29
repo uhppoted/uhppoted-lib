@@ -32,5 +32,6 @@ const (
 	httpdDBACLRules      string = "/usr/local/etc/com.github.uhppoted/httpd/acl.grl"
 	httpdDBSystemRules   string = "/usr/local/etc/com.github.uhppoted/httpd/system.grl"
 	httpdDBCardRules     string = "/usr/local/etc/com.github.uhppoted/httpd/cards.grl"
+	httpdDBDoorRules     string = "/usr/local/etc/com.github.uhppoted/httpd/doors.grl"
 	httpdAuditFile       string = "/usr/local/var/com.github.uhppoted/httpd/audit/audit.log"
 )
