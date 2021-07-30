@@ -376,6 +376,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.request.timeout = 5s
 ; httpd.system.controllers = %[23]s
 ; httpd.system.doors = %[24]s
+; httpd.system.refresh = 30s
 ; httpd.db.file = %[25]s
 ; httpd.db.rules.acl = %[26]s
 ; httpd.db.rules.system = %[27]s
@@ -537,6 +538,7 @@ timeout = %[4]v
 ; httpd.request.timeout = 5s
 ; httpd.system.controllers = %[24]s
 ; httpd.system.doors = %[25]s
+; httpd.system.refresh = 30s
 ; httpd.db.file = %[26]s
 ; httpd.db.rules.acl = %[27]s
 ; httpd.db.rules.system = %[28]s
