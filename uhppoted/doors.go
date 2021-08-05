@@ -13,6 +13,14 @@ const (
 	Controlled     ControlState = 3
 )
 
+func (m ControlState) String() string {
+	if m < 1 || m > 3 {
+		return ""
+	}
+
+	return [...]string{"", "normally open", "normally closed", "controlled"}[m]
+}
+
 func (s ControlState) MarshalJSON() ([]byte, error) {
 	switch s {
 	case NormallyOpen:
