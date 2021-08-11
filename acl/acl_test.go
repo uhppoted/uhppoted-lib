@@ -46,7 +46,7 @@ func (m *mock) GetDoorControlState(deviceID uint32, door byte) (*types.DoorContr
 	return nil, nil
 }
 
-func (m *mock) SetDoorControlState(deviceID uint32, door uint8, state uint8, delay uint8) (*types.DoorControlState, error) {
+func (m *mock) SetDoorControlState(deviceID uint32, door uint8, state types.ControlState, delay uint8) (*types.DoorControlState, error) {
 	return nil, nil
 }
 

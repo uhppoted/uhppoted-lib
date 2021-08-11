@@ -1,56 +1,8 @@
 package uhppoted
 
 import (
-	"encoding/json"
 	"fmt"
 )
-
-type ControlState uint8
-
-const (
-	NormallyOpen   ControlState = 1
-	NormallyClosed ControlState = 2
-	Controlled     ControlState = 3
-)
-
-func (m ControlState) String() string {
-	if m < 1 || m > 3 {
-		return ""
-	}
-
-	return [...]string{"", "normally open", "normally closed", "controlled"}[m]
-}
-
-func (s ControlState) MarshalJSON() ([]byte, error) {
-	switch s {
-	case NormallyOpen:
-		return json.Marshal("normally open")
-	case NormallyClosed:
-		return json.Marshal("normally closed")
-	case Controlled:
-		return json.Marshal("controlled")
-	}
-
-	return []byte("???"), fmt.Errorf("Invalid ControlState: %v", s)
-}
-
-func (s *ControlState) UnmarshalJSON(bytes []byte) (err error) {
-	v := ""
-	if err = json.Unmarshal(bytes, &v); err == nil {
-		switch v {
-		case "normally open":
-			*s = NormallyOpen
-		case "normally closed":
-			*s = NormallyClosed
-		case "controlled":
-			*s = Controlled
-		default:
-			err = fmt.Errorf("Invalid DoorControlState: %s", string(bytes))
-		}
-	}
-
-	return
-}
 
 func (u *UHPPOTED) GetDoorDelay(request GetDoorDelayRequest) (*GetDoorDelayResponse, error) {
 	u.debug("get-door-delay", fmt.Sprintf("request  %+v", request))
@@ -112,7 +64,7 @@ func (u *UHPPOTED) GetDoorControl(request GetDoorControlRequest) (*GetDoorContro
 	response := GetDoorControlResponse{
 		DeviceID: DeviceID(result.SerialNumber),
 		Door:     result.Door,
-		Control:  ControlState(result.ControlState),
+		Control:  result.ControlState,
 	}
 
 	u.debug("get-door-control", fmt.Sprintf("response %+v", response))
@@ -130,7 +82,7 @@ func (u *UHPPOTED) SetDoorControl(request SetDoorControlRequest) (*SetDoorContro
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting door %v control for %v (%w)", door, device, err))
 	}
 
-	result, err := u.UHPPOTE.SetDoorControlState(device, door, uint8(request.Control), state.Delay)
+	result, err := u.UHPPOTE.SetDoorControlState(device, door, request.Control, state.Delay)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error setting door %v control %v for %v (%w)", door, request.Control, device, err))
 	}
@@ -138,7 +90,7 @@ func (u *UHPPOTED) SetDoorControl(request SetDoorControlRequest) (*SetDoorContro
 	response := SetDoorControlResponse{
 		DeviceID: DeviceID(result.SerialNumber),
 		Door:     result.Door,
-		Control:  ControlState(result.ControlState),
+		Control:  result.ControlState,
 	}
 
 	u.debug("set-door-control", fmt.Sprintf("response %+v", response))

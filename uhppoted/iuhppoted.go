@@ -107,21 +107,21 @@ type GetDoorControlRequest struct {
 }
 
 type GetDoorControlResponse struct {
-	DeviceID DeviceID     `json:"device-id"`
-	Door     uint8        `json:"door"`
-	Control  ControlState `json:"control"`
+	DeviceID DeviceID           `json:"device-id"`
+	Door     uint8              `json:"door"`
+	Control  types.ControlState `json:"control"`
 }
 
 type SetDoorControlRequest struct {
 	DeviceID DeviceID
 	Door     uint8
-	Control  ControlState
+	Control  types.ControlState
 }
 
 type SetDoorControlResponse struct {
-	DeviceID DeviceID     `json:"device-id"`
-	Door     uint8        `json:"door"`
-	Control  ControlState `json:"control"`
+	DeviceID DeviceID           `json:"device-id"`
+	Door     uint8              `json:"door"`
+	Control  types.ControlState `json:"control"`
 }
 
 type GetStatusRequest struct {
