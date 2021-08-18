@@ -26,6 +26,10 @@ type HTTPD struct {
 		Controllers string        `conf:"controllers"`
 		Doors       string        `conf:"doors"`
 		Refresh     time.Duration `conf:"refresh"`
+		Windows     struct {
+			Ok        time.Duration `conf:"ok"`
+			Uncertain time.Duration `conf:"uncertain"`
+		} `conf:"windows"`
 	} `conf:"system"`
 	DB struct {
 		File  string `conf:"file"`
@@ -70,10 +74,21 @@ func NewHTTPD() *HTTPD {
 			Controllers string        `conf:"controllers"`
 			Doors       string        `conf:"doors"`
 			Refresh     time.Duration `conf:"refresh"`
+			Windows     struct {
+				Ok        time.Duration `conf:"ok"`
+				Uncertain time.Duration `conf:"uncertain"`
+			} `conf:"windows"`
 		}{
 			Controllers: httpdControllersFile,
 			Doors:       httpdDoorsFile,
 			Refresh:     30 * time.Second,
+			Windows: struct {
+				Ok        time.Duration `conf:"ok"`
+				Uncertain time.Duration `conf:"uncertain"`
+			}{
+				Ok:        60 * time.Second,
+				Uncertain: 300 * time.Second,
+			},
 		},
 		DB: struct {
 			File  string `conf:"file"`
