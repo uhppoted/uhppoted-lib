@@ -27,8 +27,10 @@ type HTTPD struct {
 		Doors       string        `conf:"doors"`
 		Refresh     time.Duration `conf:"refresh"`
 		Windows     struct {
-			Ok        time.Duration `conf:"ok"`
-			Uncertain time.Duration `conf:"uncertain"`
+			Ok          time.Duration `conf:"ok"`
+			Uncertain   time.Duration `conf:"uncertain"`
+			Systime     time.Duration `conf:"systime"`
+			CacheExpiry time.Duration `conf:"expires"`
 		} `conf:"windows"`
 	} `conf:"system"`
 	DB struct {
@@ -75,19 +77,25 @@ func NewHTTPD() *HTTPD {
 			Doors       string        `conf:"doors"`
 			Refresh     time.Duration `conf:"refresh"`
 			Windows     struct {
-				Ok        time.Duration `conf:"ok"`
-				Uncertain time.Duration `conf:"uncertain"`
+				Ok          time.Duration `conf:"ok"`
+				Uncertain   time.Duration `conf:"uncertain"`
+				Systime     time.Duration `conf:"systime"`
+				CacheExpiry time.Duration `conf:"expires"`
 			} `conf:"windows"`
 		}{
 			Controllers: httpdControllersFile,
 			Doors:       httpdDoorsFile,
 			Refresh:     30 * time.Second,
 			Windows: struct {
-				Ok        time.Duration `conf:"ok"`
-				Uncertain time.Duration `conf:"uncertain"`
+				Ok          time.Duration `conf:"ok"`
+				Uncertain   time.Duration `conf:"uncertain"`
+				Systime     time.Duration `conf:"systime"`
+				CacheExpiry time.Duration `conf:"expires"`
 			}{
-				Ok:        60 * time.Second,
-				Uncertain: 300 * time.Second,
+				Ok:          60 * time.Second,
+				Uncertain:   300 * time.Second,
+				Systime:     300 * time.Second,
+				CacheExpiry: 120 * time.Second,
 			},
 		},
 		DB: struct {

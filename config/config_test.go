@@ -379,6 +379,8 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.system.refresh = 30s
 ; httpd.system.windows.ok = 1m0s
 ; httpd.system.windows.uncertain = 5m0s
+; httpd.system.windows.systime = 5m0s
+; httpd.system.windows.expires = 2m0s
 ; httpd.db.file = %[25]s
 ; httpd.db.rules.acl = %[26]s
 ; httpd.db.rules.system = %[27]s
@@ -543,6 +545,8 @@ timeout = %[4]v
 ; httpd.system.refresh = 30s
 ; httpd.system.windows.ok = 1m0s
 ; httpd.system.windows.uncertain = 5m0s
+; httpd.system.windows.systime = 5m0s
+; httpd.system.windows.expires = 2m0s
 ; httpd.db.file = %[26]s
 ; httpd.db.rules.acl = %[27]s
 ; httpd.db.rules.system = %[28]s
