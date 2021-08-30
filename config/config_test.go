@@ -376,17 +376,18 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.request.timeout = 5s
 ; httpd.system.controllers = %[23]s
 ; httpd.system.doors = %[24]s
+; httpd.system.groups = %[25]s
 ; httpd.system.refresh = 30s
 ; httpd.system.windows.ok = 1m0s
 ; httpd.system.windows.uncertain = 5m0s
 ; httpd.system.windows.systime = 5m0s
 ; httpd.system.windows.expires = 2m0s
-; httpd.db.file = %[25]s
-; httpd.db.rules.acl = %[26]s
-; httpd.db.rules.system = %[27]s
-; httpd.db.rules.cards = %[28]s
-; httpd.db.rules.doors = %[29]s
-; httpd.audit.file = %[30]s
+; httpd.db.file = %[26]s
+; httpd.db.rules.acl = %[27]s
+; httpd.db.rules.system = %[28]s
+; httpd.db.rules.cards = %[29]s
+; httpd.db.rules.doors = %[30]s
+; httpd.audit.file = %[31]s
 ; httpd.retention = 6h0m0s
 
 # Wild Apricot
@@ -416,7 +417,9 @@ func TestDefaultConfigWrite(t *testing.T) {
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, mqttCards, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
-		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdControllersFile, httpdDoorsFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdDBDoorRules, httpdAuditFile)
+		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey,
+		httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile,
+		httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdDBDoorRules, httpdAuditFile)
 
 	config := NewConfig()
 
@@ -542,17 +545,18 @@ timeout = %[4]v
 ; httpd.request.timeout = 5s
 ; httpd.system.controllers = %[24]s
 ; httpd.system.doors = %[25]s
+; httpd.system.groups = %[26]s
 ; httpd.system.refresh = 30s
 ; httpd.system.windows.ok = 1m0s
 ; httpd.system.windows.uncertain = 5m0s
 ; httpd.system.windows.systime = 5m0s
 ; httpd.system.windows.expires = 2m0s
-; httpd.db.file = %[26]s
-; httpd.db.rules.acl = %[27]s
-; httpd.db.rules.system = %[28]s
-; httpd.db.rules.cards = %[29]s
-; httpd.db.rules.doors = %[30]s
-; httpd.audit.file = %[31]s
+; httpd.db.file = %[27]s
+; httpd.db.rules.acl = %[28]s
+; httpd.db.rules.system = %[29]s
+; httpd.db.rules.cards = %[30]s
+; httpd.db.rules.doors = %[31]s
+; httpd.audit.file = %[32]s
 httpd.retention = 5h30m0s
 
 # Wild Apricot
@@ -589,7 +593,9 @@ UT0311-L0x.405419896.timezone = France/Paris
 		restUsers, restGroups, restHOTP,
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, mqttCards, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
-		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey, httpdControllersFile, httpdDoorsFile, httpdDBFile, httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdDBDoorRules, httpdAuditFile)
+		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey,
+		httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile,
+		httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdDBDoorRules, httpdAuditFile)
 
 	config := NewConfig()
 
