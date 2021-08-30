@@ -26,6 +26,7 @@ type HTTPD struct {
 		Controllers string        `conf:"controllers"`
 		Doors       string        `conf:"doors"`
 		Groups      string        `conf:"groups"`
+		Cards       string        `conf:"cards"`
 		Refresh     time.Duration `conf:"refresh"`
 		Windows     struct {
 			Ok          time.Duration `conf:"ok"`
@@ -35,7 +36,6 @@ type HTTPD struct {
 		} `conf:"windows"`
 	} `conf:"system"`
 	DB struct {
-		File  string `conf:"file"`
 		Rules struct {
 			ACL    string `conf:"acl"`
 			System string `conf:"system"`
@@ -77,6 +77,7 @@ func NewHTTPD() *HTTPD {
 			Controllers string        `conf:"controllers"`
 			Doors       string        `conf:"doors"`
 			Groups      string        `conf:"groups"`
+			Cards       string        `conf:"cards"`
 			Refresh     time.Duration `conf:"refresh"`
 			Windows     struct {
 				Ok          time.Duration `conf:"ok"`
@@ -88,6 +89,7 @@ func NewHTTPD() *HTTPD {
 			Controllers: httpdControllersFile,
 			Doors:       httpdDoorsFile,
 			Groups:      httpdGroupsFile,
+			Cards:       httpdCardsFile,
 			Refresh:     30 * time.Second,
 			Windows: struct {
 				Ok          time.Duration `conf:"ok"`
@@ -102,7 +104,6 @@ func NewHTTPD() *HTTPD {
 			},
 		},
 		DB: struct {
-			File  string `conf:"file"`
 			Rules struct {
 				ACL    string `conf:"acl"`
 				System string `conf:"system"`
@@ -110,7 +111,6 @@ func NewHTTPD() *HTTPD {
 				Doors  string `conf:"doors"`
 			} `conf:"rules"`
 		}{
-			File: httpdCardsFile,
 			Rules: struct {
 				ACL    string `conf:"acl"`
 				System string `conf:"system"`
