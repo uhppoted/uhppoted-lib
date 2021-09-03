@@ -387,7 +387,8 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.db.rules.system = %[28]s
 ; httpd.db.rules.cards = %[29]s
 ; httpd.db.rules.doors = %[30]s
-; httpd.audit.file = %[31]s
+; httpd.db.rules.groups = %[31]s
+; httpd.audit.file = %[32]s
 ; httpd.retention = 6h0m0s
 
 # Wild Apricot
@@ -419,7 +420,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 		nonceServer, nonceClients,
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey,
 		httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile,
-		httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdDBDoorRules, httpdAuditFile)
+		httpdRulesACL, httpdRulesSystem, httpdRulesCards, httpdRulesDoors, httpdRulesGroups, httpdAuditFile)
 
 	config := NewConfig()
 
@@ -556,7 +557,8 @@ timeout = %[4]v
 ; httpd.db.rules.system = %[29]s
 ; httpd.db.rules.cards = %[30]s
 ; httpd.db.rules.doors = %[31]s
-; httpd.audit.file = %[32]s
+; httpd.db.rules.groups = %[32]s
+; httpd.audit.file = %[33]s
 httpd.retention = 5h30m0s
 
 # Wild Apricot
@@ -595,7 +597,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 		nonceServer, nonceClients,
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey,
 		httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile,
-		httpdDBACLRules, httpdDBSystemRules, httpdDBCardRules, httpdDBDoorRules, httpdAuditFile)
+		httpdRulesACL, httpdRulesSystem, httpdRulesCards, httpdRulesDoors, httpdRulesGroups, httpdAuditFile)
 
 	config := NewConfig()
 

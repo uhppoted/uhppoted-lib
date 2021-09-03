@@ -34,10 +34,11 @@ var httpdControllersFile string = filepath.Join(workdir(), "httpd", "system", "c
 var httpdDoorsFile string = filepath.Join(workdir(), "httpd", "system", "doors.json")
 var httpdGroupsFile string = filepath.Join(workdir(), "httpd", "system", "groups.json")
 var httpdCardsFile string = filepath.Join(workdir(), "httpd", "memdb", "db.json")
-var httpdDBACLRules string = filepath.Join(workdir(), "httpd", "acl.grl")
-var httpdDBSystemRules string = filepath.Join(workdir(), "httpd", "system.grl")
-var httpdDBCardRules string = filepath.Join(workdir(), "httpd", "cards.grl")
-var httpdDBDoorRules string = filepath.Join(workdir(), "httpd", "doors.grl")
+var httpdRulesACL string = filepath.Join(workdir(), "httpd", "acl.grl")
+var httpdRulesSystem string = filepath.Join(workdir(), "httpd", "system.grl")
+var httpdRulesCards string = filepath.Join(workdir(), "httpd", "cards.grl")
+var httpdRulesDoors string = filepath.Join(workdir(), "httpd", "doors.grl")
+var httpdRulesGroups string = filepath.Join(workdir(), "httpd", "groups.grl")
 var httpdAuditFile string = filepath.Join(workdir(), "httpd", "audit", "audit.log")
 
 func workdir() string {
