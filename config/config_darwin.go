@@ -29,7 +29,7 @@ const (
 	httpdControllersFile string = "/usr/local/var/com.github.uhppoted/httpd/system/controllers.json"
 	httpdDoorsFile       string = "/usr/local/var/com.github.uhppoted/httpd/system/doors.json"
 	httpdGroupsFile      string = "/usr/local/var/com.github.uhppoted/httpd/system/groups.json"
-	httpdCardsFile       string = "/usr/local/var/com.github.uhppoted/httpd/memdb/db.json"
+	httpdCardsFile       string = "/usr/local/var/com.github.uhppoted/httpd/system/cards.json"
 	httpdRulesACL        string = "/usr/local/etc/com.github.uhppoted/httpd/acl.grl"
 	httpdRulesSystem     string = "/usr/local/etc/com.github.uhppoted/httpd/system.grl"
 	httpdRulesCards      string = "/usr/local/etc/com.github.uhppoted/httpd/cards.grl"

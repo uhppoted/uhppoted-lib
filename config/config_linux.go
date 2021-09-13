@@ -29,7 +29,7 @@ const (
 	httpdControllersFile string = "/var/uhppoted/httpd/system/controlers.json"
 	httpdDoorsFile       string = "/var/uhppoted/httpd/system/doors.json"
 	httpdGroupsFile      string = "/var/uhppoted/httpd/system/groups.json"
-	httpdCardsFile       string = "/var/uhppoted/httpd/memdb/db.json"
+	httpdCardsFile       string = "/var/uhppoted/httpd/system/cards.json"
 	httpdRulesACL        string = "/var/uhppoted/httpd/acl.grl"
 	httpdRulesSystem     string = "/var/uhppoted/httpd/system.grl"
 	httpdRulesCards      string = "/var/uhppoted/httpd/cards.grl"
