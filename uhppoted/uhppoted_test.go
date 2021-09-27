@@ -14,6 +14,9 @@ type stub struct {
 	getTimeProfile      func(deviceID uint32, profileID uint8) (*types.TimeProfile, error)
 	setTimeProfile      func(deviceID uint32, profile types.TimeProfile) (bool, error)
 	clearTimeProfiles   func(deviceID uint32) (bool, error)
+	getEventIndex       func(deviceID uint32) (*types.EventIndex, error)
+	setEventIndex       func(deviceID, index uint32) (*types.EventIndexResult, error)
+	getEvent            func(deviceID, index uint32) (*types.Event, error)
 	recordSpecialEvents func(deviceID uint32, enable bool) (bool, error)
 }
 
@@ -130,15 +133,27 @@ func (m *stub) OpenDoor(deviceID uint32, door uint8) (*types.Result, error) {
 }
 
 func (m *stub) GetEventIndex(deviceID uint32) (*types.EventIndex, error) {
-	return nil, nil
+	if m.getEventIndex != nil {
+		return m.getEventIndex(deviceID)
+	}
+
+	return nil, fmt.Errorf("Not implemented")
 }
 
 func (m *stub) SetEventIndex(deviceID, index uint32) (*types.EventIndexResult, error) {
-	return nil, nil
+	if m.setEventIndex != nil {
+		return m.setEventIndex(deviceID, index)
+	}
+
+	return nil, fmt.Errorf("Not implemented")
 }
 
 func (m *stub) GetEvent(deviceID, index uint32) (*types.Event, error) {
-	return nil, nil
+	if m.getEvent != nil {
+		return m.getEvent(deviceID, index)
+	}
+
+	return nil, fmt.Errorf("Not implemented")
 }
 
 func (m *stub) RecordSpecialEvents(deviceID uint32, enable bool) (bool, error) {

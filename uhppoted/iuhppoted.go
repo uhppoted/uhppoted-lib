@@ -31,7 +31,7 @@ type IUHPPOTED interface {
 	ClearTimeProfiles(request ClearTimeProfilesRequest) (*ClearTimeProfilesResponse, error)
 	PutTaskList(request PutTaskListRequest) (*PutTaskListResponse, int, error)
 	GetEventRange(request GetEventRangeRequest) (*GetEventRangeResponse, error)
-	GetEvent(request GetEventRequest) (*GetEventResponse, error)
+	GetEvents(request GetEventsRequest) (*GetEventResponse, error)
 	OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error)
 }
 
@@ -271,6 +271,16 @@ type GetEventRequest struct {
 type GetEventResponse struct {
 	DeviceID DeviceID `json:"device-id"`
 	Event    Event    `json:"event"`
+}
+
+type GetEventsRequest struct {
+	DeviceID DeviceID
+	Max      int
+}
+
+type GetEventsResponse struct {
+	DeviceID DeviceID `json:"device-id,omitempty"`
+	Events   []Event  `json:"events"`
 }
 
 type RecordSpecialEventsRequest struct {

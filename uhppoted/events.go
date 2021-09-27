@@ -176,6 +176,65 @@ func (u *UHPPOTED) GetEvent(request GetEventRequest) (*GetEventResponse, error) 
 	return &response, nil
 }
 
+// Retrieves up to MAX events starting with the current controller event index. The current controller
+// event index is updated on completion of this request.
+func (u *UHPPOTED) GetEvents(request GetEventsRequest) (*GetEventsResponse, error) {
+	u.debug("get-events", fmt.Sprintf("request  %+v", request))
+
+	device := uint32(request.DeviceID)
+
+	last, err := u.UHPPOTE.GetEventIndex(device)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting event index from %v (%w)", device, err))
+	} else if last == nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting event index from %v (%w)", device, errors.New("Record not found")))
+	}
+
+	events := []Event{}
+	index := last.Index
+	max := request.Max
+
+	for len(events) < max {
+		next := index + 1
+		if next > ROLLOVER {
+			next = 1
+		}
+
+		e, err := u.UHPPOTE.GetEvent(device, next)
+		if err != nil {
+			return nil, err
+		} else if e == nil {
+			break
+		} else {
+			events = append(events, Event{
+				Index:      e.Index,
+				Type:       e.Type,
+				Granted:    e.Granted,
+				Door:       e.Door,
+				Direction:  e.Direction,
+				CardNumber: e.CardNumber,
+				Timestamp:  e.Timestamp,
+				Reason:     e.Reason,
+			})
+
+			index = next
+		}
+	}
+
+	if _, err := u.UHPPOTE.SetEventIndex(device, index); err != nil {
+		return nil, err
+	}
+
+	response := GetEventsResponse{
+		DeviceID: DeviceID(device),
+		Events:   events,
+	}
+
+	u.debug("get-events", fmt.Sprintf("response %+v", response))
+
+	return &response, nil
+}
+
 // Unwraps the request and dispatches the corresponding controller command to enable or disable
 // door open, door close and door button press events for the controller.
 func (u *UHPPOTED) RecordSpecialEvents(request RecordSpecialEventsRequest) (*RecordSpecialEventsResponse, error) {
