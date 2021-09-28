@@ -27,6 +27,7 @@ type HTTPD struct {
 		Doors       string        `conf:"doors"`
 		Groups      string        `conf:"groups"`
 		Cards       string        `conf:"cards"`
+		Events      string        `conf:"events"`
 		Refresh     time.Duration `conf:"refresh"`
 		Windows     struct {
 			Ok          time.Duration `conf:"ok"`
@@ -79,6 +80,7 @@ func NewHTTPD() *HTTPD {
 			Doors       string        `conf:"doors"`
 			Groups      string        `conf:"groups"`
 			Cards       string        `conf:"cards"`
+			Events      string        `conf:"events"`
 			Refresh     time.Duration `conf:"refresh"`
 			Windows     struct {
 				Ok          time.Duration `conf:"ok"`
@@ -91,6 +93,7 @@ func NewHTTPD() *HTTPD {
 			Doors:       httpdDoorsFile,
 			Groups:      httpdGroupsFile,
 			Cards:       httpdCardsFile,
+			Events:      httpdEventsFile,
 			Refresh:     30 * time.Second,
 			Windows: struct {
 				Ok          time.Duration `conf:"ok"`

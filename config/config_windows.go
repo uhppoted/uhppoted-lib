@@ -34,6 +34,7 @@ var httpdControllersFile string = filepath.Join(workdir(), "httpd", "system", "c
 var httpdDoorsFile string = filepath.Join(workdir(), "httpd", "system", "doors.json")
 var httpdGroupsFile string = filepath.Join(workdir(), "httpd", "system", "groups.json")
 var httpdCardsFile string = filepath.Join(workdir(), "httpd", "system", "cards.json")
+var httpdEventsFile string = filepath.Join(workdir(), "httpd", "system", "events.json")
 var httpdRulesACL string = filepath.Join(workdir(), "httpd", "acl.grl")
 var httpdRulesSystem string = filepath.Join(workdir(), "httpd", "system.grl")
 var httpdRulesCards string = filepath.Join(workdir(), "httpd", "cards.grl")
