@@ -11,6 +11,7 @@ import (
 const ROLLOVER = uint32(100000)
 
 type Event struct {
+	DeviceID   uint32         `json:"device-id"`
 	Index      uint32         `json:"event-id"`
 	Type       uint8          `json:"event-type"`
 	Granted    bool           `json:"access-granted"`
@@ -160,6 +161,7 @@ func (u *UHPPOTED) GetEvent(request GetEventRequest) (*GetEventResponse, error) 
 	response := GetEventResponse{
 		DeviceID: DeviceID(record.SerialNumber),
 		Event: Event{
+			DeviceID:   device,
 			Index:      record.Index,
 			Type:       record.Type,
 			Granted:    record.Granted,
@@ -207,6 +209,7 @@ func (u *UHPPOTED) GetEvents(request GetEventsRequest) (*GetEventsResponse, erro
 			break
 		} else {
 			events = append(events, Event{
+				DeviceID:   device,
 				Index:      e.Index,
 				Type:       e.Type,
 				Granted:    e.Granted,

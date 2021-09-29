@@ -67,6 +67,7 @@ func TestGetEvents(t *testing.T) {
 
 	events := []Event{
 		Event{
+			DeviceID:   405419896,
 			Index:      18,
 			Type:       2,
 			Granted:    true,
@@ -77,6 +78,7 @@ func TestGetEvents(t *testing.T) {
 			Reason:     6,
 		},
 		Event{
+			DeviceID:   405419896,
 			Index:      19,
 			Type:       2,
 			Granted:    false,
