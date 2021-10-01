@@ -184,48 +184,66 @@ func (u *UHPPOTED) GetEvents(request GetEventsRequest) (*GetEventsResponse, erro
 	u.debug("get-events", fmt.Sprintf("request  %+v", request))
 
 	device := uint32(request.DeviceID)
-
-	last, err := u.UHPPOTE.GetEventIndex(device)
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting event index from %v (%w)", device, err))
-	} else if last == nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting event index from %v (%w)", device, errors.New("Record not found")))
-	}
-
 	events := []Event{}
-	index := last.Index
-	max := request.Max
 
-	for len(events) < max {
-		next := index + 1
-		if next > ROLLOVER {
-			next = 1
-		}
-
-		e, err := u.UHPPOTE.GetEvent(device, next)
-		if err != nil {
-			return nil, err
-		} else if e == nil {
-			break
-		} else {
-			events = append(events, Event{
-				DeviceID:   device,
-				Index:      e.Index,
-				Type:       e.Type,
-				Granted:    e.Granted,
-				Door:       e.Door,
-				Direction:  e.Direction,
-				CardNumber: e.CardNumber,
-				Timestamp:  e.Timestamp,
-				Reason:     e.Reason,
-			})
-
-			index = next
-		}
+	first, err := u.UHPPOTE.GetEvent(device, 0)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting first event index from %v (%w)", device, err))
 	}
 
-	if _, err := u.UHPPOTE.SetEventIndex(device, index); err != nil {
-		return nil, err
+	last, err := u.UHPPOTE.GetEvent(device, 0xffffffff)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting last event index from %v (%w)", device, err))
+	}
+
+	if first != nil && first.Index > 0 && last != nil && last.Index > 0 && last.Index != first.Index {
+		current, err := u.UHPPOTE.GetEventIndex(device)
+		if err != nil {
+			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting current event index from %v (%w)", device, err))
+		} else if current == nil {
+			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting current event index from %v (%w)", device, errors.New("Record not found")))
+		}
+
+		max := request.Max
+		index := current.Index
+		next := index + 1
+
+		if index == 0 {
+			index = first.Index
+			next = first.Index
+		}
+
+		for len(events) < max && index != last.Index {
+			e, err := u.UHPPOTE.GetEvent(device, next)
+			if err != nil {
+				return nil, err
+			} else if e == nil || e.Index != next {
+				if last.Index < first.Index {
+					next = 1
+				} else {
+					break
+				}
+			} else {
+				events = append(events, Event{
+					DeviceID:   device,
+					Index:      e.Index,
+					Type:       e.Type,
+					Granted:    e.Granted,
+					Door:       e.Door,
+					Direction:  e.Direction,
+					CardNumber: e.CardNumber,
+					Timestamp:  e.Timestamp,
+					Reason:     e.Reason,
+				})
+
+				index = next
+				next = index + 1
+			}
+		}
+
+		if _, err := u.UHPPOTE.SetEventIndex(device, index); err != nil {
+			return nil, err
+		}
 	}
 
 	response := GetEventsResponse{

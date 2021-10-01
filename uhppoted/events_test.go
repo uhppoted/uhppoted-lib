@@ -127,6 +127,32 @@ func TestGetEvents(t *testing.T) {
 
 		getEvent: func(deviceID, index uint32) (*types.Event, error) {
 			switch {
+			case deviceID == 405419896 && index == 0:
+				return &types.Event{
+					SerialNumber: 405419896,
+					Index:        18,
+					Type:         2,
+					Granted:      true,
+					Door:         2,
+					Direction:    1,
+					CardNumber:   6154413,
+					Timestamp:    types.DateTime(timestamp),
+					Reason:       6,
+				}, nil
+
+			case deviceID == 405419896 && index == 0xffffffff:
+				return &types.Event{
+					SerialNumber: 405419896,
+					Index:        19,
+					Type:         2,
+					Granted:      false,
+					Door:         2,
+					Direction:    2,
+					CardNumber:   6154414,
+					Timestamp:    types.DateTime(timestamp),
+					Reason:       15,
+				}, nil
+
 			case deviceID == 405419896 && index == 18:
 				return &types.Event{
 					SerialNumber: 405419896,
