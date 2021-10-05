@@ -9,6 +9,32 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
+func TestEventRangeString(t *testing.T) {
+	zero := uint32(0)
+	first := uint32(13)
+	last := uint32(37)
+
+	vector := []struct {
+		events   EventRange
+		expected string
+	}{
+		{EventRange{}, "{ First:-, Last:- }"},
+		{EventRange{First: &zero, Last: &zero}, "{ First:-, Last:- }"},
+		{EventRange{First: &first, Last: &zero}, "{ First:13, Last:- }"},
+		{EventRange{First: &zero, Last: &last}, "{ First:-, Last:37 }"},
+		{EventRange{First: &first, Last: &last}, "{ First:13, Last:37 }"},
+		{EventRange{First: &last, Last: &first}, "{ First:37, Last:13 }"},
+	}
+
+	for _, v := range vector {
+		s := fmt.Sprintf("%v", v.events)
+
+		if s != v.expected {
+			t.Errorf("incorrect EventRange string - expected:%v, got:%v", v.expected, s)
+		}
+	}
+}
+
 func TestIncrementEventIndex(t *testing.T) {
 	vector := []struct {
 		index    uint32

@@ -52,8 +52,19 @@ type EventRange struct {
 	Last  *uint32 `json:"last,omitempty"`
 }
 
-func (e *EventRange) String() string {
-	return fmt.Sprintf("{ First:%v, Last:%v }", e.First, e.Last)
+func (e EventRange) String() string {
+	first := "-"
+	last := "-"
+
+	if e.First != nil && *e.First != 0 {
+		first = fmt.Sprintf("%v", *e.First)
+	}
+
+	if e.Last != nil && *e.Last != 0 {
+		last = fmt.Sprintf("%v", *e.Last)
+	}
+
+	return fmt.Sprintf("{ First:%v, Last:%v }", first, last)
 }
 
 type EventIndex uint32
