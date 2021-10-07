@@ -77,7 +77,7 @@ func TestMarshal(t *testing.T) {
 	}
 
 	config := struct {
-		System     System
+		System     System        `conf:""`
 		Ignore     string        `conf:"-"`
 		UdpAddress *net.UDPAddr  `conf:"udp.address"`
 		Interface  testType      `conf:"interface.value"`
@@ -113,6 +113,35 @@ func TestMarshal(t *testing.T) {
 		Embedded: Embedded{
 			Name: "zxcvb",
 			ID:   67890,
+		},
+	}
+
+	bytes, err := Marshal(config)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	if !reflect.DeepEqual(bytes, configuration) {
+		l, ls, p, q := diff(string(configuration), string(bytes))
+		t.Errorf("conf not marshaled correctly:\n%s\n>> line %d:\n>> %s\n--------\n   %s\n   %s\n--------\n", string(bytes), l, ls, p, q)
+	}
+}
+
+func TestMarshalWithMisspeltTag(t *testing.T) {
+	var configuration = []byte(`socket = socket
+`)
+
+	config := struct {
+		Socket string `conf:"socket"`
+		RPC    struct {
+			Socket string `conf:"socket"`
+		} `config:"rpc"`
+	}{
+		Socket: "socket",
+		RPC: struct {
+			Socket string `conf:"socket"`
+		}{
+			Socket: "rpc-socket",
 		},
 	}
 
@@ -225,6 +254,40 @@ func TestUnmarshal(t *testing.T) {
 
 	if config.ID != uint(67890) {
 		t.Errorf("Expected 'embedded.id' value '%v', got: '%v'", uint(67890), config.ID)
+	}
+}
+
+func TestUnmarshalWithMisspeltTag(t *testing.T) {
+	var configuration = []byte(`
+socket = qwerty
+rpc.socket = uiop
+`)
+
+	config := struct {
+		Socket string `conf:"socket"`
+		RPC    struct {
+			Socket string `conf:"socket"`
+		} `config:"rpc"`
+	}{
+		Socket: "socket",
+		RPC: struct {
+			Socket string `conf:"socket"`
+		}{
+			Socket: "rpc-socket",
+		},
+	}
+
+	err := Unmarshal(configuration, &config)
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+
+	if config.Socket != "qwerty" {
+		t.Errorf("Expected 'socket' %v, got: %v", "qwerty", config.Socket)
+	}
+
+	if config.RPC.Socket != "rpc-socket" {
+		t.Errorf("Expected 'rpc.socket' %v, got: %v", "rpc-socket", config.RPC.Socket)
 	}
 }
 

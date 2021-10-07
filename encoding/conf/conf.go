@@ -63,7 +63,14 @@ func marshal(s reflect.Value) ([]byte, error) {
 		for i := 0; i < N; i++ {
 			f := s.Field(i)
 			t := s.Type().Field(i)
-			tag := t.Tag.Get("conf")
+			tag := strings.TrimSpace(t.Tag.Get("conf"))
+
+			// embedded struct ?
+			if _, ok := t.Tag.Lookup("conf"); !ok {
+				if f.Kind() != reflect.Struct || !t.Anonymous {
+					continue
+				}
+			}
 
 			if tag == "-" {
 				continue
@@ -192,13 +199,20 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 	for i := 0; i < N; i++ {
 		f := s.Field(i)
 		t := s.Type().Field(i)
-		tag := strings.TrimSpace(t.Tag.Get("conf"))
+		tag := t.Tag.Get("conf")
 
 		if !f.CanSet() {
 			continue
 		}
 
-		tag = prefix + tag
+		// embedded struct ?
+		if _, ok := t.Tag.Lookup("conf"); !ok {
+			if f.Kind() != reflect.Struct || !t.Anonymous {
+				continue
+			}
+		}
+
+		tag = prefix + strings.TrimSpace(tag)
 
 		// Unmarshal value fields with UnmarshalConf{} interface
 		if u, ok := f.Addr().Interface().(Unmarshaler); ok {

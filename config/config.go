@@ -118,7 +118,7 @@ UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
 {{end}}`
 
 type Config struct {
-	System
+	System      `conf:""`
 	Devices     DeviceMap `conf:"/^UT0311-L0x\\.([0-9]+)\\.(.*)/"`
 	REST        `conf:"rest"`
 	MQTT        `conf:"mqtt"`
