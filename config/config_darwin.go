@@ -31,6 +31,7 @@ const (
 	httpdGroupsFile      string = "/usr/local/var/com.github.uhppoted/httpd/system/groups.json"
 	httpdCardsFile       string = "/usr/local/var/com.github.uhppoted/httpd/system/cards.json"
 	httpdEventsFile      string = "/usr/local/var/com.github.uhppoted/httpd/system/events.json"
+	httpdLogsFile        string = "/usr/local/var/com.github.uhppoted/httpd/system/logs.json"
 	httpdRulesACL        string = "/usr/local/etc/com.github.uhppoted/httpd/acl.grl"
 	httpdRulesSystem     string = "/usr/local/etc/com.github.uhppoted/httpd/system.grl"
 	httpdRulesCards      string = "/usr/local/etc/com.github.uhppoted/httpd/cards.grl"

@@ -31,6 +31,7 @@ const (
 	httpdGroupsFile      string = "/var/uhppoted/httpd/system/groups.json"
 	httpdCardsFile       string = "/var/uhppoted/httpd/system/cards.json"
 	httpdEventsFile      string = "/var/uhppoted/httpd/system/events.json"
+	httpdLogsFile        string = "/var/uhppoted/httpd/system/logs.json"
 	httpdRulesACL        string = "/var/uhppoted/httpd/acl.grl"
 	httpdRulesSystem     string = "/var/uhppoted/httpd/system.grl"
 	httpdRulesCards      string = "/var/uhppoted/httpd/cards.grl"
