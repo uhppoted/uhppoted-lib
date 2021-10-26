@@ -32,7 +32,7 @@ const (
 	httpdRulesDoors     string = "/etc/uhppoted/httpd/doors.grl"
 	httpdRulesGroups    string = "/etc/uhppoted/httpd/groups.grl"
 
-	httpdControllersFile string = "/var/uhppoted/httpd/system/controlers.json"
+	httpdControllersFile string = "/var/uhppoted/httpd/system/controllers.json"
 	httpdDoorsFile       string = "/var/uhppoted/httpd/system/doors.json"
 	httpdGroupsFile      string = "/var/uhppoted/httpd/system/groups.json"
 	httpdCardsFile       string = "/var/uhppoted/httpd/system/cards.json"
