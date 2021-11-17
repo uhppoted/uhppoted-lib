@@ -44,6 +44,7 @@ type HTTPD struct {
 			Cards  string `conf:"cards"`
 			Doors  string `conf:"doors"`
 			Groups string `conf:"groups"`
+			Users  string `conf:"users"`
 		} `conf:"rules"`
 	} `conf:"db"`
 	Audit struct {
@@ -117,6 +118,7 @@ func NewHTTPD() *HTTPD {
 				Cards  string `conf:"cards"`
 				Doors  string `conf:"doors"`
 				Groups string `conf:"groups"`
+				Users  string `conf:"users"`
 			} `conf:"rules"`
 		}{
 			Rules: struct {
@@ -125,12 +127,14 @@ func NewHTTPD() *HTTPD {
 				Cards  string `conf:"cards"`
 				Doors  string `conf:"doors"`
 				Groups string `conf:"groups"`
+				Users  string `conf:"users"`
 			}{
 				ACL:    httpdRulesACL,
 				System: httpdRulesSystem,
 				Cards:  httpdRulesCards,
 				Doors:  httpdRulesDoors,
 				Groups: httpdRulesGroups,
+				Users:  httpdRulesUsers,
 			},
 		},
 		Audit: struct {
