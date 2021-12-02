@@ -36,6 +36,7 @@ const (
 	httpdRulesGroups    string = _etc + "/httpd/groups.grl"
 	httpdRulesUsers     string = _etc + "/httpd/users.grl"
 
+	httpdInterfacesFile  string = _var + "/httpd/system/interfaces.json"
 	httpdControllersFile string = _var + "/httpd/system/controllers.json"
 	httpdDoorsFile       string = _var + "/httpd/system/doors.json"
 	httpdGroupsFile      string = _var + "/httpd/system/groups.json"

@@ -23,6 +23,7 @@ type HTTPD struct {
 	} `conf:"security"`
 	RequestTimeout time.Duration `conf:"request.timeout"`
 	System         struct {
+		Interfaces  string        `conf:"interfaces"`
 		Controllers string        `conf:"controllers"`
 		Doors       string        `conf:"doors"`
 		Groups      string        `conf:"groups"`
@@ -78,6 +79,7 @@ func NewHTTPD() *HTTPD {
 		},
 		RequestTimeout: 5 * time.Second,
 		System: struct {
+			Interfaces  string        `conf:"interfaces"`
 			Controllers string        `conf:"controllers"`
 			Doors       string        `conf:"doors"`
 			Groups      string        `conf:"groups"`
@@ -92,6 +94,7 @@ func NewHTTPD() *HTTPD {
 				CacheExpiry time.Duration `conf:"expires"`
 			} `conf:"windows"`
 		}{
+			Interfaces:  httpdInterfacesFile,
 			Controllers: httpdControllersFile,
 			Doors:       httpdDoorsFile,
 			Groups:      httpdGroupsFile,
