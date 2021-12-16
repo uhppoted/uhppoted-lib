@@ -66,33 +66,3 @@ func (e EventRange) String() string {
 
 	return fmt.Sprintf("{ First:%v, Last:%v }", first, last)
 }
-
-type EventIndex uint32
-
-func (index EventIndex) increment(rollover uint32) EventIndex {
-	ix := uint32(index)
-
-	if ix < 1 {
-		ix = 1
-	} else if ix >= rollover {
-		ix = 1
-	} else {
-		ix += 1
-	}
-
-	return EventIndex(ix)
-}
-
-func (index EventIndex) decrement(rollover uint32) EventIndex {
-	ix := uint32(index)
-
-	if ix <= 1 {
-		ix = rollover
-	} else if ix > rollover {
-		ix = rollover
-	} else {
-		ix -= 1
-	}
-
-	return EventIndex(ix)
-}

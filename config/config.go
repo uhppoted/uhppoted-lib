@@ -24,7 +24,6 @@ type DeviceMap map[uint32]*Device
 type Device struct {
 	Name     string
 	Address  *net.UDPAddr
-	Rollover uint32
 	Doors    []string
 	TimeZone string
 }
@@ -59,7 +58,6 @@ const pretty = `# SYSTEM{{range .system}}
 # DEVICES{{range $id,$device := .devices}}
 UT0311-L0x.{{$id}}.name = {{$device.Name}}{{if $device.Address}}
 UT0311-L0x.{{$id}}.address = {{$device.Address}}{{end}}
-UT0311-L0x.{{$id}}.rollover = {{$device.Rollover}}
 UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
 UT0311-L0x.{{$id}}.door.2 = {{index $device.Doors 1}}
 UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
@@ -69,7 +67,6 @@ UT0311-L0x.{{$id}}.timezone = {{$device.TimeZone}}
 # Example configuration for UTO311-L04 with serial number 405419896
 # UT0311-L0x.405419896.name = D405419896
 # UT0311-L0x.405419896.address = 192.168.1.100:60000
-# UT0311-L0x.405419896.rollover = 100000
 # UT0311-L0x.405419896.door.1 = Front Door
 # UT0311-L0x.405419896.door.2 = Side Door
 # UT0311-L0x.405419896.door.3 = Garage
@@ -101,7 +98,6 @@ const dump = `# SYSTEM{{range .system}}
 # DEVICES{{range $id,$device := .devices}}
 UT0311-L0x.{{$id}}.name = {{$device.Name}}
 UT0311-L0x.{{$id}}.address = {{$device.Address}}
-UT0311-L0x.{{$id}}.rollover = {{$device.Rollover}}
 UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
 UT0311-L0x.{{$id}}.door.2 = {{index $device.Doors 1}}
 UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
@@ -110,7 +106,6 @@ UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
 # Example configuration for UTO311-L04 with serial number 405419896
 # UT0311-L0x.405419896.name = D405419896
 # UT0311-L0x.405419896.address = 192.168.1.100:60000
-# UT0311-L0x.405419896.rollover = 100000
 # UT0311-L0x.405419896.door.1 = Front Door
 # UT0311-L0x.405419896.door.2 = Side Door
 # UT0311-L0x.405419896.door.3 = Garage
@@ -138,8 +133,6 @@ type System struct {
 	HealthCheckIgnore   time.Duration        `conf:"monitoring.healthcheck.ignore"`
 	WatchdogInterval    time.Duration        `conf:"monitoring.watchdog.interval"`
 }
-
-const ROLLOVER = 100000
 
 func NewConfig() *Config {
 	bind, broadcast, listen := DefaultIpAddresses()
@@ -364,7 +357,6 @@ func (f DeviceMap) MarshalConf(tag string) ([]byte, error) {
 				fmt.Fprintf(&s, "UTO311-L0x.%d.address = %s\n", id, device.Address)
 			}
 
-			fmt.Fprintf(&s, "UTO311-L0x.%d.rollover = %d\n", id, device.Rollover)
 			for d, door := range device.Doors {
 				fmt.Fprintf(&s, "UTO311-L0x.%d.door.%d = %s\n", id, d+1, door)
 			}
@@ -398,8 +390,7 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 			d, ok := (*f)[uint32(id)]
 			if !ok || d == nil {
 				d = &Device{
-					Doors:    make([]string, 4),
-					Rollover: ROLLOVER,
+					Doors: make([]string, 4),
 				}
 
 				(*f)[uint32(id)] = d
@@ -421,14 +412,6 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 					}
 
 					copy(d.Address.IP, address.IP.To4())
-				}
-
-			case "rollover":
-				rollover, err := strconv.ParseUint(strings.TrimSpace(value), 10, 32)
-				if err != nil {
-					return f, fmt.Errorf("Device %v, invalid rollover '%s': %v", id, value, err)
-				} else {
-					d.Rollover = uint32(rollover)
 				}
 
 			case "door.1":

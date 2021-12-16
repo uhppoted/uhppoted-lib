@@ -8,8 +8,6 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-const ROLLOVER = uint32(100000)
-
 type Event struct {
 	DeviceID   uint32         `json:"device-id"`
 	Index      uint32         `json:"event-id"`
@@ -25,17 +23,9 @@ type Event struct {
 func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeResponse, error) {
 	u.debug("get-events", fmt.Sprintf("request  %+v", request))
 
-	devices := u.UHPPOTE.DeviceList()
 	device := uint32(request.DeviceID)
 	start := request.Start
 	end := request.End
-	rollover := ROLLOVER
-
-	if d, ok := devices[device]; ok {
-		if d.RolloverAt() != 0 {
-			rollover = d.RolloverAt()
-		}
-	}
 
 	f, err := u.UHPPOTE.GetEvent(device, 0)
 	if err != nil {
@@ -53,26 +43,26 @@ func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeRe
 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting last event index from %v (%w)", device, errors.New("Record not found")))
 	}
 
-	// The indexing logic below 'decrements' the index from l(ast) to f(irst) assuming that the on-device event store has
-	// a circular event buffer of size ROLLOVER. The logic assumes the events are ordered by datetime, which is reasonable
-	// but not necessarily true e.g. if the start/end interval includes a significant device time change.
+	// The indexing logic below 'decrements' the index from l(ast) to f(irst) assuming that the events are ordered by datetime,
+	// which is reasonable but not necessarily true e.g. if the start/end interval includes a significant device time change.
+	// TODO replace with binary search
 	var first *types.Event
 	var last *types.Event
-	var dates *DateRange
-	var events *EventRange
 
-	if f == nil || l == nil {
-		if start != nil || end != nil {
-			dates = &DateRange{
-				Start: start,
-				End:   end,
-			}
-		}
+	events := EventRange{}
+	dates := DateRange{}
 
-		events = &EventRange{}
-	} else {
+	if start != nil {
+		dates.Start = start
+	}
+
+	if end != nil {
+		dates.End = end
+	}
+
+	if f != nil && l != nil {
 		if start != nil || end != nil {
-			index := EventIndex(l.Index)
+			index := l.Index
 			for {
 				record, err := u.UHPPOTE.GetEvent(device, uint32(index))
 				if err != nil {
@@ -93,33 +83,27 @@ func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeRe
 					break
 				}
 
-				index = index.decrement(rollover)
+				index--
 			}
 
-			dates = &DateRange{
-				Start: start,
-				End:   end,
-			}
+			dates.Start = start
+			dates.End = end
 
 			if first != nil && last != nil {
-				events = &EventRange{
-					First: &first.Index,
-					Last:  &last.Index,
-				}
+				events.First = &first.Index
+				events.Last = &last.Index
 			}
 
 		} else {
-			events = &EventRange{
-				First: &f.Index,
-				Last:  &l.Index,
-			}
+			events.First = &f.Index
+			events.Last = &l.Index
 		}
 	}
 
 	response := GetEventRangeResponse{
 		DeviceID: DeviceID(device),
-		Dates:    dates,
-		Events:   events,
+		Dates:    &dates,
+		Events:   &events,
 	}
 
 	u.debug("get-events", fmt.Sprintf("response %+v", response))

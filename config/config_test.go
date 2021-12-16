@@ -412,7 +412,6 @@ func TestDefaultConfigWrite(t *testing.T) {
 # Example configuration for UTO311-L04 with serial number 405419896
 # UT0311-L0x.405419896.name = D405419896
 # UT0311-L0x.405419896.address = 192.168.1.100:60000
-# UT0311-L0x.405419896.rollover = 100000
 # UT0311-L0x.405419896.door.1 = Front Door
 # UT0311-L0x.405419896.door.2 = Side Door
 # UT0311-L0x.405419896.door.3 = Garage
@@ -584,7 +583,6 @@ httpd.retention = 5h30m0s
 
 # DEVICES
 UT0311-L0x.303986753.name = Q303986753
-UT0311-L0x.303986753.rollover = 100000
 UT0311-L0x.303986753.door.1 = A
 UT0311-L0x.303986753.door.2 = B
 UT0311-L0x.303986753.door.3 = C
@@ -593,7 +591,6 @@ UT0311-L0x.303986753.timezone = UTC
 
 UT0311-L0x.405419896.name = Z405419896
 UT0311-L0x.405419896.address = 192.168.1.100:60000
-UT0311-L0x.405419896.rollover = 98765
 UT0311-L0x.405419896.door.1 = D1
 UT0311-L0x.405419896.door.2 = D2
 UT0311-L0x.405419896.door.3 = D3
@@ -619,14 +616,12 @@ UT0311-L0x.405419896.timezone = France/Paris
 				Port: 60000,
 				Zone: "",
 			},
-			Rollover: 98765,
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 			TimeZone: "France/Paris",
 		},
 
 		303986753: &Device{
 			Name:     "Q303986753",
-			Rollover: 100000,
 			Doors:    []string{"A", "B", "C", "D"},
 			TimeZone: "UTC",
 		},

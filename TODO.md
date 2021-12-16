@@ -2,14 +2,16 @@
 
 ### IN PROGRESS
 
+- [ ] Remove _rollover_
+- [ ] Rework EventRange to use binary search (it's assuming ordered by date already)
+- [x] Commonalise `config` command a la `version`
+- [x] Fix `encoding/conf` marshalling/unmarshalling bug for items with a misspelt tag and 
+      common suffix.
+
 - [ ] Replace UHPPOTE parameter from ACL API with IUHPPOTED
 - [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
 - [ ] Rework Config to use plugins
       https://pkg.go.dev/plugin
-
-- [x] Commonalise `config` command a la `version`
-- [x] Fix `encoding/conf` marshalling/unmarshalling bug for items with a misspelt tag and 
-      common suffix.
 
 ## TODO
 

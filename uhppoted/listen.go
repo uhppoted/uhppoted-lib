@@ -95,18 +95,10 @@ func (u *UHPPOTED) retrieve(deviceID uint32, received *EventMap, handler EventHa
 			return
 		}
 
-		devices := u.UHPPOTE.DeviceList()
-		rollover := ROLLOVER
-		if d, ok := devices[deviceID]; ok {
-			if d.RolloverAt() != 0 {
-				rollover = d.RolloverAt()
-			}
-		}
+		from := index
+		to := event.Index
 
-		from := EventIndex(index)
-		to := EventIndex(event.Index)
-
-		if retrieved := u.fetch(deviceID, from.increment(rollover), to, handler); retrieved != 0 {
+		if retrieved := u.fetch(deviceID, from+1, to, handler); retrieved != 0 {
 			received.retrieved[deviceID] = retrieved
 			if err := received.store(); err != nil {
 				u.warn("listen", err)
@@ -170,12 +162,12 @@ func (u *UHPPOTED) onEvent(e *types.Status, received *EventMap, handler EventHan
 	u.info("event", fmt.Sprintf("%+v", e))
 
 	deviceID := uint32(e.SerialNumber)
-	last := EventIndex(e.Event.Index)
-	first := EventIndex(e.Event.Index)
+	last := e.Event.Index
+	first := e.Event.Index
 
 	retrieved, ok := received.retrieved[deviceID]
 	if ok && retrieved != uint32(last) {
-		first = EventIndex(retrieved)
+		first = retrieved
 	}
 
 	if eventID := u.fetch(deviceID, first, last, handler); eventID != 0 {
@@ -186,19 +178,10 @@ func (u *UHPPOTED) onEvent(e *types.Status, received *EventMap, handler EventHan
 	}
 }
 
-func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHandler) (retrieved uint32) {
-	devices := u.UHPPOTE.DeviceList()
+func (u *UHPPOTED) fetch(deviceID uint32, from, to uint32, handler EventHandler) (retrieved uint32) {
 	batchSize := BATCHSIZE
-	rollover := ROLLOVER
-
 	if u.ListenBatchSize > 0 {
 		batchSize = u.ListenBatchSize
-	}
-
-	if d, ok := devices[deviceID]; ok {
-		if d.RolloverAt() != 0 {
-			rollover = d.RolloverAt()
-		}
 	}
 
 	first, err := u.UHPPOTE.GetEvent(deviceID, 0)
@@ -221,19 +204,19 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 
 	if last.Index >= first.Index {
 		if uint32(from) < first.Index || uint32(from) > last.Index {
-			from = EventIndex(first.Index)
+			from = first.Index
 		}
 
 		if uint32(to) < first.Index || uint32(to) > last.Index {
-			to = EventIndex(last.Index)
+			to = last.Index
 		}
 	} else {
 		if uint32(from) < first.Index && uint32(from) > last.Index {
-			from = EventIndex(first.Index)
+			from = first.Index
 		}
 
 		if uint32(to) < first.Index && uint32(to) > last.Index {
-			to = EventIndex(last.Index)
+			to = last.Index
 		}
 	}
 
@@ -279,7 +262,7 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to EventIndex, handler EventHand
 			break
 		}
 
-		index = index.increment(rollover)
+		index++
 	}
 
 	return
