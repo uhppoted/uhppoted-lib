@@ -32,6 +32,7 @@ type IUHPPOTED interface {
 	PutTaskList(request PutTaskListRequest) (*PutTaskListResponse, int, error)
 	GetEventRange(request GetEventRangeRequest) (*GetEventRangeResponse, error)
 	GetEvents(request GetEventsRequest) (*GetEventResponse, error)
+	GetEvent(request GetEventRequest) (*GetEventResponse, error)
 	OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error)
 }
 

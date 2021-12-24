@@ -2,8 +2,8 @@
 
 ### IN PROGRESS
 
-- [ ] Remove _rollover_
 - [ ] Rework EventRange to use binary search (it's assuming ordered by date already)
+- [x] Remove _rollover_
 - [x] Commonalise `config` command a la `version`
 - [x] Fix `encoding/conf` marshalling/unmarshalling bug for items with a misspelt tag and 
       common suffix.
