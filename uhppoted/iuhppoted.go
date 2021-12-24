@@ -31,7 +31,7 @@ type IUHPPOTED interface {
 	ClearTimeProfiles(request ClearTimeProfilesRequest) (*ClearTimeProfilesResponse, error)
 	PutTaskList(request PutTaskListRequest) (*PutTaskListResponse, int, error)
 	GetEventRange(request GetEventRangeRequest) (*GetEventRangeResponse, error)
-	GetEvents(request GetEventsRequest) (*GetEventResponse, error)
+	GetEvents(request GetEventsRequest) (*GetEventsResponse, error)
 	GetEvent(request GetEventRequest) (*GetEventResponse, error)
 	OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error)
 }
