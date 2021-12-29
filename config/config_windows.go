@@ -39,6 +39,8 @@ var httpdRulesSystem string = filepath.Join(_etc, "httpd", "system.grl")
 var httpdRulesCards string = filepath.Join(_etc, "httpd", "cards.grl")
 var httpdRulesDoors string = filepath.Join(_etc, "httpd", "doors.grl")
 var httpdRulesGroups string = filepath.Join(_etc, "httpd", "groups.grl")
+var httpdRulesEvents string = filepath.Join(_etc, "httpd", "events.grl")
+var httpdRulesLogs string = filepath.Join(_etc, "httpd", "logs.grl")
 var httpdRulesUsers string = filepath.Join(_etc, "httpd", "users.grl")
 
 var httpdInterfacesFile string = filepath.Join(_var, "httpd", "system", "interfaces.json")

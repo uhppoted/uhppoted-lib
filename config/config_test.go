@@ -391,8 +391,10 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.db.rules.cards = %[32]s
 ; httpd.db.rules.doors = %[33]s
 ; httpd.db.rules.groups = %[34]s
-; httpd.db.rules.users = %[35]s
-; httpd.audit.file = %[36]s
+; httpd.db.rules.events = %[35]s
+; httpd.db.rules.logs = %[36]s
+; httpd.db.rules.users = %[37]s
+; httpd.audit.file = %[38]s
 ; httpd.retention = 6h0m0s
 
 # Wild Apricot
@@ -423,7 +425,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 		nonceServer, nonceClients,
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey,
 		httpdInterfacesFile, httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile, httpdEventsFile, httpdLogsFile,
-		httpdRulesACL, httpdRulesSystem, httpdRulesCards, httpdRulesDoors, httpdRulesGroups, httpdRulesUsers, httpdAuditFile)
+		httpdRulesACL, httpdRulesSystem, httpdRulesCards, httpdRulesDoors, httpdRulesGroups, httpdRulesEvents, httpdRulesLogs, httpdRulesUsers, httpdAuditFile)
 
 	config := NewConfig()
 
@@ -564,8 +566,10 @@ timeout = %[4]v
 ; httpd.db.rules.cards = %[33]s
 ; httpd.db.rules.doors = %[34]s
 ; httpd.db.rules.groups = %[35]s
-; httpd.db.rules.users = %[36]s
-; httpd.audit.file = %[37]s
+; httpd.db.rules.events = %[36]s
+; httpd.db.rules.logs = %[37]s
+; httpd.db.rules.users = %[38]s
+; httpd.audit.file = %[39]s
 httpd.retention = 5h30m0s
 
 # Wild Apricot
@@ -602,7 +606,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 		nonceServer, nonceClients,
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey,
 		httpdInterfacesFile, httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile, httpdEventsFile, httpdLogsFile,
-		httpdRulesACL, httpdRulesSystem, httpdRulesCards, httpdRulesDoors, httpdRulesGroups, httpdRulesUsers, httpdAuditFile)
+		httpdRulesACL, httpdRulesSystem, httpdRulesCards, httpdRulesDoors, httpdRulesGroups, httpdRulesEvents, httpdRulesLogs, httpdRulesUsers, httpdAuditFile)
 
 	config := NewConfig()
 

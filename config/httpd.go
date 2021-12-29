@@ -45,6 +45,8 @@ type HTTPD struct {
 			Cards  string `conf:"cards"`
 			Doors  string `conf:"doors"`
 			Groups string `conf:"groups"`
+			Events string `conf:"events"`
+			Logs   string `conf:"logs"`
 			Users  string `conf:"users"`
 		} `conf:"rules"`
 	} `conf:"db"`
@@ -121,6 +123,8 @@ func NewHTTPD() *HTTPD {
 				Cards  string `conf:"cards"`
 				Doors  string `conf:"doors"`
 				Groups string `conf:"groups"`
+				Events string `conf:"events"`
+				Logs   string `conf:"logs"`
 				Users  string `conf:"users"`
 			} `conf:"rules"`
 		}{
@@ -130,6 +134,8 @@ func NewHTTPD() *HTTPD {
 				Cards  string `conf:"cards"`
 				Doors  string `conf:"doors"`
 				Groups string `conf:"groups"`
+				Events string `conf:"events"`
+				Logs   string `conf:"logs"`
 				Users  string `conf:"users"`
 			}{
 				ACL:    httpdRulesACL,
@@ -137,6 +143,8 @@ func NewHTTPD() *HTTPD {
 				Cards:  httpdRulesCards,
 				Doors:  httpdRulesDoors,
 				Groups: httpdRulesGroups,
+				Events: httpdRulesEvents,
+				Logs:   httpdRulesLogs,
 				Users:  httpdRulesUsers,
 			},
 		},
