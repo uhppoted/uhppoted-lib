@@ -3,7 +3,6 @@ package uhppoted
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
 )
@@ -18,109 +17,6 @@ type Event struct {
 	CardNumber uint32         `json:"card-number"`
 	Timestamp  types.DateTime `json:"timestamp"`
 	Reason     uint8          `json:"event-reason"`
-}
-
-func (u *UHPPOTED) GetEventRange(request GetEventRangeRequest) (*GetEventRangeResponse, error) {
-	u.debug("get-events", fmt.Sprintf("request  %+v", request))
-
-	device := uint32(request.DeviceID)
-	start := request.Start
-	end := request.End
-
-	f, err := u.UHPPOTE.GetEvent(device, 0)
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting first event index from %v (%w)", device, err))
-	}
-
-	l, err := u.UHPPOTE.GetEvent(device, 0xffffffff)
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting last event index from %v (%w)", device, err))
-	}
-
-	if f == nil && l != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting first event index from %v (%w)", device, errors.New("Record not found")))
-	} else if f != nil && l == nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting last event index from %v (%w)", device, errors.New("Record not found")))
-	}
-
-	// The indexing logic below 'decrements' the index from l(ast) to f(irst) assuming that the events are ordered by datetime,
-	// which is reasonable but not necessarily true e.g. if the start/end interval includes a significant device time change.
-	// TODO replace with binary search
-	var first *types.Event
-	var last *types.Event
-
-	events := EventRange{}
-	dates := DateRange{}
-
-	if start != nil {
-		dates.Start = start
-	}
-
-	if end != nil {
-		dates.End = end
-	}
-
-	if f != nil && l != nil {
-		if start != nil || end != nil {
-			index := l.Index
-			for {
-				record, err := u.UHPPOTE.GetEvent(device, uint32(index))
-				if err != nil {
-					return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting event for index %v from %v (%w)", index, device, err))
-				}
-
-				if in(record, start, end) {
-					if last == nil {
-						last = record
-					}
-
-					first = record
-				} else if first != nil || last != nil {
-					break
-				}
-
-				if uint32(index) == f.Index {
-					break
-				}
-
-				index--
-			}
-
-			dates.Start = start
-			dates.End = end
-
-			if first != nil && last != nil {
-				events.First = &first.Index
-				events.Last = &last.Index
-			}
-
-		} else {
-			events.First = &f.Index
-			events.Last = &l.Index
-		}
-	}
-
-	response := GetEventRangeResponse{
-		DeviceID: DeviceID(device),
-		Dates:    &dates,
-		Events:   &events,
-	}
-
-	u.debug("get-events", fmt.Sprintf("response %+v", response))
-
-	return &response, nil
-}
-
-func in(record *types.Event, start, end *types.DateTime) bool {
-	if start != nil && time.Time(record.Timestamp).Before(time.Time(*start)) {
-		return false
-	}
-
-	if end != nil && time.Time(record.Timestamp).After(time.Time(*end)) {
-		return false
-	}
-
-	return true
 }
 
 func (u *UHPPOTED) GetEvent(request GetEventRequest) (*GetEventResponse, error) {
@@ -192,7 +88,7 @@ func (u *UHPPOTED) GetEvents(request GetEventsRequest) (*GetEventsResponse, erro
 		index := current.Index
 		next := index + 1
 
-		if index == 0 {
+		if index == 0 || index < first.Index {
 			index = first.Index
 			next = first.Index
 		}
