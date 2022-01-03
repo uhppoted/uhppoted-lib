@@ -13,39 +13,21 @@ func TestGetEvents(t *testing.T) {
 	timestamp, _ := time.ParseInLocation("2006-01-02 15:04:05", "2019-02-10 07:12:01", time.Local)
 	index := uint32(17)
 
-	events := []Event{
-		Event{
-			DeviceID:   405419896,
-			Index:      18,
-			Type:       2,
-			Granted:    true,
-			Door:       2,
-			Direction:  1,
-			CardNumber: 6154413,
-			Timestamp:  types.DateTime(timestamp),
-			Reason:     6,
-		},
-		Event{
-			DeviceID:   405419896,
-			Index:      19,
-			Type:       2,
-			Granted:    false,
-			Door:       2,
-			Direction:  2,
-			CardNumber: 6154414,
-			Timestamp:  types.DateTime(timestamp),
-			Reason:     15,
-		},
-	}
-
 	request := GetEventsRequest{
 		DeviceID: 405419896,
-		Max:      2,
 	}
 
 	expected := GetEventsResponse{
 		DeviceID: 405419896,
-		Events:   events,
+		Events: struct {
+			First   uint32 `json:"first,omitempty"`
+			Last    uint32 `json:"last,omitempty"`
+			Current uint32 `json:"current,omitempty"`
+		}{
+			First:   39,
+			Last:    107,
+			Current: 17,
+		},
 	}
 
 	mock := stub{
@@ -78,7 +60,7 @@ func TestGetEvents(t *testing.T) {
 			case deviceID == 405419896 && index == 0:
 				return &types.Event{
 					SerialNumber: 405419896,
-					Index:        18,
+					Index:        39,
 					Type:         2,
 					Granted:      true,
 					Door:         2,
@@ -91,32 +73,7 @@ func TestGetEvents(t *testing.T) {
 			case deviceID == 405419896 && index == 0xffffffff:
 				return &types.Event{
 					SerialNumber: 405419896,
-					Index:        19,
-					Type:         2,
-					Granted:      false,
-					Door:         2,
-					Direction:    2,
-					CardNumber:   6154414,
-					Timestamp:    types.DateTime(timestamp),
-					Reason:       15,
-				}, nil
-
-			case deviceID == 405419896 && index == 18:
-				return &types.Event{
-					SerialNumber: 405419896,
-					Index:        18,
-					Type:         2,
-					Granted:      true,
-					Door:         2,
-					Direction:    1,
-					CardNumber:   6154413,
-					Timestamp:    types.DateTime(timestamp),
-					Reason:       6,
-				}, nil
-			case deviceID == 405419896 && index == 19:
-				return &types.Event{
-					SerialNumber: 405419896,
-					Index:        19,
+					Index:        107,
 					Type:         2,
 					Granted:      false,
 					Door:         2,
@@ -148,10 +105,6 @@ func TestGetEvents(t *testing.T) {
 
 	if !reflect.DeepEqual(*response, expected) {
 		t.Errorf("Incorrect response:\n   expected: %+v\n   got:      %+v\n", expected, *response)
-	}
-
-	if index != uint32(19) {
-		t.Errorf("Failed to update controller event index - expected: %v\n   got:      %v\n", 19, index)
 	}
 }
 

@@ -253,7 +253,7 @@ type PutTaskListResponse struct {
 
 type GetEventRequest struct {
 	DeviceID DeviceID
-	EventID  uint32
+	Index    uint32
 }
 
 type GetEventResponse struct {
@@ -263,12 +263,15 @@ type GetEventResponse struct {
 
 type GetEventsRequest struct {
 	DeviceID DeviceID
-	Max      int
 }
 
 type GetEventsResponse struct {
 	DeviceID DeviceID `json:"device-id,omitempty"`
-	Events   []Event  `json:"events"`
+	Events   struct {
+		First   uint32 `json:"first,omitempty"`
+		Last    uint32 `json:"last,omitempty"`
+		Current uint32 `json:"current,omitempty"`
+	} `json:"events"`
 }
 
 type RecordSpecialEventsRequest struct {
