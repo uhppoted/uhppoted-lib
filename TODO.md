@@ -7,7 +7,12 @@
 - [x] Commonalise `config` command a la `version`
 - [x] Fix `encoding/conf` marshalling/unmarshalling bug for items with a misspelt tag and 
       common suffix.
+- [x] Remove GetEvents date range
+- [x] Rework GetEvents as GetEventIndices and just return native values
+- [x] GetNextEvent
+- [x] Get modularized OpenAPI stuff to at least 'bundle'
 
+- [ ] Simplify all the IUHPPOTED functions - no need to be so unsuccessfully generic
 - [ ] Replace UHPPOTE parameter from ACL API with IUHPPOTED
 - [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
 - [ ] Rework Config to use plugins

@@ -30,9 +30,11 @@ type IUHPPOTED interface {
 	PutTimeProfile(request PutTimeProfileRequest) (*PutTimeProfileResponse, error)
 	ClearTimeProfiles(request ClearTimeProfilesRequest) (*ClearTimeProfilesResponse, error)
 	PutTaskList(request PutTaskListRequest) (*PutTaskListResponse, int, error)
-	GetEvents(request GetEventsRequest) (*GetEventsResponse, error)
-	GetEvent(request GetEventRequest) (*GetEventResponse, error)
 	OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error)
+
+	GetEventIndices(deviceID uint32) (uint32, uint32, uint32, error)
+	GetEvent(deviceID uint32, index uint32) (*Event, error)
+	GetNextEvent(deviceID uint32) (*Event, error)
 }
 
 type GetDevicesRequest struct {
@@ -249,29 +251,6 @@ type PutTaskListRequest struct {
 type PutTaskListResponse struct {
 	DeviceID DeviceID `json:"device-id"`
 	Warnings []error  `json:"warnings"`
-}
-
-type GetEventRequest struct {
-	DeviceID DeviceID
-	Index    uint32
-}
-
-type GetEventResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Event    Event    `json:"event"`
-}
-
-type GetEventsRequest struct {
-	DeviceID DeviceID
-}
-
-type GetEventsResponse struct {
-	DeviceID DeviceID `json:"device-id,omitempty"`
-	Events   struct {
-		First   uint32 `json:"first,omitempty"`
-		Last    uint32 `json:"last,omitempty"`
-		Current uint32 `json:"current,omitempty"`
-	} `json:"events"`
 }
 
 type RecordSpecialEventsRequest struct {

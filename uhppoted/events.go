@@ -18,164 +18,108 @@ type Event struct {
 	Reason     uint8          `json:"event-reason"`
 }
 
-func (u *UHPPOTED) GetEvents(request GetEventsRequest) (*GetEventsResponse, error) {
-	u.debug("get-events", fmt.Sprintf("request  %+v", request))
+func (u *UHPPOTED) GetEventIndices(deviceID uint32) (uint32, uint32, uint32, error) {
+	var first uint32 = 0
+	var last uint32 = 0
+	var current uint32 = 0
 
-	device := uint32(request.DeviceID)
-
-	events := struct {
-		First   uint32 `json:"first,omitempty"`
-		Last    uint32 `json:"last,omitempty"`
-		Current uint32 `json:"current,omitempty"`
-	}{}
-
-	first, err := u.UHPPOTE.GetEvent(device, 0)
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting first event index from %v (%w)", device, err))
-	} else if first != nil {
-		events.First = first.Index
+	if v, err := u.UHPPOTE.GetEvent(deviceID, 0); err != nil {
+		return 0, 0, 0, err
+	} else if v != nil {
+		first = v.Index
 	}
 
-	last, err := u.UHPPOTE.GetEvent(device, 0xffffffff)
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting last event index from %v (%w)", device, err))
-	} else if last != nil {
-		events.Last = last.Index
+	if v, err := u.UHPPOTE.GetEvent(deviceID, 0xffffffff); err != nil {
+		return 0, 0, 0, err
+	} else if v != nil {
+		last = v.Index
 	}
 
-	current, err := u.UHPPOTE.GetEventIndex(device)
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting current event index from %v (%w)", device, err))
-	} else if current != nil {
-		events.Current = current.Index
+	if v, err := u.UHPPOTE.GetEventIndex(deviceID); err != nil {
+		return 0, 0, 0, err
+	} else if v != nil {
+		current = v.Index
 	}
 
-	response := GetEventsResponse{
-		DeviceID: DeviceID(device),
-		Events:   events,
-	}
-
-	u.debug("get-events", fmt.Sprintf("response %+v", response))
-
-	return &response, nil
+	return first, last, current, nil
 }
 
-func (u *UHPPOTED) GetEvent(request GetEventRequest) (*GetEventResponse, error) {
-	u.debug("get-events", fmt.Sprintf("request  %+v", request))
-
-	device := uint32(request.DeviceID)
-	index := request.Index
-
-	event, err := u.UHPPOTE.GetEvent(device, index)
+func (u *UHPPOTED) GetEvent(deviceID uint32, index uint32) (*Event, error) {
+	event, err := u.UHPPOTE.GetEvent(deviceID, index)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, err)
+	} else if event == nil {
+		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, deviceID))
+	} else if index != 0 && index != 0xffffffff && event.Index != index {
+		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, deviceID))
 	}
 
-	if event == nil {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, device))
-	}
-
-	if index != 0 && index != 0xffffffff && event.Index != index {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, device))
-	}
-
-	response := GetEventResponse{
-		DeviceID: request.DeviceID,
-		Event: Event{
-			DeviceID:   uint32(event.SerialNumber),
-			Index:      event.Index,
-			Type:       event.Type,
-			Granted:    event.Granted,
-			Door:       event.Door,
-			Direction:  event.Direction,
-			CardNumber: event.CardNumber,
-			Timestamp:  event.Timestamp,
-			Reason:     event.Reason,
-		},
-	}
-
-	u.debug("get-event", fmt.Sprintf("response %+v", response))
-
-	return &response, nil
+	return &Event{
+		DeviceID:   uint32(event.SerialNumber),
+		Index:      event.Index,
+		Type:       event.Type,
+		Granted:    event.Granted,
+		Door:       event.Door,
+		Direction:  event.Direction,
+		CardNumber: event.CardNumber,
+		Timestamp:  event.Timestamp,
+		Reason:     event.Reason,
+	}, nil
 }
 
-// // Retrieves up to MAX events starting with the current controller event index. The current controller
-// // event index is updated on completion of this request.
-// func (u *UHPPOTED) GetEvents(request GetEventsRequest) (*GetEventsResponse, error) {
-// 	u.debug("get-events", fmt.Sprintf("request  %+v", request))
-//
-// 	device := uint32(request.DeviceID)
-// 	events := []Event{}
-//
-// 	first, err := u.UHPPOTE.GetEvent(device, 0)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting first event index from %v (%w)", device, err))
-// 	}
-//
-// 	last, err := u.UHPPOTE.GetEvent(device, 0xffffffff)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting last event index from %v (%w)", device, err))
-// 	}
-//
-// 	if first != nil && first.Index > 0 && last != nil && last.Index > 0 && last.Index != first.Index {
-// 		current, err := u.UHPPOTE.GetEventIndex(device)
-// 		if err != nil {
-// 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting current event index from %v (%w)", device, err))
-// 		} else if current == nil {
-// 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting current event index from %v (%w)", device, errors.New("Record not found")))
-// 		}
-//
-// 		max := request.Max
-// 		index := current.Index
-// 		next := index + 1
-//
-// 		if index == 0 || index < first.Index {
-// 			index = first.Index
-// 			next = first.Index
-// 		}
-//
-// 		for len(events) < max && index != last.Index {
-// 			e, err := u.UHPPOTE.GetEvent(device, next)
-// 			if err != nil {
-// 				return nil, err
-// 			} else if e == nil || e.Index != next {
-// 				if last.Index < first.Index {
-// 					next = 1
-// 				} else {
-// 					break
-// 				}
-// 			} else {
-// 				events = append(events, Event{
-// 					DeviceID:   device,
-// 					Index:      e.Index,
-// 					Type:       e.Type,
-// 					Granted:    e.Granted,
-// 					Door:       e.Door,
-// 					Direction:  e.Direction,
-// 					CardNumber: e.CardNumber,
-// 					Timestamp:  e.Timestamp,
-// 					Reason:     e.Reason,
-// 				})
-//
-// 				index = next
-// 				next = index + 1
-// 			}
-// 		}
-//
-// 		if _, err := u.UHPPOTE.SetEventIndex(device, index); err != nil {
-// 			return nil, err
-// 		}
-// 	}
-//
-// 	response := GetEventsResponse{
-// 		DeviceID: DeviceID(device),
-// 		Events:   events,
-// 	}
-//
-// 	u.debug("get-events", fmt.Sprintf("response %+v", response))
-//
-// 	return &response, nil
-// }
+// Retrieves the event immediately subsequent to the 'current' event index, or the 'first' event if the current event index
+// is less than the first event index. Return nil if the 'next' event is after the last event.
+func (u *UHPPOTED) GetNextEvent(deviceID uint32) (*Event, error) {
+	var first uint32 = 0
+	var current uint32 = 0
+
+	if v, err := u.UHPPOTE.GetEvent(deviceID, 0); err != nil {
+		return nil, err
+	} else if v != nil {
+		first = v.Index
+	}
+
+	if v, err := u.UHPPOTE.GetEventIndex(deviceID); err != nil {
+		return nil, err
+	} else if v != nil {
+		current = v.Index
+	}
+
+	index := current + 1
+	if index < first {
+		index = first
+	}
+
+	event, err := u.UHPPOTE.GetEvent(deviceID, index)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, err)
+	} else if event == nil {
+		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, deviceID))
+	} else if index != 0 && index != 0xffffffff && event.Index != index {
+		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, deviceID))
+	}
+
+	response, err := u.UHPPOTE.SetEventIndex(deviceID, index)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, err)
+	} else if response == nil {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("No response to set-event-index %v for %v", index, deviceID))
+	} else if response.Index != index {
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Failed to update event index %v", deviceID))
+	}
+
+	return &Event{
+		DeviceID:   uint32(event.SerialNumber),
+		Index:      event.Index,
+		Type:       event.Type,
+		Granted:    event.Granted,
+		Door:       event.Door,
+		Direction:  event.Direction,
+		CardNumber: event.CardNumber,
+		Timestamp:  event.Timestamp,
+		Reason:     event.Reason,
+	}, nil
+}
 
 // Unwraps the request and dispatches the corresponding controller command to enable or disable
 // door open, door close and door button press events for the controller.

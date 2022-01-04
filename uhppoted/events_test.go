@@ -9,26 +9,9 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-func TestGetEvents(t *testing.T) {
+func TestGetEventIndices(t *testing.T) {
 	timestamp, _ := time.ParseInLocation("2006-01-02 15:04:05", "2019-02-10 07:12:01", time.Local)
 	index := uint32(17)
-
-	request := GetEventsRequest{
-		DeviceID: 405419896,
-	}
-
-	expected := GetEventsResponse{
-		DeviceID: 405419896,
-		Events: struct {
-			First   uint32 `json:"first,omitempty"`
-			Last    uint32 `json:"last,omitempty"`
-			Current uint32 `json:"current,omitempty"`
-		}{
-			First:   39,
-			Last:    107,
-			Current: 17,
-		},
-	}
 
 	mock := stub{
 		getEventIndex: func(deviceID uint32) (*types.EventIndex, error) {
@@ -94,17 +77,21 @@ func TestGetEvents(t *testing.T) {
 		Log:             nil,
 	}
 
-	response, err := u.GetEvents(request)
+	first, last, current, err := u.GetEventIndices(405419896)
 	if err != nil {
 		t.Fatalf("Unexpected error (%v)", err)
 	}
 
-	if response == nil {
-		t.Fatalf("Invalid response (%v)", response)
+	if first != 39 {
+		t.Errorf("Incorrect 'FIRST' event - expected:%v, got:%v", 39, first)
 	}
 
-	if !reflect.DeepEqual(*response, expected) {
-		t.Errorf("Incorrect response:\n   expected: %+v\n   got:      %+v\n", expected, *response)
+	if last != 107 {
+		t.Errorf("Incorrect 'LAST' event - expected:%v, got:%v", 107, last)
+	}
+
+	if current != 17 {
+		t.Errorf("Incorrect 'CURRENT' event - expected:%v, got:%v", 17, current)
 	}
 }
 
