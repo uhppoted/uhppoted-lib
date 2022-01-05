@@ -49,9 +49,9 @@ func (u *UHPPOTED) GetEvent(deviceID uint32, index uint32) (*Event, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", InternalServerError, err)
 	} else if event == nil {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, deviceID))
+		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("%v: no event %v", deviceID, index))
 	} else if index != 0 && index != 0xffffffff && event.Index != index {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, deviceID))
+		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("%v: no event %v", deviceID, index))
 	}
 
 	return &Event{
@@ -92,11 +92,11 @@ func (u *UHPPOTED) GetNextEvent(deviceID uint32) (*Event, error) {
 
 	event, err := u.UHPPOTE.GetEvent(deviceID, index)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, err)
+		return nil, fmt.Errorf("%w", err)
 	} else if event == nil {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, deviceID))
+		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("%v: no event %v", deviceID, index))
 	} else if index != 0 && index != 0xffffffff && event.Index != index {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No event record for ID %v for %v", index, deviceID))
+		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("%v: no event %v", deviceID, index))
 	}
 
 	response, err := u.UHPPOTE.SetEventIndex(deviceID, index)
