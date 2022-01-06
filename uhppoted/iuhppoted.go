@@ -34,7 +34,7 @@ type IUHPPOTED interface {
 
 	GetEventIndices(deviceID uint32) (uint32, uint32, uint32, error)
 	GetEvent(deviceID uint32, index uint32) (*Event, error)
-	GetNextEvent(deviceID uint32) (*Event, error)
+	GetEvents(deviceID uint32, N int) ([]Event, error)
 }
 
 type GetDevicesRequest struct {
