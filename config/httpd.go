@@ -75,7 +75,7 @@ func NewHTTPD() *HTTPD {
 			Auth:          "basic",
 			AuthDB:        httpdAuthDB,
 			CookieMaxAge:  24,
-			LoginExpiry:   "5m",
+			LoginExpiry:   "1m",
 			SessionExpiry: "60m",
 			StaleTime:     6 * time.Hour,
 		},
