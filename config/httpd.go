@@ -14,12 +14,11 @@ type HTTPD struct {
 	TLSKey                   string `conf:"tls.key"`
 	RequireClientCertificate bool   `conf:"tls.client.certificates.required"`
 	Security                 struct {
-		Auth          string        `conf:"auth"`
-		AuthDB        string        `conf:"local.db"`
-		CookieMaxAge  int           `conf:"cookie.max-age"`
-		LoginExpiry   string        `conf:"login.expiry"`
-		SessionExpiry string        `conf:"session.expiry"`
-		StaleTime     time.Duration `conf:"stale-time"`
+		Auth          string `conf:"auth"`
+		AuthDB        string `conf:"local.db"`
+		CookieMaxAge  int    `conf:"cookie.max-age"`
+		LoginExpiry   string `conf:"login.expiry"`
+		SessionExpiry string `conf:"session.expiry"`
 	} `conf:"security"`
 	RequestTimeout time.Duration `conf:"request.timeout"`
 	System         struct {
@@ -65,19 +64,17 @@ func NewHTTPD() *HTTPD {
 		TLSKey:                   httpdTLSKey,
 		RequireClientCertificate: false,
 		Security: struct {
-			Auth          string        `conf:"auth"`
-			AuthDB        string        `conf:"local.db"`
-			CookieMaxAge  int           `conf:"cookie.max-age"`
-			LoginExpiry   string        `conf:"login.expiry"`
-			SessionExpiry string        `conf:"session.expiry"`
-			StaleTime     time.Duration `conf:"stale-time"`
+			Auth          string `conf:"auth"`
+			AuthDB        string `conf:"local.db"`
+			CookieMaxAge  int    `conf:"cookie.max-age"`
+			LoginExpiry   string `conf:"login.expiry"`
+			SessionExpiry string `conf:"session.expiry"`
 		}{
 			Auth:          "basic",
 			AuthDB:        httpdAuthDB,
 			CookieMaxAge:  24,
 			LoginExpiry:   "1m",
 			SessionExpiry: "60m",
-			StaleTime:     6 * time.Hour,
 		},
 		RequestTimeout: 5 * time.Second,
 		System: struct {

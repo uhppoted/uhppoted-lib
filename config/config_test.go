@@ -372,7 +372,6 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.security.cookie.max-age = 24
 ; httpd.security.login.expiry = 1m
 ; httpd.security.session.expiry = 60m
-; httpd.security.stale-time = 6h0m0s
 ; httpd.request.timeout = 5s
 ; httpd.system.interfaces = %[23]s
 ; httpd.system.controllers = %[24]s
@@ -547,7 +546,6 @@ timeout = %[4]v
 ; httpd.security.cookie.max-age = 24
 ; httpd.security.login.expiry = 1m
 ; httpd.security.session.expiry = 60m
-; httpd.security.stale-time = 6h0m0s
 ; httpd.request.timeout = 5s
 ; httpd.system.interfaces = %[24]s
 ; httpd.system.controllers = %[25]s
