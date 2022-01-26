@@ -11,6 +11,16 @@ clean:
 	go clean
 	rm -rf bin
 
+update:
+	go get -u github.com/uhppoted/uhppote-core@master
+	go get -u golang.org/x/sys
+	go mod tidy
+
+update-release:
+	go get -u github.com/uhppoted/uhppote-core
+	go get -u golang.org/x/sys
+	go mod tidy
+
 format: 
 	go fmt ./...
 
@@ -39,10 +49,6 @@ build-all: test vet
 	env GOOS=windows GOARCH=amd64       go build ./...
 
 release: build-all
-
-bump:
-	go get -u github.com/uhppoted/uhppote-core
-	go get -u golang.org/x/sys
 
 debug: build
 	go test ./... -run TestDefaultConfigWrite

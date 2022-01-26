@@ -1,4 +1,4 @@
-## v0.7.x
+## v0.7.2
 
 ### IN PROGRESS
 
@@ -10,15 +10,14 @@
 - [x] Remove GetEvents date range
 - [x] Rework GetEvents as GetEventIndices and just return native values
 - [x] GetNextEvent
-- [x] Get modularized OpenAPI stuff to at least 'bundle'
+
+## TODO
 
 - [ ] Simplify all the IUHPPOTED functions - no need to be so unsuccessfully generic
 - [ ] Replace UHPPOTE parameter from ACL API with IUHPPOTED
 - [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
 - [ ] Rework Config to use plugins
       https://pkg.go.dev/plugin
-
-## TODO
 
 1. Rework healthcheck to remove need for IUHPPOTE::DeviceList
 2. Rework healthcheck to remove need for IUHPPOTE::ListenAddr

@@ -4,15 +4,16 @@
 
 Shared library that implements the functionality common to multiple _uhppoted_ sub-projects. In particular:
 
+- _conf_ file marshaling
 - ACL (access control lists)
 - TSV encoding and decoding
-- _conf_ file marshaling
-- Wrapper functions for invoking functionality across multiple devices.
+- Wrapper functions for the rest and MQTT services to facilitate invoking controller functions on multiple devices.
 
 ## Releases
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.2    | Replaced event rollover with infinite event indexes to match controller implementation    |
 | v0.7.1    | Added support for task list functions from the extended API                               |
 | v0.7.0    | Added support for time profiles from the extended API                                     |
 | v0.6.12   | Additional validation of bind, broadcast and listen ports when loading configuration      |
@@ -50,8 +51,7 @@ go build -o bin ./...
 | *Dependency*                                             | *Description*                                          |
 | -------------------------------------------------------- | ------------------------------------------------------ |
 | [uhppote-core](https://github.com/uhppoted/uhppote-core) | Device level API implementation                        |
-| golang.org/x/sys/windows                                 | Support for Windows services                           |
-| golang.org/x/lint/golint                                 | Additional *lint* check for release builds             |
+| golang.org/x/sys                                         | Support for Windows services                           |
 
 
 
