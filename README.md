@@ -43,7 +43,7 @@ If you prefer not to use `make`:
 git clone https://github.com/uhppoted/uhppoted-lib.git
 cd uhppoted-lib
 mkdir bin
-go build -o bin ./...
+go build -trimpath -o bin ./...
 ```
 
 #### Dependencies

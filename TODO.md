@@ -1,15 +1,8 @@
-## v0.7.2
+## v0.7.x
 
 ### IN PROGRESS
 
-- [x] Remove _rollover_
-- [x] Remove EventRange (not practical)
-- [x] Commonalise `config` command a la `version`
-- [x] Fix `encoding/conf` marshalling/unmarshalling bug for items with a misspelt tag and 
-      common suffix.
-- [x] Remove GetEvents date range
-- [x] Rework GetEvents as GetEventIndices and just return native values
-- [x] GetNextEvent
+- [x] Add -trimpath to `go build`
 
 ## TODO
 
