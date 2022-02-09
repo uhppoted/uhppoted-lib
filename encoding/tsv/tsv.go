@@ -149,20 +149,20 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 			case tDate:
 				if v, err := types.DateFromString(value); err != nil {
 					return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
-				} else if v == nil {
+				} else if !v.IsValid() {
 					return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
 				} else {
-					f.Set(reflect.ValueOf(*v))
+					f.Set(reflect.ValueOf(v))
 				}
 
 			case tDatePtr:
 				if value != "" {
 					if v, err := types.DateFromString(value); err != nil {
 						return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
-					} else if v == nil {
+					} else if !v.IsValid() {
 						return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
 					} else {
-						f.Set(reflect.ValueOf(v))
+						f.Set(reflect.ValueOf(&v))
 					}
 				}
 

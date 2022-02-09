@@ -45,5 +45,6 @@ const (
 	httpdCardsFile       string = _var + "/httpd/system/cards.json"
 	httpdEventsFile      string = _var + "/httpd/system/events.json"
 	httpdLogsFile        string = _var + "/httpd/system/logs.json"
+	httpdUsersFile       string = _var + "/httpd/system/users.json"
 	httpdAuditFile       string = _var + "/httpd/audit/audit.log"
 )

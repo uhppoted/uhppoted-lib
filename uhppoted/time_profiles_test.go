@@ -9,10 +9,10 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-func date(s string) *types.Date {
+func pdate(s string) *types.Date {
 	d, _ := types.DateFromString(s)
 
-	return d
+	return &d
 }
 
 func hhmm(s string) types.HHmm {
@@ -25,8 +25,8 @@ func TestGetTimeProfiles(t *testing.T) {
 	profile := types.TimeProfile{
 		ID:              29,
 		LinkedProfileID: 19,
-		From:            date("2021-04-01"),
-		To:              date("2021-12-29"),
+		From:            pdate("2021-04-01"),
+		To:              pdate("2021-12-29"),
 		Weekdays: types.Weekdays{
 			time.Monday:    true,
 			time.Tuesday:   true,
@@ -89,8 +89,8 @@ func TestGetTimeProfile(t *testing.T) {
 	profile := types.TimeProfile{
 		ID:              29,
 		LinkedProfileID: 19,
-		From:            date("2021-04-01"),
-		To:              date("2021-12-29"),
+		From:            pdate("2021-04-01"),
+		To:              pdate("2021-12-29"),
 		Weekdays: types.Weekdays{
 			time.Monday:    true,
 			time.Tuesday:   true,
@@ -150,8 +150,8 @@ func TestGetTimeProfile(t *testing.T) {
 func TestSetTimeProfile(t *testing.T) {
 	linked := types.TimeProfile{
 		ID:   19,
-		From: date("2021-04-01"),
-		To:   date("2021-12-29"),
+		From: pdate("2021-04-01"),
+		To:   pdate("2021-12-29"),
 		Weekdays: types.Weekdays{
 			time.Monday:    true,
 			time.Tuesday:   true,
@@ -171,8 +171,8 @@ func TestSetTimeProfile(t *testing.T) {
 	profile := types.TimeProfile{
 		ID:              29,
 		LinkedProfileID: 19,
-		From:            date("2021-04-01"),
-		To:              date("2021-12-29"),
+		From:            pdate("2021-04-01"),
+		To:              pdate("2021-12-29"),
 		Weekdays: types.Weekdays{
 			time.Monday:    true,
 			time.Tuesday:   true,

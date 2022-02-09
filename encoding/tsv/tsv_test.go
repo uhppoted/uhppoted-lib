@@ -226,13 +226,13 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 func date(s string) types.Date {
 	d, _ := types.DateFromString(s)
 
-	return *d
+	return d
 }
 
 func pdate(s string) *types.Date {
 	d, _ := types.DateFromString(s)
 
-	return d
+	return &d
 }
 
 func hhmm(s string) types.HHmm {
