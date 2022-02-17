@@ -5,6 +5,7 @@ import (
 )
 
 type HTTPD struct {
+	HttpHTML                 string `conf:"html"`
 	HttpEnabled              bool   `conf:"http.enabled"`
 	HttpPort                 uint16 `conf:"http.port"`
 	HttpsEnabled             bool   `conf:"https.enabled"`
@@ -58,6 +59,7 @@ type HTTPD struct {
 
 func NewHTTPD() *HTTPD {
 	return &HTTPD{
+		HttpHTML:                 "",
 		HttpEnabled:              false,
 		HttpsEnabled:             true,
 		CACertificate:            httpdCACertificate,

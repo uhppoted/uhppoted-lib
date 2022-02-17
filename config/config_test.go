@@ -359,6 +359,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; aws.region = us-east-1
 
 # HTTPD
+; httpd.html = 
 ; httpd.http.enabled = false
 ; httpd.http.port = 0
 ; httpd.https.enabled = true
@@ -534,6 +535,7 @@ timeout = %[4]v
 ; aws.region = us-east-1
 
 # HTTPD
+; httpd.html = 
 ; httpd.http.enabled = false
 ; httpd.http.port = 0
 ; httpd.https.enabled = true
