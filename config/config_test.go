@@ -361,9 +361,9 @@ func TestDefaultConfigWrite(t *testing.T) {
 # HTTPD
 ; httpd.html = 
 ; httpd.http.enabled = false
-; httpd.http.port = 0
+; httpd.http.port = 8080
 ; httpd.https.enabled = true
-; httpd.https.port = 0
+; httpd.https.port = 8443
 ; httpd.tls.ca = %[20]s
 ; httpd.tls.certificate = %[21]s
 ; httpd.tls.key = %[22]s
@@ -537,9 +537,9 @@ timeout = %[4]v
 # HTTPD
 ; httpd.html = 
 ; httpd.http.enabled = false
-; httpd.http.port = 0
+; httpd.http.port = 8080
 ; httpd.https.enabled = true
-; httpd.https.port = 0
+; httpd.https.port = 8443
 ; httpd.tls.ca = %[21]s
 ; httpd.tls.certificate = %[22]s
 ; httpd.tls.key = %[23]s

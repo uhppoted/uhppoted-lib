@@ -61,7 +61,9 @@ func NewHTTPD() *HTTPD {
 	return &HTTPD{
 		HTML:                     "",
 		HttpEnabled:              false,
+		HttpPort:                 8080,
 		HttpsEnabled:             true,
+		HttpsPort:                8443,
 		CACertificate:            httpdCACertificate,
 		TLSCertificate:           httpdTLSCertificate,
 		TLSKey:                   httpdTLSKey,
