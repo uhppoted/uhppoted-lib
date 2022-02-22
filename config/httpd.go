@@ -41,14 +41,15 @@ type HTTPD struct {
 	} `conf:"system"`
 	DB struct {
 		Rules struct {
-			ACL    string `conf:"acl"`
-			System string `conf:"system"`
-			Cards  string `conf:"cards"`
-			Doors  string `conf:"doors"`
-			Groups string `conf:"groups"`
-			Events string `conf:"events"`
-			Logs   string `conf:"logs"`
-			Users  string `conf:"users"`
+			ACL         string `conf:"acl"`
+			Interfaces  string `conf:"interfaces"`
+			Controllers string `conf:"controllers"`
+			Cards       string `conf:"cards"`
+			Doors       string `conf:"doors"`
+			Groups      string `conf:"groups"`
+			Events      string `conf:"events"`
+			Logs        string `conf:"logs"`
+			Users       string `conf:"users"`
 		} `conf:"rules"`
 	} `conf:"db"`
 	Audit struct {
@@ -122,34 +123,37 @@ func NewHTTPD() *HTTPD {
 		},
 		DB: struct {
 			Rules struct {
-				ACL    string `conf:"acl"`
-				System string `conf:"system"`
-				Cards  string `conf:"cards"`
-				Doors  string `conf:"doors"`
-				Groups string `conf:"groups"`
-				Events string `conf:"events"`
-				Logs   string `conf:"logs"`
-				Users  string `conf:"users"`
+				ACL         string `conf:"acl"`
+				Interfaces  string `conf:"interfaces"`
+				Controllers string `conf:"controllers"`
+				Cards       string `conf:"cards"`
+				Doors       string `conf:"doors"`
+				Groups      string `conf:"groups"`
+				Events      string `conf:"events"`
+				Logs        string `conf:"logs"`
+				Users       string `conf:"users"`
 			} `conf:"rules"`
 		}{
 			Rules: struct {
-				ACL    string `conf:"acl"`
-				System string `conf:"system"`
-				Cards  string `conf:"cards"`
-				Doors  string `conf:"doors"`
-				Groups string `conf:"groups"`
-				Events string `conf:"events"`
-				Logs   string `conf:"logs"`
-				Users  string `conf:"users"`
+				ACL         string `conf:"acl"`
+				Interfaces  string `conf:"interfaces"`
+				Controllers string `conf:"controllers"`
+				Cards       string `conf:"cards"`
+				Doors       string `conf:"doors"`
+				Groups      string `conf:"groups"`
+				Events      string `conf:"events"`
+				Logs        string `conf:"logs"`
+				Users       string `conf:"users"`
 			}{
-				ACL:    httpdRulesACL,
-				System: httpdRulesSystem,
-				Cards:  httpdRulesCards,
-				Doors:  httpdRulesDoors,
-				Groups: httpdRulesGroups,
-				Events: httpdRulesEvents,
-				Logs:   httpdRulesLogs,
-				Users:  httpdRulesUsers,
+				ACL:         httpdRulesACL,
+				Interfaces:  httpdRulesInterfaces,
+				Controllers: httpdRulesControllers,
+				Cards:       httpdRulesCards,
+				Doors:       httpdRulesDoors,
+				Groups:      httpdRulesGroups,
+				Events:      httpdRulesEvents,
+				Logs:        httpdRulesLogs,
+				Users:       httpdRulesUsers,
 			},
 		},
 		Audit: struct {
