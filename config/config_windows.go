@@ -33,15 +33,26 @@ var httpdAuthDB string = filepath.Join(_etc, "httpd", "auth.json")
 var httpdCACertificate string = filepath.Join(_etc, "httpd", "ca.cert")
 var httpdTLSCertificate string = filepath.Join(_etc, "httpd", "uhppoted.cert")
 var httpdTLSKey string = filepath.Join(_etc, "httpd", "uhppoted.key")
-var httpdRulesACL string = filepath.Join(_etc, "httpd", "acl.grl")
-var httpdRulesInterfaces string = filepath.Join(_etc, "httpd", "interfaces.grl")
-var httpdRulesControllers string = filepath.Join(_etc, "httpd", "controllers.grl")
-var httpdRulesCards string = filepath.Join(_etc, "httpd", "cards.grl")
-var httpdRulesDoors string = filepath.Join(_etc, "httpd", "doors.grl")
-var httpdRulesGroups string = filepath.Join(_etc, "httpd", "groups.grl")
-var httpdRulesEvents string = filepath.Join(_etc, "httpd", "events.grl")
-var httpdRulesLogs string = filepath.Join(_etc, "httpd", "logs.grl")
-var httpdRulesUsers string = filepath.Join(_etc, "httpd", "users.grl")
+
+// var httpdRulesACL string = filepath.Join(_etc, "httpd", "acl.grl")
+// var httpdRulesInterfaces string = filepath.Join(_etc, "httpd", "interfaces.grl")
+// var httpdRulesControllers string = filepath.Join(_etc, "httpd", "controllers.grl")
+// var httpdRulesCards string = filepath.Join(_etc, "httpd", "cards.grl")
+// var httpdRulesDoors string = filepath.Join(_etc, "httpd", "doors.grl")
+// var httpdRulesGroups string = filepath.Join(_etc, "httpd", "groups.grl")
+// var httpdRulesEvents string = filepath.Join(_etc, "httpd", "events.grl")
+// var httpdRulesLogs string = filepath.Join(_etc, "httpd", "logs.grl")
+// var httpdRulesUsers string = filepath.Join(_etc, "httpd", "users.grl")
+
+var httpdRulesACL string = ""
+var httpdRulesInterfaces string = ""
+var httpdRulesControllers string = ""
+var httpdRulesCards string = ""
+var httpdRulesDoors string = ""
+var httpdRulesGroups string = ""
+var httpdRulesEvents string = ""
+var httpdRulesLogs string = ""
+var httpdRulesUsers string = ""
 
 var httpdInterfacesFile string = filepath.Join(_var, "httpd", "system", "interfaces.json")
 var httpdControllersFile string = filepath.Join(_var, "httpd", "system", "controllers.json")
