@@ -30,7 +30,7 @@ const (
 	httpdTLSCertificate string = _etc + "/httpd/uhppoted.cert"
 	httpdTLSKey         string = _etc + "/httpd/uhppoted.key"
 
-	// httpdRulesACL         string = _etc + "/httpd/acl.grl"
+	httpdRulesACL string = _etc + "/httpd/acl.grl"
 	// httpdRulesInterfaces  string = _etc + "/httpd/interfaces.grl"
 	// httpdRulesControllers string = _etc + "/httpd/controllers.grl"
 	// httpdRulesCards       string = _etc + "/httpd/cards.grl"
@@ -40,7 +40,6 @@ const (
 	// httpdRulesLogs        string = _etc + "/httpd/logs.grl"
 	// httpdRulesUsers       string = _etc + "/httpd/users.grl"
 
-	httpdRulesACL         string = ""
 	httpdRulesInterfaces  string = ""
 	httpdRulesControllers string = ""
 	httpdRulesCards       string = ""

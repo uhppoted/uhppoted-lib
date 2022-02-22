@@ -34,7 +34,8 @@ var httpdCACertificate string = filepath.Join(_etc, "httpd", "ca.cert")
 var httpdTLSCertificate string = filepath.Join(_etc, "httpd", "uhppoted.cert")
 var httpdTLSKey string = filepath.Join(_etc, "httpd", "uhppoted.key")
 
-// var httpdRulesACL string = filepath.Join(_etc, "httpd", "acl.grl")
+var httpdRulesACL string = filepath.Join(_etc, "httpd", "acl.grl")
+
 // var httpdRulesInterfaces string = filepath.Join(_etc, "httpd", "interfaces.grl")
 // var httpdRulesControllers string = filepath.Join(_etc, "httpd", "controllers.grl")
 // var httpdRulesCards string = filepath.Join(_etc, "httpd", "cards.grl")
@@ -44,7 +45,6 @@ var httpdTLSKey string = filepath.Join(_etc, "httpd", "uhppoted.key")
 // var httpdRulesLogs string = filepath.Join(_etc, "httpd", "logs.grl")
 // var httpdRulesUsers string = filepath.Join(_etc, "httpd", "users.grl")
 
-var httpdRulesACL string = ""
 var httpdRulesInterfaces string = ""
 var httpdRulesControllers string = ""
 var httpdRulesCards string = ""
