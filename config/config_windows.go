@@ -5,11 +5,10 @@ import (
 	"path/filepath"
 )
 
-// DefaultConfig is the default file path for the uhppoted configuration file
 var DefaultConfig = filepath.Join(workdir(), "uhppoted.conf")
 
-var _etc string = filepath.Join(workdir(), "etc")
-var _var string = filepath.Join(workdir(), "var")
+var _etc string = workdir()
+var _var string = workdir()
 
 var restUsers string = filepath.Join(workdir(), "rest", "users")
 var restGroups string = filepath.Join(workdir(), "rest", "groups")
