@@ -28,7 +28,7 @@ type Ticker struct {
 	mu   sync.Mutex
 }
 
-func (l *Ticker) Write(p []byte) (n int, err error) {
+func (l Ticker) Write(p []byte) (n int, err error) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
