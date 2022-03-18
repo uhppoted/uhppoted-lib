@@ -1,6 +1,6 @@
 module github.com/uhppoted/uhppoted-lib
 
-go 1.17
+go 1.18
 
 require (
 	github.com/uhppoted/uhppote-core v0.7.3-0.20220209060920-850b355446cc

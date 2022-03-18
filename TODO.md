@@ -6,6 +6,7 @@
 
 ## TODO
 
+- [ ] config.NewConfig should not return pointer
 - [ ] Simplify all the IUHPPOTED functions - no need to be so unsuccessfully generic
 - [ ] Replace UHPPOTE parameter from ACL API with IUHPPOTED
 - [ ] Rework PutTimeProfiles to return (response,BadRequestError) or somesuch rather than status code
