@@ -73,7 +73,7 @@ func putACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card) (*
 		return nil, err
 	}
 
-	diff := compare(current, cards)
+	diff := compare(deviceID, current, cards)
 
 	report := Report{
 		Unchanged: []uint32{},
@@ -141,7 +141,7 @@ func fakePutACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card
 		return nil, err
 	}
 
-	diff := compare(current, cards)
+	diff := compare(deviceID, current, cards)
 
 	report := Report{
 		Unchanged: []uint32{},

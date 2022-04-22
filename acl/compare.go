@@ -1,9 +1,10 @@
 package acl
 
 import (
-	"github.com/uhppoted/uhppote-core/types"
 	"reflect"
 	"sort"
+
+	"github.com/uhppoted/uhppote-core/types"
 )
 
 func Compare(src, dst ACL) (map[uint32]Diff, error) {
@@ -20,13 +21,13 @@ func Compare(src, dst ACL) (map[uint32]Diff, error) {
 	for k, _ := range m {
 		p := src[k]
 		q := dst[k]
-		m[k] = compare(p, q)
+		m[k] = compare(k, p, q)
 	}
 
 	return m, nil
 }
 
-func compare(p, q map[uint32]types.Card) Diff {
+func compare(device uint32, p, q map[uint32]types.Card) Diff {
 	cards := map[uint32]struct{}{}
 
 	for k, _ := range p {
