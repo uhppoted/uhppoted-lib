@@ -1,5 +1,9 @@
 ## CHANGELOG
 
+### IN PROGRESS
+
+1. Added `SetEventListener` function.
+
 ### v0.7.2
 
 1. Reworked `config` to support types.BindAddr, types.BroadcastAddr and types.ListenAddr

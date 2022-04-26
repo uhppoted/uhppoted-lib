@@ -103,6 +103,21 @@ func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, erro
 	return &response, nil
 }
 
+func (u *UHPPOTED) SetEventListener(deviceID uint32, address types.ListenAddr) (bool, error) {
+	u.debug("set-event-listener", fmt.Sprintf("%v %v", deviceID, address))
+
+	result, err := u.UHPPOTE.SetListener(deviceID, net.UDPAddr(address))
+	if err != nil {
+		return false, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("set-event-listener: %v %w", deviceID, err))
+	} else if result == nil {
+		return false, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("set-event-listener: %v  no response", deviceID))
+	} else if !result.Succeeded {
+		return false, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("set-event-listener: %v  failed", deviceID))
+	}
+
+	return true, nil
+}
+
 func identify(deviceID types.SerialNumber) string {
 	id := strconv.FormatUint(uint64(deviceID), 10)
 
