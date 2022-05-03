@@ -398,6 +398,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.db.rules.users = %[39]s
 ; httpd.audit.file = %[40]s
 ; httpd.retention = 6h0m0s
+; httpd.timezones = 
 
 # Wild Apricot
 ; wild-apricot.http.client-timeout = 10s
@@ -575,6 +576,7 @@ timeout = %[4]v
 ; httpd.db.rules.users = %[40]s
 ; httpd.audit.file = %[41]s
 httpd.retention = 5h30m0s
+; httpd.timezones = 
 
 # Wild Apricot
 ; wild-apricot.http.client-timeout = 10s
