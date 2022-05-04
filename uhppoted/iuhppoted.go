@@ -13,9 +13,7 @@ type IUHPPOTED interface {
 	GetTime(request GetTimeRequest) (*GetTimeResponse, error)
 	SetTime(request SetTimeRequest) (*SetTimeResponse, error)
 	GetDoorDelay(request GetDoorDelayRequest) (*GetDoorDelayResponse, error)
-	SetDoorDelay(request SetDoorDelayRequest) (*SetDoorDelayResponse, error)
 	GetDoorControl(request GetDoorControlRequest) (*GetDoorControlResponse, error)
-	SetDoorControl(request SetDoorControlRequest) (*SetDoorControlResponse, error)
 	RecordSpecialEvents(request RecordSpecialEventsRequest) (*RecordSpecialEventsResponse, error)
 	GetStatus(request GetStatusRequest) (*GetStatusResponse, error)
 	GetCardRecords(request GetCardRecordsRequest) (*GetCardRecordsResponse, error)
@@ -32,6 +30,8 @@ type IUHPPOTED interface {
 	PutTaskList(request PutTaskListRequest) (*PutTaskListResponse, int, error)
 	OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error)
 
+	SetDoorControl(deviceID uint32, door uint8, mode types.ControlState) error
+	SetDoorDelay(deviceID uint32, door uint8, delay uint8) error
 	GetEventIndices(deviceID uint32) (uint32, uint32, uint32, error)
 	GetEvent(deviceID uint32, index uint32) (*Event, error)
 	GetEvents(deviceID uint32, N int) ([]Event, error)
@@ -91,36 +91,12 @@ type GetDoorDelayResponse struct {
 	Delay    uint8    `json:"delay"`
 }
 
-type SetDoorDelayRequest struct {
-	DeviceID DeviceID
-	Door     uint8
-	Delay    uint8
-}
-
-type SetDoorDelayResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Door     uint8    `json:"door"`
-	Delay    uint8    `json:"delay"`
-}
-
 type GetDoorControlRequest struct {
 	DeviceID DeviceID
 	Door     uint8
 }
 
 type GetDoorControlResponse struct {
-	DeviceID DeviceID           `json:"device-id"`
-	Door     uint8              `json:"door"`
-	Control  types.ControlState `json:"control"`
-}
-
-type SetDoorControlRequest struct {
-	DeviceID DeviceID
-	Door     uint8
-	Control  types.ControlState
-}
-
-type SetDoorControlResponse struct {
 	DeviceID DeviceID           `json:"device-id"`
 	Door     uint8              `json:"door"`
 	Control  types.ControlState `json:"control"`
