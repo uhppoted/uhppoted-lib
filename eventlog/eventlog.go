@@ -25,12 +25,12 @@ type Ticker struct {
 
 	size int64
 	file *os.File
-	mu   sync.Mutex
+	sync.Mutex
 }
 
 func (l *Ticker) Write(p []byte) (n int, err error) {
-	l.mu.Lock()
-	defer l.mu.Unlock()
+	l.Lock()
+	defer l.Unlock()
 
 	writeLen := int64(len(p))
 	if writeLen > l.max() {
@@ -58,8 +58,9 @@ func (l *Ticker) Write(p []byte) (n int, err error) {
 }
 
 func (l *Ticker) Close() error {
-	l.mu.Lock()
-	defer l.mu.Unlock()
+	l.Lock()
+	defer l.Unlock()
+
 	return l.close()
 }
 
@@ -73,8 +74,9 @@ func (l *Ticker) close() error {
 }
 
 func (l *Ticker) Rotate() error {
-	l.mu.Lock()
-	defer l.mu.Unlock()
+	l.Lock()
+	defer l.Unlock()
+
 	return l.rotate()
 }
 

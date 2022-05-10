@@ -382,21 +382,22 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.system.events = %[28]s
 ; httpd.system.logs = %[29]s
 ; httpd.system.users = %[30]s
+; httpd.system.history = %[31]s
 ; httpd.system.refresh = 30s
 ; httpd.system.windows.ok = 1m0s
 ; httpd.system.windows.uncertain = 5m0s
 ; httpd.system.windows.systime = 5m0s
 ; httpd.system.windows.expires = 2m0s
-; httpd.db.rules.acl = %[31]s
-; httpd.db.rules.interfaces = %[32]s
-; httpd.db.rules.controllers = %[33]s
-; httpd.db.rules.cards = %[34]s
-; httpd.db.rules.doors = %[35]s
-; httpd.db.rules.groups = %[36]s
-; httpd.db.rules.events = %[37]s
-; httpd.db.rules.logs = %[38]s
-; httpd.db.rules.users = %[39]s
-; httpd.audit.file = %[40]s
+; httpd.db.rules.acl = %[32]s
+; httpd.db.rules.interfaces = %[33]s
+; httpd.db.rules.controllers = %[34]s
+; httpd.db.rules.cards = %[35]s
+; httpd.db.rules.doors = %[36]s
+; httpd.db.rules.groups = %[37]s
+; httpd.db.rules.events = %[38]s
+; httpd.db.rules.logs = %[39]s
+; httpd.db.rules.users = %[40]s
+; httpd.audit.file = %[41]s
 ; httpd.retention = 6h0m0s
 ; httpd.timezones = 
 
@@ -427,7 +428,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, mqttCards, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey,
-		httpdInterfacesFile, httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile, httpdEventsFile, httpdLogsFile, httpdUsersFile,
+		httpdInterfacesFile, httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile, httpdEventsFile, httpdLogsFile, httpdUsersFile, httpdHistoryFile,
 		httpdRulesACL, httpdRulesInterfaces, httpdRulesControllers, httpdRulesCards, httpdRulesDoors, httpdRulesGroups, httpdRulesEvents, httpdRulesLogs, httpdRulesUsers, httpdAuditFile)
 
 	config := NewConfig()
@@ -560,21 +561,22 @@ timeout = %[4]v
 ; httpd.system.events = %[29]s
 ; httpd.system.logs = %[30]s
 ; httpd.system.users = %[31]s
+; httpd.system.history = %[32]s
 ; httpd.system.refresh = 30s
 ; httpd.system.windows.ok = 1m0s
 ; httpd.system.windows.uncertain = 5m0s
 ; httpd.system.windows.systime = 5m0s
 ; httpd.system.windows.expires = 2m0s
-; httpd.db.rules.acl = %[32]s
-; httpd.db.rules.interfaces = %[33]s
-; httpd.db.rules.controllers = %[34]s
-; httpd.db.rules.cards = %[35]s
-; httpd.db.rules.doors = %[36]s
-; httpd.db.rules.groups = %[37]s
-; httpd.db.rules.events = %[38]s
-; httpd.db.rules.logs = %[39]s
-; httpd.db.rules.users = %[40]s
-; httpd.audit.file = %[41]s
+; httpd.db.rules.acl = %[33]s
+; httpd.db.rules.interfaces = %[34]s
+; httpd.db.rules.controllers = %[35]s
+; httpd.db.rules.cards = %[36]s
+; httpd.db.rules.doors = %[37]s
+; httpd.db.rules.groups = %[38]s
+; httpd.db.rules.events = %[39]s
+; httpd.db.rules.logs = %[40]s
+; httpd.db.rules.users = %[41]s
+; httpd.audit.file = %[42]s
 httpd.retention = 5h30m0s
 ; httpd.timezones = 
 
@@ -611,7 +613,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 		mqttBrokerCertificate, mqttClientCertificate, mqttClientKey, eventIDs, mqttUsers, mqttGroups, mqttCards, hotpSecrets, hotpCounters, rsaKeyDir,
 		nonceServer, nonceClients,
 		httpdAuthDB, httpdCACertificate, httpdTLSCertificate, httpdTLSKey,
-		httpdInterfacesFile, httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile, httpdEventsFile, httpdLogsFile, httpdUsersFile,
+		httpdInterfacesFile, httpdControllersFile, httpdDoorsFile, httpdGroupsFile, httpdCardsFile, httpdEventsFile, httpdLogsFile, httpdUsersFile, httpdHistoryFile,
 		httpdRulesACL, httpdRulesInterfaces, httpdRulesControllers, httpdRulesCards, httpdRulesDoors, httpdRulesGroups, httpdRulesEvents, httpdRulesLogs, httpdRulesUsers, httpdAuditFile)
 
 	config := NewConfig()

@@ -51,6 +51,7 @@ var httpdCardsFile string = filepath.Join(_var, "httpd", "system", "cards.json")
 var httpdEventsFile string = filepath.Join(_var, "httpd", "system", "events.json")
 var httpdLogsFile string = filepath.Join(_var, "httpd", "system", "logs.json")
 var httpdUsersFile string = filepath.Join(_var, "httpd", "system", "users.json")
+var httpdHistoryFile string = filepath.Join(_var, "httpd", "system", "history.json")
 var httpdAuditFile string = filepath.Join(_var, "httpd", "audit", "audit.log")
 
 func workdir() string {

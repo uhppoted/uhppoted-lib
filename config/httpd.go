@@ -31,6 +31,7 @@ type HTTPD struct {
 		Events      string        `conf:"events"`
 		Logs        string        `conf:"logs"`
 		Users       string        `conf:"users"`
+		History     string        `conf:"history"`
 		Refresh     time.Duration `conf:"refresh"`
 		Windows     struct {
 			Ok          time.Duration `conf:"ok"`
@@ -93,6 +94,7 @@ func NewHTTPD() *HTTPD {
 			Events      string        `conf:"events"`
 			Logs        string        `conf:"logs"`
 			Users       string        `conf:"users"`
+			History     string        `conf:"history"`
 			Refresh     time.Duration `conf:"refresh"`
 			Windows     struct {
 				Ok          time.Duration `conf:"ok"`
@@ -109,6 +111,7 @@ func NewHTTPD() *HTTPD {
 			Events:      httpdEventsFile,
 			Logs:        httpdLogsFile,
 			Users:       httpdUsersFile,
+			History:     httpdHistoryFile,
 			Refresh:     30 * time.Second,
 			Windows: struct {
 				Ok          time.Duration `conf:"ok"`
