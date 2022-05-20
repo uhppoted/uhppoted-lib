@@ -17,20 +17,20 @@ func TestConsolidateDiff(t *testing.T) {
 	diff := SystemDiff{
 		12345: Diff{
 			Unchanged: []types.Card{
-				types.Card{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
-				types.Card{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Updated: []types.Card{
-				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
-				types.Card{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+				types.Card{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 			},
 			Added: []types.Card{
-				types.Card{CardNumber: 723321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
-				types.Card{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 723321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Deleted: []types.Card{
-				types.Card{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
-				types.Card{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 		},
 	}
@@ -56,30 +56,30 @@ func TestConsolidateDiffWithMultipleDevices(t *testing.T) {
 	diff := SystemDiff{
 		12345: Diff{
 			Unchanged: []types.Card{
-				types.Card{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Updated: []types.Card{
-				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 			},
 			Added: []types.Card{
-				types.Card{CardNumber: 723321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 723321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Deleted: []types.Card{
-				types.Card{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 		},
 		54321: Diff{
 			Unchanged: []types.Card{
-				types.Card{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Updated: []types.Card{
-				types.Card{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+				types.Card{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 			},
 			Added: []types.Card{
-				types.Card{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Deleted: []types.Card{
-				types.Card{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 		},
 	}
@@ -105,20 +105,20 @@ func TestConsolidateDiffWithAddAndUpdateSameCard(t *testing.T) {
 	diff := SystemDiff{
 		12345: Diff{
 			Unchanged: []types.Card{
-				types.Card{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
-				types.Card{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 923321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 233214569, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Updated: []types.Card{
-				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
-				types.Card{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+				types.Card{CardNumber: 233214568, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 			},
 			Added: []types.Card{
-				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
-				types.Card{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 823321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 233214567, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Deleted: []types.Card{
-				types.Card{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
-				types.Card{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 623321456, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 233214566, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 		},
 	}

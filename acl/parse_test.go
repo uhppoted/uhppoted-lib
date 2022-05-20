@@ -153,7 +153,7 @@ func TestParseRecord(t *testing.T) {
 			CardNumber: 8165535,
 			From:       date("2021-01-01"),
 			To:         date("2021-12-31"),
-			Doors: map[uint8]int{
+			Doors: map[uint8]uint8{
 				1: 0,
 				2: 1,
 				3: 29,

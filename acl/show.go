@@ -31,7 +31,7 @@ func GetCard(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32) (map[s
 
 				case v >= 2 && v <= 254:
 					ok = true
-					profile = v
+					profile = int(v)
 				}
 
 				if ok {

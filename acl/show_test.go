@@ -14,9 +14,9 @@ func TestGetCard(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
 	u := mock{
@@ -51,9 +51,9 @@ func TestGetCardWithUnknownCard(t *testing.T) {
 	expected := map[string]Permission{}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
 	u := mock{
@@ -93,16 +93,16 @@ func TestGetCardWithMultipleDevices(t *testing.T) {
 
 	cards := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 1}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 
 		54321: []types.Card{
-			types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 1}},
-			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 1, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 1, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 1}},
+			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
 		},
 	}
 

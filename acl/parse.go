@@ -176,8 +176,8 @@ func getToDate(record []string, index index) (*types.Date, error) {
 	return &to, nil
 }
 
-func getDoors(record []string, v []int) (map[uint8]int, error) {
-	doors := map[uint8]int{
+func getDoors(record []string, v []int) (map[uint8]uint8, error) {
+	doors := map[uint8]uint8{
 		1: 0,
 		2: 0,
 		3: 0,
@@ -198,7 +198,7 @@ func getDoors(record []string, v []int) (map[uint8]int, error) {
 			if profile, _ := strconv.Atoi(v); profile < 2 || profile > 254 {
 				return doors, fmt.Errorf("Invalid time profile (%v) for door %v (valid profiles are in the interval [2..254])", v, record[d])
 			} else {
-				doors[uint8(i+1)] = profile
+				doors[uint8(i+1)] = uint8(profile)
 			}
 		} else {
 			return doors, fmt.Errorf("Expected 'Y/N/<profile ID>' for door: '%s'", record[d])

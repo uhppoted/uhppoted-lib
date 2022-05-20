@@ -71,7 +71,7 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 			CardNumber: cardID,
 			From:       &from,
 			To:         &to,
-			Doors: map[uint8]int{
+			Doors: map[uint8]uint8{
 				1: 0,
 				2: 0,
 				3: 0,
@@ -100,7 +100,7 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 
 	for _, d := range doors {
 		if profileID >= 2 && profileID <= 254 {
-			card.Doors[d] = profileID
+			card.Doors[d] = uint8(profileID)
 		} else {
 			card.Doors[d] = 1
 		}
@@ -120,7 +120,7 @@ func grantAll(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types
 		CardNumber: cardID,
 		From:       &from,
 		To:         &to,
-		Doors: map[uint8]int{
+		Doors: map[uint8]uint8{
 			1: 1,
 			2: 1,
 			3: 1,

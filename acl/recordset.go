@@ -134,7 +134,7 @@ func MakeTable(acl ACL, devices []uhppote.Device) (*Table, error) {
 				}
 
 				if ix != 0 {
-					record.doors[ix-1] = c.Doors[i]
+					record.doors[ix-1] = int(c.Doors[i])
 				}
 			}
 

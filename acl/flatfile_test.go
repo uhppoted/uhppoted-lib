@@ -10,9 +10,9 @@ import (
 func TestMakeFlatFileWithMissingACL(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 1}},
-			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 	}
 
@@ -38,16 +38,16 @@ func TestMakeFlatFileWithMissingACL(t *testing.T) {
 func TestMakeFlatFile(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 1, 4: 0}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 1}},
-			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 		54321: map[uint32]types.Card{
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 1, 2: 1, 3: 0, 4: 1}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-03-01"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 1, 4: 1}},
-			65539: types.Card{CardNumber: 65539, From: date("2020-01-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 0, 2: 1, 3: 1, 4: 1}},
-			65540: types.Card{CardNumber: 65540, From: date("2019-01-01"), To: date("2021-12-31"), Doors: map[uint8]int{1: 0, 2: 1, 3: 0, 4: 1}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 0, 4: 1}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-03-01"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 1}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-01-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 1, 4: 1}},
+			65540: types.Card{CardNumber: 65540, From: date("2019-01-01"), To: date("2021-12-31"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 1}},
 		},
 	}
 
@@ -85,16 +85,16 @@ func TestMakeFlatFile(t *testing.T) {
 func TestMakeFlatFileWithTimeProfiles(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 1, 4: 0}},
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 0}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 1, 2: 0, 3: 0, 4: 1}},
-			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]int{1: 0, 2: 0, 3: 0, 4: 0}},
+			65536: types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 		54321: map[uint32]types.Card{
-			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]int{1: 1, 2: 1, 3: 0, 4: 1}},
-			65538: types.Card{CardNumber: 65538, From: date("2020-03-01"), To: date("2020-10-31"), Doors: map[uint8]int{1: 1, 2: 0, 3: 31, 4: 1}},
-			65539: types.Card{CardNumber: 65539, From: date("2020-01-03"), To: date("2020-11-30"), Doors: map[uint8]int{1: 0, 2: 1, 3: 1, 4: 1}},
-			65540: types.Card{CardNumber: 65540, From: date("2019-01-01"), To: date("2021-12-31"), Doors: map[uint8]int{1: 0, 2: 1, 3: 0, 4: 1}},
+			65537: types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 0, 4: 1}},
+			65538: types.Card{CardNumber: 65538, From: date("2020-03-01"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 31, 4: 1}},
+			65539: types.Card{CardNumber: 65539, From: date("2020-01-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 1, 4: 1}},
+			65540: types.Card{CardNumber: 65540, From: date("2019-01-01"), To: date("2021-12-31"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 1}},
 		},
 	}
 
