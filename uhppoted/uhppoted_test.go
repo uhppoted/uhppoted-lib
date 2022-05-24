@@ -64,7 +64,7 @@ func (m *stub) GetCards(deviceID uint32) (uint32, error) {
 	return 0, nil
 }
 
-func (m *stub) GetCardByIndex(deviceID, index uint32) (*types.Card, error) {
+func (m *stub) GetCardByIndex(deviceID, index uint32, f func(bool, bool) error) (*types.Card, error) {
 	return nil, nil
 }
 
