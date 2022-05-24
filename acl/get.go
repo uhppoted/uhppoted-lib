@@ -55,7 +55,7 @@ func getACL(u uhppote.IUHPPOTE, deviceID uint32) (map[uint32]types.Card, error) 
 
 	var index uint32 = 1
 	for count := 0; count < int(N); {
-		card, err := u.GetCardByIndex(deviceID, index)
+		card, err := u.GetCardByIndex(deviceID, index, nil)
 		if err != nil {
 			return nil, err
 		}
