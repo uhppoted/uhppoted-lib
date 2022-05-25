@@ -38,7 +38,7 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 
 	var index uint32 = 1
 	for count := uint32(0); count < N; {
-		record, err := u.UHPPOTE.GetCardByIndex(device, index, nil)
+		record, err := u.UHPPOTE.GetCardByIndex(device, index)
 		if err != nil {
 			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
 		}

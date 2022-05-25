@@ -66,7 +66,7 @@ func (m *mock) GetCards(deviceID uint32) (uint32, error) {
 	return m.getCards(deviceID)
 }
 
-func (m *mock) GetCardByIndex(deviceID, index uint32, f func(bool, bool) error) (*types.Card, error) {
+func (m *mock) GetCardByIndex(deviceID, index uint32) (*types.Card, error) {
 	return m.getCardByIndex(deviceID, index)
 }
 
