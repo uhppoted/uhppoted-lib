@@ -13,6 +13,7 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.7.3    | Maintenance release for version compatibility with `uhppote-core` `v0.7.3`                |
 | v0.7.2    | Replaced event rollover with infinite event indexes to match controller implementation    |
 | v0.7.1    | Added support for task list functions from the extended API                               |
 | v0.7.0    | Added support for time profiles from the extended API                                     |

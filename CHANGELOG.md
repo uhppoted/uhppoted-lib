@@ -1,10 +1,15 @@
 ## CHANGELOG
 
-### IN PROGRESS
+## [v0.7.3] - 2022-06-01
+
+### Changed
 
 1. Added `SetEventListener` function.
+2. Updated for reworked types.Date and types.DateTime zero values
 
-### v0.7.2
+## [v0.7.2]
+
+### Changed
 
 1. Reworked `config` to support types.BindAddr, types.BroadcastAddr and types.ListenAddr
 2. Implemented shared `config` command
@@ -12,7 +17,9 @@
 4. Removed `EventRange` function as not practical.
 5. Added `GetNextEvent` function to simplify sequential event retrieval
 
-### v0.7.1
+## [v0.7.1]
+
+### Changed
 
 1. Implemented `PutTaskList` function
 2. Reworked `UHPPOTED` as an interface+implementation
