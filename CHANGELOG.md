@@ -1,16 +1,19 @@
 ## CHANGELOG
 
+## [v0.8.0] - 2022-07-01
+
+### Changed
+1. Updated uhppote-core dependency to v0.8.0
+
 ## [v0.7.3] - 2022-06-01
 
 ### Changed
-
 1. Added `SetEventListener` function.
 2. Updated for reworked types.Date and types.DateTime zero values
 
 ## [v0.7.2]
 
 ### Changed
-
 1. Reworked `config` to support types.BindAddr, types.BroadcastAddr and types.ListenAddr
 2. Implemented shared `config` command
 3. Removed rollover from event handling (cf. https://github.com/uhppoted/uhppote-cli/issues/7)
@@ -20,7 +23,6 @@
 ## [v0.7.1]
 
 ### Changed
-
 1. Implemented `PutTaskList` function
 2. Reworked `UHPPOTED` as an interface+implementation
 3. `encoding/conf` moved from `uhppote-core`
