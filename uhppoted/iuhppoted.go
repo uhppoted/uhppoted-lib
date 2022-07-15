@@ -15,7 +15,6 @@ type IUHPPOTED interface {
 	GetDoorDelay(request GetDoorDelayRequest) (*GetDoorDelayResponse, error)
 	GetDoorControl(request GetDoorControlRequest) (*GetDoorControlResponse, error)
 	RecordSpecialEvents(request RecordSpecialEventsRequest) (*RecordSpecialEventsResponse, error)
-	GetStatus(request GetStatusRequest) (*GetStatusResponse, error)
 	GetCardRecords(request GetCardRecordsRequest) (*GetCardRecordsResponse, error)
 	GetCards(request GetCardsRequest) (*GetCardsResponse, error)
 	DeleteCards(request DeleteCardsRequest) (*DeleteCardsResponse, error)
@@ -32,6 +31,7 @@ type IUHPPOTED interface {
 
 	SetDoorControl(deviceID uint32, door uint8, mode types.ControlState) error
 	SetDoorDelay(deviceID uint32, door uint8, delay uint8) error
+	GetStatus(deviceID uint32) (*Status, error)
 	GetEventIndices(deviceID uint32) (uint32, uint32, uint32, error)
 	GetEvent(deviceID uint32, index uint32) (*Event, error)
 	GetEvents(deviceID uint32, N int) ([]Event, error)
@@ -100,15 +100,6 @@ type GetDoorControlResponse struct {
 	DeviceID DeviceID           `json:"device-id"`
 	Door     uint8              `json:"door"`
 	Control  types.ControlState `json:"control"`
-}
-
-type GetStatusRequest struct {
-	DeviceID DeviceID
-}
-
-type GetStatusResponse struct {
-	DeviceID DeviceID `json:"device-id"`
-	Status   Status   `json:"status"`
 }
 
 type GetCardRecordsRequest struct {

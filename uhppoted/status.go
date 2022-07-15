@@ -14,57 +14,52 @@ type Status struct {
 	SpecialInfo    uint8          `json:"special-info"`
 	RelayState     uint8          `json:"relay-state"`
 	InputState     uint8          `json:"input-state"`
-	Event          *StatusEvent   `json:"event,omitempty"`
+	Event          *Event         `json:"event,omitempty"`
 }
 
-type StatusEvent struct {
-	Index      uint32          `json:"index"`
-	Type       byte            `json:"type"`
-	Granted    bool            `json:"access-granted"`
-	Door       byte            `json:"door"`
-	Direction  uint8           `json:"direction"`
-	CardNumber uint32          `json:"card-number"`
-	Timestamp  *types.DateTime `json:"timestamp,omitempty"`
-	Reason     uint8           `json:"reason"`
-}
+// type StatusEvent struct {
+// 	Index      uint32          `json:"index"`
+// 	Type       byte            `json:"type"`
+// 	Granted    bool            `json:"access-granted"`
+// 	Door       byte            `json:"door"`
+// 	Direction  uint8           `json:"direction"`
+// 	CardNumber uint32          `json:"card-number"`
+// 	Timestamp  *types.DateTime `json:"timestamp,omitempty"`
+// 	Reason     uint8           `json:"reason"`
+// }
 
-func (u *UHPPOTED) GetStatus(request GetStatusRequest) (*GetStatusResponse, error) {
-	u.debug("get-status", fmt.Sprintf("request  %+v", request))
-
-	device := uint32(request.DeviceID)
-	status, err := u.UHPPOTE.GetStatus(device)
+func (u *UHPPOTED) GetStatus(deviceID uint32) (*Status, error) {
+	status, err := u.UHPPOTE.GetStatus(deviceID)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving status for %v (%w)", device, err))
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving status for %v (%w)", deviceID, err))
 	}
 
-	response := GetStatusResponse{
-		DeviceID: DeviceID(status.SerialNumber),
-		Status: Status{
-			DoorState:      status.DoorState,
-			DoorButton:     status.DoorButton,
-			SystemError:    status.SystemError,
-			SystemDateTime: status.SystemDateTime,
-			SequenceId:     status.SequenceId,
-			SpecialInfo:    status.SpecialInfo,
-			RelayState:     status.RelayState,
-			InputState:     status.InputState,
-		},
+	response := Status{
+		DoorState:      status.DoorState,
+		DoorButton:     status.DoorButton,
+		SystemError:    status.SystemError,
+		SystemDateTime: status.SystemDateTime,
+		SequenceId:     status.SequenceId,
+		SpecialInfo:    status.SpecialInfo,
+		RelayState:     status.RelayState,
+		InputState:     status.InputState,
 	}
 
 	if status.Event != nil {
-		response.Status.Event = &StatusEvent{
+		response.Event = &Event{
 			Index:      status.Event.Index,
 			Type:       status.Event.Type,
 			Granted:    status.Event.Granted,
 			Door:       status.Event.Door,
 			Direction:  status.Event.Direction,
 			CardNumber: status.Event.CardNumber,
-			Timestamp:  status.Event.Timestamp,
 			Reason:     status.Event.Reason,
 		}
-	}
 
-	u.debug("get-status", fmt.Sprintf("response %+v", response))
+		if status.Event.Timestamp != nil {
+			response.Event.Timestamp = *status.Event.Timestamp
+		}
+	}
 
 	return &response, nil
 }

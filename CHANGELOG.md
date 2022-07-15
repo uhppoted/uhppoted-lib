@@ -1,5 +1,12 @@
 ## CHANGELOG
 
+## [Unreleased]
+
+### Changed
+1. Fixed panic in GetCard (dereferencing invalid card)
+2. Simplified GetStatus API
+
+
 ## [v0.8.0] - 2022-07-01
 
 ### Changed

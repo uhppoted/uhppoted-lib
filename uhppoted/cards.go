@@ -89,7 +89,7 @@ func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
 
 	card, err := u.UHPPOTE.GetCardByID(device, cardID)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving card %v from %v (%w)", card.CardNumber, device, err))
+		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving card %v from %v (%w)", cardID, device, err))
 	}
 
 	if card == nil {
