@@ -331,6 +331,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; mqtt.topic.replies = ./replies
 ; mqtt.topic.events = ./events
 ; mqtt.topic.system = ./system
+; mqtt.protocol.version = 
 ; mqtt.alerts.qos = 1
 ; mqtt.alerts.retained = true
 ; mqtt.events.key = events
@@ -510,6 +511,7 @@ timeout = %[4]v
 ; mqtt.topic.replies = ./replies
 ; mqtt.topic.events = ./events
 ; mqtt.topic.system = ./system
+; mqtt.protocol.version = 
 ; mqtt.alerts.qos = 1
 ; mqtt.alerts.retained = true
 ; mqtt.events.key = events
