@@ -19,23 +19,11 @@ type EventMap struct {
 	retrieved map[uint32]uint32
 }
 
-type ListenEvent struct {
-	DeviceID   DeviceID       `json:"device-id"`
-	EventID    uint32         `json:"event-id"`
-	Type       uint8          `json:"event-type"`
-	Granted    bool           `json:"access-granted"`
-	Door       uint8          `json:"door-id"`
-	Direction  uint8          `json:"direction"`
-	CardNumber uint32         `json:"card-number"`
-	Timestamp  types.DateTime `json:"timestamp"`
-	Reason     uint8          `json:"event-reason"`
-}
+// type EventMessage struct {
+// 	Event Event `json:"event"`
+// }
 
-type EventMessage struct {
-	Event ListenEvent `json:"event"`
-}
-
-type EventHandler func(EventMessage) bool
+type EventHandler func(Event) bool
 
 type listener struct {
 	onConnected func()
@@ -236,22 +224,19 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to uint32, handler EventHandler)
 		} else if record.Index != uint32(index) {
 			u.warn("listen", fmt.Errorf("No event record for device %d, ID %d", deviceID, index))
 		} else {
-			message := EventMessage{
-				Event: ListenEvent{
-					DeviceID:   DeviceID(record.SerialNumber),
-					EventID:    record.Index,
-					Type:       record.Type,
-					Granted:    record.Granted,
-					Door:       record.Door,
-					Direction:  record.Direction,
-					CardNumber: record.CardNumber,
-					Timestamp:  record.Timestamp,
-					Reason:     record.Reason,
-				},
+			event := Event{
+				DeviceID:   uint32(record.SerialNumber),
+				Index:      record.Index,
+				Type:       record.Type,
+				Granted:    record.Granted,
+				Door:       record.Door,
+				Direction:  record.Direction,
+				CardNumber: record.CardNumber,
+				Timestamp:  record.Timestamp,
+				Reason:     record.Reason,
 			}
 
-			u.debug("listen", fmt.Sprintf("event %v", message))
-			if !handler(message) {
+			if !handler(event) {
 				break
 			}
 
