@@ -7,6 +7,7 @@
 2. Simplified GetStatus API
 3. Added locales and _en_ dictionary for event type and reason lookup.
 4. Removed wrapper for events received on by `Listen`
+5. Added support to load locale translation dictionary from JSON file.
 
 ## [v0.8.0] - 2022-07-01
 
