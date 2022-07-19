@@ -8,6 +8,7 @@ type MQTT struct {
 	ServerID        string      `conf:"server.ID"`
 	Connection      Connection  `conf:"connection"`
 	Topics          Topics      `conf:"topic"`
+	Locale          string      `conf:"translation.locale"`
 	Protocol        string      `conf:"protocol.version"`
 	Alerts          Alerts      `conf:"alerts"`
 	EventsKeyID     string      `conf:"events.key"`
