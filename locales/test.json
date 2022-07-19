@@ -1,0 +1,7 @@
+{
+    "dictionary": {
+        "event.type.0": "test.none",
+        "event.type.1": "test.swipe",
+        "event.type.3": "test.alarm"
+    }
+}
