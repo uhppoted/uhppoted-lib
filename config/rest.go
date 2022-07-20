@@ -16,6 +16,8 @@ type REST struct {
 	Users                     string `conf:"auth.users"`
 	Groups                    string `conf:"auth.groups"`
 	HOTP                      HOTP   `conf:"auth.hotp"`
+	Locale                    string `conf:"translation.locale"`
+	Protocol                  string `conf:"protocol.version"`
 }
 
 type OpenAPI struct {

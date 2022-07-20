@@ -316,6 +316,8 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; rest.auth.hotp.range = 8
 ; rest.auth.hotp.secrets = 
 ; rest.auth.hotp.counters = %[6]s
+; rest.translation.locale = 
+; rest.protocol.version = 
 
 # MQTT
 ; mqtt.server.ID = uhppoted
@@ -497,6 +499,8 @@ timeout = %[4]v
 ; rest.auth.hotp.range = 8
 ; rest.auth.hotp.secrets = 
 ; rest.auth.hotp.counters = %[7]s
+; rest.translation.locale = 
+; rest.protocol.version = 
 
 # MQTT
 ; mqtt.server.ID = uhppoted
