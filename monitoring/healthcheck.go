@@ -7,6 +7,7 @@ import (
 	"log"
 	"math"
 	"net"
+	"net/netip"
 	"sync"
 	"time"
 )
@@ -47,6 +48,12 @@ type alerts struct {
 	nolistener   bool
 	listener     bool
 }
+
+var cache = struct {
+	addresses []netip.AddrPort
+	touched   time.Time
+	sync.RWMutex
+}{}
 
 func NewHealthCheck(u uhppote.IUHPPOTE, idleTime, ignoreTime time.Duration, l *log.Logger) HealthCheck {
 	return HealthCheck{
@@ -127,6 +134,10 @@ func (h *HealthCheck) Exec(handler MonitoringHandler) {
 }
 
 func (h *HealthCheck) update(now time.Time) {
+	if dt := time.Now().Sub(cache.touched); dt > 60*time.Second {
+		go h.resolve()
+	}
+
 	devices := make(map[uint32]bool)
 
 	found, err := h.uhppote.GetDevices()
@@ -352,11 +363,6 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 	errors := uint(0)
 	warnings := uint(0)
 
-	expected := h.uhppote.ListenAddr()
-	if expected == nil {
-		return errors, warnings
-	}
-
 	if v, found := h.state.Devices.Listener.Load(id); found {
 		address := v.(listener).Address
 		touched := v.(listener).Touched
@@ -382,29 +388,82 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 			}
 		}
 
-		if !expected.IP.Equal(address.IP) || (expected.Port != address.Port) {
-			if known {
-				errors += 1
-			} else {
-				warnings += 1
-			}
+		cache.RLock()
+		defer cache.RUnlock()
 
-			if !alerted.listener {
-				msg := fmt.Sprintf("incorrect listener address/port: %s", &address)
-				if warn(h, handler, id, msg) {
-					alerted.listener = true
+		if len(cache.addresses) == 0 {
+			return errors, warnings
+		}
+
+		for _, expected := range cache.addresses {
+			addr, ok := netip.AddrFromSlice(address.IP)
+			port := uint16(address.Port)
+
+			if ok && expected == netip.AddrPortFrom(addr, port) {
+				if alerted.listener {
+					if info(h, handler, id, "listener address/port correct") {
+						alerted.listener = false
+					}
 				}
+
+				return errors, warnings
 			}
+		}
+
+		if known {
+			errors += 1
 		} else {
-			if alerted.listener {
-				if info(h, handler, id, "listener address/port correct") {
-					alerted.listener = false
-				}
+			warnings += 1
+		}
+
+		if !alerted.listener {
+			msg := fmt.Sprintf("incorrect listener address/port: %s", &address)
+			if warn(h, handler, id, msg) {
+				alerted.listener = true
 			}
 		}
 	}
 
 	return errors, warnings
+}
+
+func (h *HealthCheck) resolve() {
+	h.log.Printf("INFO  health-check refreshing interface IP address list")
+
+	list := []netip.AddrPort{}
+
+	listen := h.uhppote.ListenAddr()
+	if listen != nil {
+		addr, ok := netip.AddrFromSlice(listen.IP)
+		port := uint16(listen.Port)
+
+		if ok && !addr.IsUnspecified() {
+			list = append(list, netip.AddrPortFrom(addr, port))
+		} else if ok {
+			if ifaces, err := net.Interfaces(); err == nil {
+				for _, i := range ifaces {
+					if addrs, err := i.Addrs(); err == nil {
+						for _, a := range addrs {
+							switch v := a.(type) {
+							case *net.IPNet:
+								if v.IP.To4() != nil && i.Flags&net.FlagLoopback == 0 {
+									if addr, ok := netip.AddrFromSlice(v.IP); ok {
+										list = append(list, netip.AddrPortFrom(addr, port))
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	cache.Lock()
+	defer cache.Unlock()
+
+	cache.addresses = list
+	cache.touched = time.Now()
 }
 
 func info(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message string) bool {
