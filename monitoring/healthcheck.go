@@ -396,7 +396,7 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 		}
 
 		for _, expected := range cache.addresses {
-			addr, ok := netip.AddrFromSlice(address.IP)
+			addr, ok := netip.AddrFromSlice(address.IP.To4())
 			port := uint16(address.Port)
 
 			if ok && expected == netip.AddrPortFrom(addr, port) {
@@ -434,7 +434,7 @@ func (h *HealthCheck) resolve() {
 
 	listen := h.uhppote.ListenAddr()
 	if listen != nil {
-		addr, ok := netip.AddrFromSlice(listen.IP)
+		addr, ok := netip.AddrFromSlice(listen.IP.To4())
 		port := uint16(listen.Port)
 
 		if ok && !addr.IsUnspecified() {
@@ -447,7 +447,7 @@ func (h *HealthCheck) resolve() {
 							switch v := a.(type) {
 							case *net.IPNet:
 								if v.IP.To4() != nil && i.Flags&net.FlagLoopback == 0 {
-									if addr, ok := netip.AddrFromSlice(v.IP); ok {
+									if addr, ok := netip.AddrFromSlice(v.IP.To4()); ok {
 										list = append(list, netip.AddrPortFrom(addr, port))
 									}
 								}

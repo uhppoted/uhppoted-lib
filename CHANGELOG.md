@@ -1,5 +1,10 @@
 ## CHANGELOG
 
+## [Unreleased]
+
+### Changed
+1. Explicitly converted listener addresses to IPv4 addresses in health check (Ref. [Fix health-check listener monitor to accommodate the default 0.0.0.0 address](https://github.com/uhppoted/uhppoted-lib/issues/2#issuecomment-1204253581)).
+
 ## [v0.8.1] - 2022-08-01
 
 ### Changed
