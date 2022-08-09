@@ -23,6 +23,7 @@ type MQTT struct {
 	Nonce           Nonce       `conf:"security.nonce"`
 	SignOutgoing    bool        `conf:"security.outgoing.sign"`
 	EncryptOutgoing bool        `conf:"security.outgoing.encrypt"`
+	Softlock        Softlock    `conf:"softlock"`
 }
 
 type Connection struct {
@@ -73,6 +74,10 @@ type Permissions struct {
 	Enabled bool   `conf:"enabled"`
 	Users   string `conf:"users"`
 	Groups  string `conf:"groups"`
+}
+
+type Softlock struct {
+	Enabled bool `conf:"enabled"`
 }
 
 func (t *Topics) Resolve(subtopic string) string {

@@ -356,6 +356,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; mqtt.security.nonce.clients = %[18]s
 ; mqtt.security.outgoing.sign = true
 ; mqtt.security.outgoing.encrypt = true
+; mqtt.softlock.enabled = false
 
 # AWS
 ; aws.credentials = 
@@ -539,6 +540,7 @@ timeout = %[4]v
 ; mqtt.security.nonce.clients = %[19]s
 ; mqtt.security.outgoing.sign = true
 ; mqtt.security.outgoing.encrypt = true
+; mqtt.softlock.enabled = false
 
 # AWS
 ; aws.credentials = 

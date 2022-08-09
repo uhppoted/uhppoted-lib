@@ -163,8 +163,9 @@ func (kv *KeyValueStore) Save(w io.Writer) error {
 }
 
 // NOTE: interim file watcher implementation pending fsnotify in Go 1.4
-//       (https://github.com/fsnotify/fsnotify requires workarounds for
-//        files updated atomically by renaming)
+//
+//	(https://github.com/fsnotify/fsnotify requires workarounds for
+//	 files updated atomically by renaming)
 func (kv *KeyValueStore) Watch(filepath string, logger *log.Logger) {
 	go func() {
 		finfo, err := os.Stat(filepath)
