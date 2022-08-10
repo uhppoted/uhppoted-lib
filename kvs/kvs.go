@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -12,6 +11,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/uhppoted/uhppoted-lib/log"
 )
 
 type KeyValueStore struct {
@@ -59,14 +60,14 @@ func (kv *KeyValueStore) Put(key string, value interface{}) {
 	}
 }
 
-func (kv *KeyValueStore) Store(key string, value interface{}, filepath string, log *log.Logger) {
+func (kv *KeyValueStore) Store(key string, value interface{}, filepath string) {
 	kv.guard.Lock()
 	defer kv.guard.Unlock()
 
 	kv.store[key] = value
 	kv.version += 1
 
-	go kv.save(filepath, log)
+	go kv.save(filepath)
 }
 
 func (kv *KeyValueStore) LoadFromFile(filepath string) error {
@@ -85,7 +86,7 @@ func (kv *KeyValueStore) LoadFromFile(filepath string) error {
 }
 
 // Ref. https://www.joeshaw.org/dont-defer-close-on-writable-files/
-func (kv *KeyValueStore) save(file string, log *log.Logger) {
+func (kv *KeyValueStore) save(file string) {
 	// ... copy current store
 
 	kv.guard.Lock()
@@ -115,39 +116,39 @@ func (kv *KeyValueStore) save(file string, log *log.Logger) {
 
 	f, err := os.Create(tmpfile)
 	if err != nil {
-		log.Printf("ERROR: %s - %v", kv.name, err)
+		log.Errorf("%s - %v", kv.name, err)
 		return
 	}
 
 	for key, value := range store {
 		if _, err := fmt.Fprintf(f, "%-20s  %v\n", key, value); err != nil {
-			log.Printf("ERROR: %s - %v", kv.name, err)
+			log.Errorf("%s - %v", kv.name, err)
 			f.Close()
 			return
 		}
 	}
 
 	if err := f.Sync(); err != nil {
-		log.Printf("ERROR: %s - %v", kv.name, err)
+		log.Errorf("%s - %v", kv.name, err)
 		f.Close()
 		return
 	}
 
 	if err := f.Close(); err != nil {
-		log.Printf("ERROR: %s - %v", kv.name, err)
+		log.Errorf("%s - %v", kv.name, err)
 		return
 	}
 
 	if version > kv.stored {
 		if err := os.Rename(tmpfile, file); err != nil {
-			log.Printf("ERROR: %s - %v", kv.name, err)
+			log.Errorf("%s - %v", kv.name, err)
 		} else {
 			kv.stored = version
 		}
 	} else {
-		log.Printf("WARN: %s - out of date version discarded", kv.name)
+		log.Warnf("%s - out of date version discarded", kv.name)
 		if err := os.Remove(tmpfile); err != nil {
-			log.Printf("ERROR: %s - %v", kv.name, err)
+			log.Errorf("%s - %v", kv.name, err)
 		}
 	}
 }
@@ -166,11 +167,11 @@ func (kv *KeyValueStore) Save(w io.Writer) error {
 //
 //	(https://github.com/fsnotify/fsnotify requires workarounds for
 //	 files updated atomically by renaming)
-func (kv *KeyValueStore) Watch(filepath string, logger *log.Logger) {
+func (kv *KeyValueStore) Watch(filepath string) {
 	go func() {
 		finfo, err := os.Stat(filepath)
 		if err != nil {
-			logger.Printf("ERROR Failed to get file information for '%s': %v", filepath, err)
+			log.Errorf("failed to get file information for '%s': %v", filepath, err)
 			return
 		}
 
@@ -181,7 +182,7 @@ func (kv *KeyValueStore) Watch(filepath string, logger *log.Logger) {
 			finfo, err := os.Stat(filepath)
 			if err != nil {
 				if !logged {
-					logger.Printf("ERROR Failed to get file information for '%s': %v", filepath, err)
+					log.Errorf("failed to get file information for '%s': %v", filepath, err)
 					logged = true
 				}
 
@@ -190,15 +191,15 @@ func (kv *KeyValueStore) Watch(filepath string, logger *log.Logger) {
 
 			logged = false
 			if finfo.ModTime() != lastModified {
-				log.Printf("INFO  Reloading information from %s\n", filepath)
+				log.Infof("reloading information from %s\n", filepath)
 
 				err := kv.LoadFromFile(filepath)
 				if err != nil {
-					log.Printf("ERROR Failed to reload information from %s: %v", filepath, err)
+					log.Errorf("failed to reload information from %s: %v", filepath, err)
 					continue
 				}
 
-				log.Printf("WARN  Updated %s from %s", kv.name, filepath)
+				log.Warnf("updated %s from %s", kv.name, filepath)
 				lastModified = finfo.ModTime()
 			}
 		}
