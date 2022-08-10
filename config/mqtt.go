@@ -2,6 +2,7 @@ package config
 
 import (
 	"strings"
+	"time"
 )
 
 type MQTT struct {
@@ -77,7 +78,9 @@ type Permissions struct {
 }
 
 type Softlock struct {
-	Enabled bool `conf:"enabled"`
+	Enabled  bool          `conf:"enabled"`
+	Interval time.Duration `conf:"interval"`
+	Wait     time.Duration `conf:"wait"`
 }
 
 func (t *Topics) Resolve(subtopic string) string {
@@ -142,5 +145,10 @@ func NewMQTT() *MQTT {
 		},
 		Cards:    mqttCards,
 		EventIDs: eventIDs,
+		Softlock: Softlock{
+			Enabled:  false,
+			Interval: 60 * time.Second,
+			Wait:     90 * time.Second,
+		},
 	}
 }
