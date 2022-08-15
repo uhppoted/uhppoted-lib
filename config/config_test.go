@@ -356,9 +356,12 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; mqtt.security.nonce.clients = %[18]s
 ; mqtt.security.outgoing.sign = true
 ; mqtt.security.outgoing.encrypt = true
-; mqtt.softlock.enabled = false
-; mqtt.softlock.interval = 1m0s
-; mqtt.softlock.wait = 1m30s
+; mqtt.softlock.enabled = true
+; mqtt.softlock.interval = 30s
+; mqtt.softlock.wait = 45s
+; mqtt.disconnects.enabled = true
+; mqtt.disconnects.interval = 5m0s
+; mqtt.disconnects.max = 10
 
 # AWS
 ; aws.credentials = 
@@ -542,9 +545,12 @@ timeout = %[4]v
 ; mqtt.security.nonce.clients = %[19]s
 ; mqtt.security.outgoing.sign = true
 ; mqtt.security.outgoing.encrypt = true
-; mqtt.softlock.enabled = false
-; mqtt.softlock.interval = 1m0s
-; mqtt.softlock.wait = 1m30s
+; mqtt.softlock.enabled = true
+; mqtt.softlock.interval = 30s
+; mqtt.softlock.wait = 45s
+; mqtt.disconnects.enabled = true
+; mqtt.disconnects.interval = 5m0s
+; mqtt.disconnects.max = 10
 
 # AWS
 ; aws.credentials = 

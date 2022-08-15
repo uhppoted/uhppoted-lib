@@ -25,6 +25,7 @@ type MQTT struct {
 	SignOutgoing    bool        `conf:"security.outgoing.sign"`
 	EncryptOutgoing bool        `conf:"security.outgoing.encrypt"`
 	Softlock        Softlock    `conf:"softlock"`
+	Disconnects     Disconnects `conf:"disconnects"`
 }
 
 type Connection struct {
@@ -81,6 +82,12 @@ type Softlock struct {
 	Enabled  bool          `conf:"enabled"`
 	Interval time.Duration `conf:"interval"`
 	Wait     time.Duration `conf:"wait"`
+}
+
+type Disconnects struct {
+	Enabled  bool          `conf:"enabled"`
+	Interval time.Duration `conf:"interval"`
+	Max      uint32        `conf:"max"`
 }
 
 func (t *Topics) Resolve(subtopic string) string {
@@ -146,9 +153,14 @@ func NewMQTT() *MQTT {
 		Cards:    mqttCards,
 		EventIDs: eventIDs,
 		Softlock: Softlock{
-			Enabled:  false,
-			Interval: 60 * time.Second,
-			Wait:     90 * time.Second,
+			Enabled:  true,
+			Interval: 30 * time.Second,
+			Wait:     45 * time.Second,
+		},
+		Disconnects: Disconnects{
+			Enabled:  true,
+			Interval: 5 * time.Minute,
+			Max:      10,
 		},
 	}
 }
