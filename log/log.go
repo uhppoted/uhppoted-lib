@@ -3,6 +3,7 @@ package log
 import (
 	"fmt"
 	syslog "log"
+	"sync"
 )
 
 type LogLevel int
@@ -18,7 +19,12 @@ const (
 var log = syslog.Default()
 var debugging = false
 var level = info
-var hook func()
+var hooks = struct {
+	hooks []func()
+	sync.Mutex
+}{
+	hooks: []func(){},
+}
 
 func SetDebug(enabled bool) {
 	debugging = enabled
@@ -43,8 +49,11 @@ func SetLogger(l *syslog.Logger) {
 	log = l
 }
 
-func SetFatalHook(f func()) {
-	hook = f
+func AddFatalHook(f func()) {
+	hooks.Lock()
+	defer hooks.Unlock()
+
+	hooks.hooks = append(hooks.hooks, f)
 }
 
 func Debugf(format string, args ...any) {
@@ -69,9 +78,17 @@ func Errorf(format string, args ...any) {
 	log.Printf("%-5v  %v", "ERROR", fmt.Sprintf(format, args...))
 }
 
+// Executes fatal hooks in reverse order before invoking the system Log.Fatalf to exit
 func Fatalf(format string, args ...any) {
-	if hook != nil {
-		hook()
+	N := len(hooks.hooks)
+	list := make([]func(), N)
+
+	hooks.Lock()
+	copy(list, hooks.hooks)
+	hooks.Unlock()
+
+	for i := 1; i <= N; i++ {
+		list[N-i]()
 	}
 
 	log.Fatalf("%-5v  %v", "FATAL", fmt.Sprintf(format, args...))
