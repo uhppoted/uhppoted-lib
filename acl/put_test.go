@@ -3,6 +3,7 @@ package acl
 import (
 	"fmt"
 	"reflect"
+	"sync"
 	"testing"
 	"time"
 
@@ -527,41 +528,58 @@ func TestPutACLWithConcurrency(t *testing.T) {
 		},
 	}
 
-	cards := map[uint32][]types.Card{
-		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 1, 4: 1}},
-			types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 1, 4: 1}},
-		},
+	cards := struct {
+		cards map[uint32][]types.Card
+		sync.RWMutex
+	}{
+		cards: map[uint32][]types.Card{
+			12345: []types.Card{
+				types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+				types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 1, 4: 1}},
+				types.Card{CardNumber: 65539, From: date("2020-01-01"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 1, 4: 1}},
+			},
 
-		54321: []types.Card{
-			types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+			54321: []types.Card{
+				types.Card{CardNumber: 65536, From: date("2020-01-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+				types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 0}},
+				types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+			},
 		},
 	}
 
 	u := mock{
 		getCards: func(deviceID uint32) (uint32, error) {
-			return uint32(len(cards[deviceID])), nil
+			cards.RLock()
+			defer cards.RUnlock()
+
+			return uint32(len(cards.cards[deviceID])), nil
 		},
+
 		getCardByIndex: func(deviceID, index uint32) (*types.Card, error) {
-			if int(index) < 0 || int(index) > len(cards[deviceID]) {
+			cards.RLock()
+			defer cards.RUnlock()
+
+			if int(index) < 0 || int(index) > len(cards.cards[deviceID]) {
 				return nil, nil
 			}
-			return &cards[deviceID][index-1], nil
+			return &cards.cards[deviceID][index-1], nil
 		},
 
 		putCard: func(deviceID uint32, card types.Card) (bool, error) {
-			for ix, c := range cards[deviceID] {
+			cards.RLock()
+			for ix, c := range cards.cards[deviceID] {
 				if c.CardNumber == card.CardNumber {
-					cards[deviceID][ix] = card
+					cards.cards[deviceID][ix] = card
+					cards.RUnlock()
 					return true, nil
 				}
 			}
+			cards.RUnlock()
 
-			cards[deviceID] = append(cards[deviceID], card)
+			cards.Lock()
+			cards.cards[deviceID] = append(cards.cards[deviceID], card)
+			cards.Unlock()
 
 			time.Sleep(delays[deviceID])
 
@@ -569,9 +587,12 @@ func TestPutACLWithConcurrency(t *testing.T) {
 		},
 
 		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
-			for ix, c := range cards[deviceID] {
+			cards.Lock()
+			defer cards.Unlock()
+
+			for ix, c := range cards.cards[deviceID] {
 				if c.CardNumber == cardNumber {
-					cards[deviceID] = append(cards[deviceID][:ix], cards[deviceID][ix+1:]...)
+					cards.cards[deviceID] = append(cards.cards[deviceID][:ix], cards.cards[deviceID][ix+1:]...)
 					return true, nil
 				}
 			}
@@ -585,12 +606,14 @@ func TestPutACLWithConcurrency(t *testing.T) {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
 
-	if !reflect.DeepEqual(cards, expected) {
-		if len(cards) != len(expected) {
-			t.Errorf("Internal card lists not updated correctly - expected:%v devices, got:%v devices", len(expected), len(cards))
+	cards.RLock()
+	defer cards.RUnlock()
+	if !reflect.DeepEqual(cards.cards, expected) {
+		if len(cards.cards) != len(expected) {
+			t.Errorf("Internal card lists not updated correctly - expected:%v devices, got:%v devices", len(expected), len(cards.cards))
 		} else {
 			for k, p := range expected {
-				q := cards[k]
+				q := cards.cards[k]
 				if !reflect.DeepEqual(p, q) {
 					t.Errorf("Device %v: internal card list not updated correctly:\n    expected:%+v\n    got:     %+v", k, p, q)
 				}
