@@ -154,8 +154,8 @@ func NewMQTT() *MQTT {
 		EventIDs: eventIDs,
 		Softlock: Softlock{
 			Enabled:  true,
-			Interval: 30 * time.Second,
-			Wait:     45 * time.Second,
+			Interval: 60 * time.Second,
+			Wait:     90 * time.Second,
 		},
 		Disconnects: Disconnects{
 			Enabled:  true,
