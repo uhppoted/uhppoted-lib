@@ -92,7 +92,7 @@ type Disconnects struct {
 }
 
 type ACL struct {
-	Verify bool `conf:"verify"`
+	Verify string `conf:"verify"`
 }
 
 func (t *Topics) Resolve(subtopic string) string {
@@ -168,7 +168,7 @@ func NewMQTT() *MQTT {
 			Max:      10,
 		},
 		ACL: ACL{
-			Verify: true,
+			Verify: "RSA",
 		},
 	}
 }
