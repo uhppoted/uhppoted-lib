@@ -2,17 +2,6 @@
 
 ### IN PROGRESS
 
-- [x] Once off crash in tests after updating to Go 1.19:
-```
-go test ./...
-fatal error: concurrent map writes
-
-goroutine 83 [running]:
-github.com/uhppoted/uhppoted-lib/acl.TestPutACLWithConcurrency.func3(0x1881b0?, {0x0?, 0xc00018e258?, 0xc00018e270?, 0xc0001881b0?})
-    /Users/tonyseebregts/Development/uhppote/uhppoted/uhppoted-lib/acl/put_test.go:564 +0xa8
-github.com/uhppoted/uhppoted-lib/acl.(*mock).PutCard(0x11e70e0?, 0x1b8000?, {0x1?, 0xc00018e258?, 0xc00018e270?, 0xc0001881b0?})
-```
-
 ## TODO
 
 - [ ] config.NewConfig should not return pointer

@@ -26,6 +26,7 @@ type MQTT struct {
 	EncryptOutgoing bool        `conf:"security.outgoing.encrypt"`
 	Softlock        Softlock    `conf:"softlock"`
 	Disconnects     Disconnects `conf:"disconnects"`
+	ACL             ACL         `conf:"acl"`
 }
 
 type Connection struct {
@@ -88,6 +89,10 @@ type Disconnects struct {
 	Enabled  bool          `conf:"enabled"`
 	Interval time.Duration `conf:"interval"`
 	Max      uint32        `conf:"max"`
+}
+
+type ACL struct {
+	Verify bool `conf:"verify"`
 }
 
 func (t *Topics) Resolve(subtopic string) string {
@@ -161,6 +166,9 @@ func NewMQTT() *MQTT {
 			Enabled:  true,
 			Interval: 5 * time.Minute,
 			Max:      10,
+		},
+		ACL: ACL{
+			Verify: true,
 		},
 	}
 }
