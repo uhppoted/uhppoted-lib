@@ -45,7 +45,7 @@ func (w *Watchdog) ID() string {
 }
 
 func (w *Watchdog) Exec(handler MonitoringHandler) error {
-	w.log.Printf("DEBUG %-20s", "watchdog")
+	w.log.Printf("DEBUG  %-20s", "watchdog")
 
 	warnings := uint(0)
 	errors := uint(0)
@@ -65,14 +65,14 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 		if !w.state.HealthCheck.Alerted {
 			msg := fmt.Sprintf("'health-check' subsystem has not run since %v (%v)", types.DateTime(w.state.Started), dt)
 
-			w.log.Printf("ERROR %s", msg)
+			w.log.Printf("ERROR  %s", msg)
 			if err := handler.Alert(w, msg); err == nil {
 				w.state.HealthCheck.Alerted = true
 			}
 		}
 	} else {
 		if w.state.HealthCheck.Alerted {
-			w.log.Printf("INFO  'health-check' subsystem is running")
+			w.log.Printf("INFO   'health-check' subsystem is running")
 			w.state.HealthCheck.Alerted = false
 		}
 	}
@@ -98,7 +98,7 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 		msg = fmt.Sprintf("%s", Warnings(warnings))
 	}
 
-	w.log.Printf("%-5s %-12s %s", level, "watchdog", msg)
+	w.log.Printf("%-6s %-12s %s", level, "watchdog", msg)
 	handler.Alive(w, msg)
 
 	return nil

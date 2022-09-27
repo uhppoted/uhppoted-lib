@@ -31,18 +31,18 @@ type UHPPOTED struct {
 
 func (u *UHPPOTED) debug(tag string, msg interface{}) {
 	if u != nil && u.Log != nil {
-		u.Log.Printf("DEBUG %-12s %v", tag, msg)
+		u.Log.Printf("DEBUG  %-12s %v", tag, msg)
 	}
 }
 
 func (u *UHPPOTED) info(tag string, msg interface{}) {
 	if u != nil && u.Log != nil {
-		u.Log.Printf("INFO  %-12s %v", tag, msg)
+		u.Log.Printf("INFO   %-12s %v", tag, msg)
 	}
 }
 
 func (u *UHPPOTED) warn(tag string, err error) {
 	if u != nil && u.Log != nil {
-		u.Log.Printf("WARN  %-12s %v", tag, err)
+		u.Log.Printf("WARN   %-12s %v", tag, err)
 	}
 }

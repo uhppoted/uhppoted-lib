@@ -94,7 +94,7 @@ func (h *HealthCheck) ID() string {
 }
 
 func (h *HealthCheck) Exec(handler MonitoringHandler) {
-	h.log.Printf("DEBUG %-20s", "health-check")
+	h.log.Printf("DEBUG  %-20s", "health-check")
 
 	now := time.Now()
 	errors := uint(0)
@@ -129,7 +129,7 @@ func (h *HealthCheck) Exec(handler MonitoringHandler) {
 		msg = fmt.Sprintf("%s", Warnings(warnings))
 	}
 
-	h.log.Printf("%-5s %-12s %s", level, "health-check", msg)
+	h.log.Printf("%-6s %-12s %s", level, "health-check", msg)
 	handler.Alive(h, msg)
 }
 
@@ -428,7 +428,7 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 }
 
 func (h *HealthCheck) resolve() {
-	h.log.Printf("INFO  health-check refreshing interface IP address list")
+	h.log.Printf("INFO   health-check refreshing interface IP address list")
 
 	list := []netip.AddrPort{}
 
@@ -469,7 +469,7 @@ func (h *HealthCheck) resolve() {
 func info(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message string) bool {
 	msg := fmt.Sprintf("UTC0311-L0x %s %s", types.SerialNumber(deviceID), message)
 
-	h.log.Printf("%-5s %s", "INFO", msg)
+	h.log.Printf("%-6s %s", "INFO", msg)
 	if err := handler.Alert(h, msg); err != nil {
 		return false
 	}
@@ -480,7 +480,7 @@ func info(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message st
 func warn(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message string) bool {
 	msg := fmt.Sprintf("UTC0311-L0x %s %s", types.SerialNumber(deviceID), message)
 
-	h.log.Printf("%-5s %s", "WARN", msg)
+	h.log.Printf("%-6s %s", "WARN", msg)
 	if err := handler.Alert(h, msg); err != nil {
 		return false
 	}
@@ -499,9 +499,9 @@ func alert(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message s
 	}
 
 	if known {
-		h.log.Printf("%-5s %s", "ERROR", msg)
+		h.log.Printf("%-6s %s", "ERROR", msg)
 	} else {
-		h.log.Printf("%-5s %s", "WARN", msg)
+		h.log.Printf("%-6s %s", "WARN", msg)
 	}
 
 	if err := handler.Alert(h, msg); err != nil {

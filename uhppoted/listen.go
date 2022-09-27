@@ -19,10 +19,6 @@ type EventMap struct {
 	retrieved map[uint32]uint32
 }
 
-// type EventMessage struct {
-// 	Event Event `json:"event"`
-// }
-
 type EventHandler func(Event) bool
 
 type listener struct {
