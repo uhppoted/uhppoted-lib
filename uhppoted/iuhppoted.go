@@ -14,7 +14,6 @@ type IUHPPOTED interface {
 	SetTime(request SetTimeRequest) (*SetTimeResponse, error)
 	GetDoorDelay(request GetDoorDelayRequest) (*GetDoorDelayResponse, error)
 	GetDoorControl(request GetDoorControlRequest) (*GetDoorControlResponse, error)
-	RecordSpecialEvents(request RecordSpecialEventsRequest) (*RecordSpecialEventsResponse, error)
 	GetCardRecords(request GetCardRecordsRequest) (*GetCardRecordsResponse, error)
 	GetCards(request GetCardsRequest) (*GetCardsResponse, error)
 	DeleteCards(request DeleteCardsRequest) (*DeleteCardsResponse, error)
@@ -35,6 +34,7 @@ type IUHPPOTED interface {
 	GetEventIndices(deviceID uint32) (uint32, uint32, uint32, error)
 	GetEvent(deviceID uint32, index uint32) (*Event, error)
 	GetEvents(deviceID uint32, N int) ([]Event, error)
+	RecordSpecialEvents(deviceID uint32, enable bool) (bool, error)
 }
 
 type GetDevicesRequest struct {
@@ -218,17 +218,6 @@ type PutTaskListRequest struct {
 type PutTaskListResponse struct {
 	DeviceID DeviceID `json:"device-id"`
 	Warnings []error  `json:"warnings"`
-}
-
-type RecordSpecialEventsRequest struct {
-	DeviceID DeviceID
-	Enable   bool
-}
-
-type RecordSpecialEventsResponse struct {
-	DeviceID DeviceID
-	Enable   bool
-	Updated  bool
 }
 
 type OpenDoorRequest struct {

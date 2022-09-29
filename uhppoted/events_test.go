@@ -2,7 +2,6 @@ package uhppoted
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 	"time"
 
@@ -96,16 +95,8 @@ func TestGetEventIndices(t *testing.T) {
 }
 
 func TestRecordSpecialEvents(t *testing.T) {
-	request := RecordSpecialEventsRequest{
-		DeviceID: 405419896,
-		Enable:   true,
-	}
-
-	expected := RecordSpecialEventsResponse{
-		DeviceID: 405419896,
-		Enable:   true,
-		Updated:  true,
-	}
+	deviceID := uint32(405419896)
+	enabled := true
 
 	mock := stub{
 		recordSpecialEvents: func(deviceID uint32, enable bool) (bool, error) {
@@ -123,31 +114,19 @@ func TestRecordSpecialEvents(t *testing.T) {
 		Log:             nil,
 	}
 
-	response, err := u.RecordSpecialEvents(request)
+	updated, err := u.RecordSpecialEvents(deviceID, enabled)
 	if err != nil {
 		t.Fatalf("Unexpected error (%v)", err)
 	}
 
-	if response == nil {
-		t.Fatalf("Invalid response (%v)", response)
-	}
-
-	if !reflect.DeepEqual(*response, expected) {
-		t.Errorf("Incorrect response:\n   expected: %+v\n   got:      %+v\n", expected, *response)
+	if !updated {
+		t.Errorf("Incorrect response - expected: %+v, got: %+v", true, updated)
 	}
 }
 
 func TestRecordSpecialEventsWithFail(t *testing.T) {
-	request := RecordSpecialEventsRequest{
-		DeviceID: 405419896,
-		Enable:   true,
-	}
-
-	expected := RecordSpecialEventsResponse{
-		DeviceID: 405419896,
-		Enable:   true,
-		Updated:  false,
-	}
+	deviceID := uint32(405419896)
+	enabled := true
 
 	mock := stub{
 		recordSpecialEvents: func(deviceID uint32, enable bool) (bool, error) {
@@ -161,16 +140,12 @@ func TestRecordSpecialEventsWithFail(t *testing.T) {
 		Log:             nil,
 	}
 
-	response, err := u.RecordSpecialEvents(request)
+	updated, err := u.RecordSpecialEvents(deviceID, enabled)
 	if err != nil {
 		t.Fatalf("Unexpected error (%v)", err)
 	}
 
-	if response == nil {
-		t.Fatalf("Invalid response (%v)", response)
-	}
-
-	if !reflect.DeepEqual(*response, expected) {
-		t.Errorf("Incorrect response:\n   expected: %+v\n   got:      %+v\n", expected, *response)
+	if updated {
+		t.Errorf("Incorrect response: - expected:%+v, got:%+v", false, updated)
 	}
 }

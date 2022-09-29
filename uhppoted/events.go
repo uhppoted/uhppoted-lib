@@ -132,24 +132,15 @@ func (u *UHPPOTED) GetEvents(deviceID uint32, N int) ([]Event, error) {
 
 // Unwraps the request and dispatches the corresponding controller command to enable or disable
 // door open, door close and door button press events for the controller.
-func (u *UHPPOTED) RecordSpecialEvents(request RecordSpecialEventsRequest) (*RecordSpecialEventsResponse, error) {
-	u.debug("record-special-events", fmt.Sprintf("request  %+v", request))
+func (u *UHPPOTED) RecordSpecialEvents(deviceID uint32, enable bool) (bool, error) {
+	u.debug("record-special-events", fmt.Sprintf("%v enable:%v", deviceID, enable))
 
-	device := uint32(request.DeviceID)
-	enable := request.Enable
-
-	updated, err := u.UHPPOTE.RecordSpecialEvents(device, enable)
+	updated, err := u.UHPPOTE.RecordSpecialEvents(deviceID, enable)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error updating 'record special events' flag for %v (%w)", device, err))
+		return false, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("%v  error enabling/disabling 'record special events' (%w)", deviceID, err))
 	}
 
-	response := RecordSpecialEventsResponse{
-		DeviceID: DeviceID(device),
-		Enable:   enable,
-		Updated:  updated,
-	}
+	u.debug("record-special-events", fmt.Sprintf("updated %+v", updated))
 
-	u.debug("record-special-events", fmt.Sprintf("response %+v", response))
-
-	return &response, nil
+	return updated, nil
 }
