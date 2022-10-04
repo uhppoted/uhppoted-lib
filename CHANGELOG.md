@@ -7,6 +7,7 @@
 2. Updated go.mod to Go 1.19.
 3. Added softlock to MQTT configuration.
 4. Added ACL mqtt.acl.verify to MQTT configuration.
+5. Reworked RecordSpecialEvents to not use wrapped requests/responses
 
 ## [v0.8.1] - 2022-08-01
 

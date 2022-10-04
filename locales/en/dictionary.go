@@ -14,6 +14,8 @@ var Dictionary = map[string]string{
 
 	// event reason
 	"event.reason.1":  "swipe",
+	"event.reason.2":  "swipe open",
+	"event.reason.3":  "swipe close",
 	"event.reason.5":  "swipe:denied (system)",
 	"event.reason.6":  "no access rights",
 	"event.reason.7":  "incorrect password",
