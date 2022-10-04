@@ -34,8 +34,9 @@ func (w Warnings) String() string {
 }
 
 const (
-	IDLE   = time.Duration(60 * time.Second)
-	IGNORE = time.Duration(5 * time.Minute)
-	DELTA  = 60
-	DELAY  = 30
+	IDLE      = time.Duration(60 * time.Second)
+	IGNORE    = time.Duration(5 * time.Minute)
+	DELTA     = 60
+	MIN_DELAY = 30
+	PADDING   = 15
 )

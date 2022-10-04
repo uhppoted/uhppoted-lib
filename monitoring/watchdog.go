@@ -52,15 +52,18 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 	healthCheckRunning := false
 
 	// Verify health-check
+
+	delay := math.Max(MIN_DELAY, w.healthcheck.interval.Seconds()+PADDING)
+
 	dt := time.Since(w.state.Started).Round(time.Second)
 	if w.healthcheck.state.Touched != nil {
 		dt = time.Since(*w.healthcheck.state.Touched)
-		if int64(math.Abs(dt.Seconds())) < DELAY {
+		if math.Abs(dt.Seconds()) < delay {
 			healthCheckRunning = true
 		}
 	}
 
-	if int64(math.Abs(dt.Seconds())) > DELAY {
+	if math.Abs(dt.Seconds()) > delay {
 		errors += 1
 		if !w.state.HealthCheck.Alerted {
 			msg := fmt.Sprintf("'health-check' subsystem has not run since %v (%v)", types.DateTime(w.state.Started), dt)

@@ -14,6 +14,7 @@ import (
 
 type HealthCheck struct {
 	uhppote    uhppote.IUHPPOTE
+	interval   time.Duration
 	idleTime   time.Duration
 	ignoreTime time.Duration
 	log        *log.Logger
@@ -55,9 +56,10 @@ var cache = struct {
 	sync.RWMutex
 }{}
 
-func NewHealthCheck(u uhppote.IUHPPOTE, idleTime, ignoreTime time.Duration, l *log.Logger) HealthCheck {
+func NewHealthCheck(u uhppote.IUHPPOTE, interval, idleTime, ignoreTime time.Duration, l *log.Logger) HealthCheck {
 	return HealthCheck{
 		uhppote:    u,
+		interval:   interval,
 		idleTime:   idleTime,
 		ignoreTime: ignoreTime,
 		log:        l,
