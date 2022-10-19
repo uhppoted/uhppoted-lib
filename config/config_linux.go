@@ -50,6 +50,4 @@ const (
 	httpdUsersFile       string = _var + "/httpd/system/users.json"
 	httpdHistoryFile     string = _var + "/httpd/system/history.json"
 	httpdAuditFile       string = _var + "/httpd/audit/audit.log"
-
-	SheetsCredentials string = _etc + "/sheets/credentials.json"
 )

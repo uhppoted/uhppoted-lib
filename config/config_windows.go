@@ -54,8 +54,6 @@ var httpdUsersFile string = filepath.Join(_var, "httpd", "system", "users.json")
 var httpdHistoryFile string = filepath.Join(_var, "httpd", "system", "history.json")
 var httpdAuditFile string = filepath.Join(_var, "httpd", "audit", "audit.log")
 
-var SheetsCredentials string = filepath.Join(_etc, "sheets", "credentials.json")
-
 func workdir() string {
 	programData, err := windows.KnownFolderPath(windows.FOLDERID_ProgramData, windows.KF_FLAG_DEFAULT)
 	if err != nil {
