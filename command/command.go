@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 type Command interface {
@@ -13,6 +14,22 @@ type Command interface {
 	Description() string
 	Usage() string
 	Help()
+}
+
+func name(name string) string {
+	return strings.Split(name, "|")[0]
+}
+
+func alt(name string, arg string) bool {
+	tokens := strings.Split(name, "|")
+
+	for _, t := range tokens {
+		if t == arg {
+			return true
+		}
+	}
+
+	return false
 }
 
 func Parse(cli []Command, run Command, help Command) (Command, error) {
@@ -26,12 +43,12 @@ func Parse(cli []Command, run Command, help Command) (Command, error) {
 	}
 
 	if len(args) > 0 {
-		if args[0] == help.Name() {
+		if alt(help.Name(), args[0]) {
 			cmd = help
 			args = args[1:]
 		} else {
 			for _, c := range cli {
-				if args[0] == c.Name() {
+				if alt(c.Name(), args[0]) {
 					cmd = c
 					args = args[1:]
 					break
@@ -43,7 +60,7 @@ func Parse(cli []Command, run Command, help Command) (Command, error) {
 	if cmd != nil {
 		flagset := cmd.FlagSet()
 		if flagset == nil {
-			panic(fmt.Sprintf("'%s' command implementation without a flagset: %#v", cmd.Name(), cmd))
+			panic(fmt.Sprintf("'%s' command implementation without a flagset: %#v", name(cmd.Name()), cmd))
 		}
 
 		return cmd, flagset.Parse(args)

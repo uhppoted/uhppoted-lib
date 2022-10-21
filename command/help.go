@@ -57,13 +57,13 @@ func (h *HelpV) Execute(args ...interface{}) error {
 			return nil
 		}
 
-		if os.Args[2] == h.Name() {
+		if alt(h.Name(), os.Args[2]) {
 			h.Help()
 			return nil
 		}
 
 		for _, c := range h.cli {
-			if os.Args[2] == c.Name() {
+			if alt(c.Name(), os.Args[2]) {
 				c.Help()
 				return nil
 			}
@@ -105,9 +105,9 @@ func (h *HelpV) usage() {
 	fmt.Println()
 
 	if h.run != nil {
-		fmt.Printf("  Defaults to '%s'.\n", h.run.Name())
+		fmt.Printf("  Defaults to '%s'.\n", name(h.run.Name()))
 		fmt.Println()
-		fmt.Printf("   '%s' options:\n", h.run.Name())
+		fmt.Printf("   '%s' options:\n", name(h.run.Name()))
 
 		h.run.FlagSet().VisitAll(func(f *flag.Flag) {
 			fmt.Printf("    --%-12s %s\n", f.Name, f.Usage)
@@ -128,7 +128,7 @@ func (h *HelpV) helpCommands() {
 	fmt.Println()
 
 	if h.run != nil {
-		fmt.Printf("     Defaults to '%s'.\n", h.run.Name())
+		fmt.Printf("     Defaults to '%s'.\n", name(h.run.Name()))
 		fmt.Println()
 	}
 }
