@@ -20,6 +20,9 @@ type HTTPD struct {
 		CookieMaxAge  int    `conf:"cookie.max-age"`
 		LoginExpiry   string `conf:"login.expiry"`
 		SessionExpiry string `conf:"session.expiry"`
+		OTP           struct {
+			Issuer string `conf:"issuer"`
+		} `conf:"otp"`
 	} `conf:"security"`
 	RequestTimeout time.Duration `conf:"request.timeout"`
 	System         struct {
@@ -77,12 +80,20 @@ func NewHTTPD() *HTTPD {
 			CookieMaxAge  int    `conf:"cookie.max-age"`
 			LoginExpiry   string `conf:"login.expiry"`
 			SessionExpiry string `conf:"session.expiry"`
+			OTP           struct {
+				Issuer string `conf:"issuer"`
+			} `conf:"otp"`
 		}{
 			Auth:          "basic",
 			AuthDB:        httpdAuthDB,
 			CookieMaxAge:  24,
 			LoginExpiry:   "1m",
 			SessionExpiry: "60m",
+			OTP: struct {
+				Issuer string `conf:"issuer"`
+			}{
+				Issuer: "uhppoted-httpd",
+			},
 		},
 		RequestTimeout: 5 * time.Second,
 		System: struct {

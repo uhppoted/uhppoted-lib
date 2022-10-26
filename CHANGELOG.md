@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [Unreleased]
+
+1. Added OTP section to _uhppoted-httpd_ config.
+
 ## [0.8.2](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.1) - 2022-10-14
 
 ### Changed
