@@ -22,6 +22,7 @@ type HTTPD struct {
 		SessionExpiry string `conf:"session.expiry"`
 		OTP           struct {
 			Issuer string `conf:"issuer"`
+			Login  string `conf:"login"`
 		} `conf:"otp"`
 	} `conf:"security"`
 	RequestTimeout time.Duration `conf:"request.timeout"`
@@ -82,6 +83,7 @@ func NewHTTPD() *HTTPD {
 			SessionExpiry string `conf:"session.expiry"`
 			OTP           struct {
 				Issuer string `conf:"issuer"`
+				Login  string `conf:"login"`
 			} `conf:"otp"`
 		}{
 			Auth:          "basic",
@@ -91,8 +93,10 @@ func NewHTTPD() *HTTPD {
 			SessionExpiry: "60m",
 			OTP: struct {
 				Issuer string `conf:"issuer"`
+				Login  string `conf:"login"`
 			}{
 				Issuer: "uhppoted-httpd",
+				Login:  "allow",
 			},
 		},
 		RequestTimeout: 5 * time.Second,
