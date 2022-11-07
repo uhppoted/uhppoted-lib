@@ -14,6 +14,9 @@ func (cmd *Version) Name() string {
 	return "version"
 }
 
+func (cmd *Version) Configure(c map[string]any) {
+}
+
 func (cmd *Version) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("version", flag.ExitOnError)
 }
