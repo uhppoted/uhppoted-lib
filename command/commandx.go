@@ -10,7 +10,7 @@ import (
 
 type CommandX interface {
 	Name() string
-	Configure(map[string]any) 
+	Configure(map[string]any)
 	FlagSet() *flag.FlagSet
 	Execute(...interface{}) error
 	Description() string
