@@ -16,6 +16,10 @@ type Command interface {
 	Help()
 }
 
+type CommandExt interface {
+	Configure(map[string]any)
+}
+
 func name(name string) string {
 	return strings.Split(name, "|")[0]
 }
