@@ -69,13 +69,6 @@ func Parse(cli []Command, run Command, help Command) (Command, error) {
 		} else {
 			return cmd, flagset.Parse(args)
 		}
-		
-		// flagset := cmd.FlagSet()
-		// if flagset == nil {
-		// 	panic(fmt.Sprintf("'%s' command implementation without a flagset: %#v", name(cmd.Name()), cmd))
-		// }
-
-		// return cmd, flagset.Parse(args)
 	}
 
 	return nil, nil
