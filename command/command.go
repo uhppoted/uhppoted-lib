@@ -10,10 +10,14 @@ import (
 type Command interface {
 	Name() string
 	FlagSet() *flag.FlagSet
-	Execute(...interface{}) error
+	Execute(...any) error
 	Description() string
 	Usage() string
 	Help()
+}
+
+type CommandExt interface {
+	ParseCmd(args ...string) error
 }
 
 func name(name string) string {
@@ -58,12 +62,20 @@ func Parse(cli []Command, run Command, help Command) (Command, error) {
 	}
 
 	if cmd != nil {
-		flagset := cmd.FlagSet()
-		if flagset == nil {
+		if ext, ok := cmd.(CommandExt); ok {
+			return cmd, ext.ParseCmd(args...)
+		} else if flagset := cmd.FlagSet(); flagset == nil {
 			panic(fmt.Sprintf("'%s' command implementation without a flagset: %#v", name(cmd.Name()), cmd))
+		} else {
+			return cmd, flagset.Parse(args)
 		}
+		
+		// flagset := cmd.FlagSet()
+		// if flagset == nil {
+		// 	panic(fmt.Sprintf("'%s' command implementation without a flagset: %#v", name(cmd.Name()), cmd))
+		// }
 
-		return cmd, flagset.Parse(args)
+		// return cmd, flagset.Parse(args)
 	}
 
 	return nil, nil
