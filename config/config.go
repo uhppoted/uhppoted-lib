@@ -134,6 +134,12 @@ type System struct {
 	WatchdogInterval    time.Duration        `conf:"monitoring.watchdog.interval"`
 }
 
+type Lockfile struct {
+	File     string        `conf:"file"`
+	Interval time.Duration `conf:"interval"`
+	Wait     time.Duration `conf:"wait"`
+}
+
 func NewConfig() *Config {
 	bind, broadcast, listen := DefaultIpAddresses()
 

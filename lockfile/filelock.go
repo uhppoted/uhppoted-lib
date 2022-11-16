@@ -33,8 +33,8 @@ func makeFileLock(file string) (*filelock, error) {
 	}, nil
 }
 
-func (f *filelock) Release() {
-	if f != nil {
-		os.Remove(f.file)
+func (l *filelock) Release() {
+	if l != nil {
+		os.Remove(l.file)
 	}
 }
