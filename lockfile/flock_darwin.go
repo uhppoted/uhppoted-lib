@@ -1,6 +1,7 @@
 package lockfile
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -26,7 +27,11 @@ func makeFLock(file string) (*flock, error) {
 	}
 
 	if err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB); err != nil {
-		return nil, fmt.Errorf("lockfile '%v' in use (%v)", file, err)
+		if errors.Is(err, syscall.EWOULDBLOCK) {
+			return nil, fmt.Errorf("lockfile '%v' in use (%v)", file, err)
+		} else {
+			return nil, fmt.Errorf("failed to lock '%v' (%v)", file, err)
+		}
 	}
 
 	pid := fmt.Sprintf("%d\n", os.Getpid())

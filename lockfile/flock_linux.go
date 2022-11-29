@@ -1,41 +1,60 @@
 package lockfile
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
+	"syscall"
 )
 
 type flock struct {
-	file string
+	file *os.File
 }
 
-// (will eventually) use 'flock' to create lockfile
+// Use 'flock' to manage file locks
+//
+// Ref. https://linux.die.net/man/2/flock
 func makeFLock(file string) (*flock, error) {
 	dir := filepath.Dir(file)
 	if err := os.MkdirAll(dir, os.ModeDir|os.ModePerm); err != nil {
 		return nil, err
 	}
 
-	pid := fmt.Sprintf("%d\n", os.Getpid())
-
-	if _, err := os.Stat(file); err == nil {
-		return nil, fmt.Errorf("lockfile '%v' already in use", file)
-	} else if !os.IsNotExist(err) {
+	f, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE, 0660)
+	if err != nil {
 		return nil, err
 	}
 
-	if err := os.WriteFile(file, []byte(pid), 0644); err != nil {
+	if err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB); err != nil {
+		if errors.Is(err, syscall.EWOULDBLOCK) {
+			return nil, fmt.Errorf("lockfile '%v' in use (%v)", file, err)
+		} else {
+			return nil, fmt.Errorf("failed to lock '%v' (%v)", file, err)
+		}
+	}
+
+	pid := fmt.Sprintf("%d\n", os.Getpid())
+
+	if _, err := f.Write([]byte(pid)); err != nil {
+		return nil, err
+	} else if err := f.Sync(); err != nil {
 		return nil, err
 	}
 
 	return &flock{
-		file: file,
+		file: f,
 	}, nil
 }
 
+// NTS: does not remove the lockfile because another process may open it in blocking mode, in which
+//
+//	case deleting the lockfile allows a second process to use the "same" lockfile and not block.
+//	(because the lock if on the fd, not the file name). Which of course means you can' use a
+//	mixture of blocking flocks and filelocks, but so be it.
 func (l *flock) Release() {
 	if l != nil {
-		os.Remove(l.file)
+		syscall.Flock(int(l.file.Fd()), syscall.LOCK_UN)
+		l.file.Close()
 	}
 }
