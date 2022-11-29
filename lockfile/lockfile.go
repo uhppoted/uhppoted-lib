@@ -20,7 +20,7 @@ func MakeLockFile(cfg config.Lockfile) (Lockfile, error) {
 		return makeSoftLock(cfg.File, cfg.Interval, cfg.Wait)
 	}
 
-	return makeFileLock(cfg.File)
+	return makeFLock(cfg.File)
 }
 
 func MakeFileFile(file string) (Lockfile, error) {

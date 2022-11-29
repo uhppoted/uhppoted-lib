@@ -1,0 +1,55 @@
+package lockfile
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"syscall"
+)
+
+type flock struct {
+	file *os.File
+}
+
+// Use 'flock' to manage file locks
+//
+// Ref. https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/flock.2.html
+func makeFLock(file string) (*flock, error) {
+	dir := filepath.Dir(file)
+	if err := os.MkdirAll(dir, os.ModeDir|os.ModePerm); err != nil {
+		return nil, err
+	}
+
+	f, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE, 0660)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB); err != nil {
+		return nil, fmt.Errorf("lockfile '%v' in use (%v)", file, err)
+	}
+
+	pid := fmt.Sprintf("%d\n", os.Getpid())
+
+	if _, err := f.Write([]byte(pid)); err != nil {
+		return nil, err
+	} else if err := f.Sync(); err != nil {
+		return nil, err
+	}
+
+	return &flock{
+		file: f,
+	}, nil
+}
+
+// NTS: does not remove the lockfile because another process may open it in blocking mode, in which
+//
+//	case deleting the lockfile allows a second process to use the "same" lockfile and not block.
+//	(because the lock if on the fd, not the file name). Which of course means you can' use a
+//	mixture of blocking flocks and filelocks, but so be it.
+func (l *flock) Release() {
+	if l != nil {
+		syscall.Flock(int(l.file.Fd()), syscall.LOCK_UN)
+		l.file.Close()
+	}
+}
