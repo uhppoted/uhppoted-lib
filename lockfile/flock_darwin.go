@@ -26,7 +26,8 @@ func makeFLock(file string) (*flock, error) {
 		return nil, err
 	}
 
-	if err := syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB); err != nil {
+	handle := int(f.Fd())
+	if err := syscall.Flock(handle, syscall.LOCK_EX|syscall.LOCK_NB); err != nil {
 		if errors.Is(err, syscall.EWOULDBLOCK) {
 			return nil, fmt.Errorf("lockfile '%v' in use (%v)", file, err)
 		} else {
@@ -47,14 +48,16 @@ func makeFLock(file string) (*flock, error) {
 	}, nil
 }
 
-// NTS: does not remove the lockfile because another process may open it in blocking mode, in which
+// NTS
 //
-//	case deleting the lockfile allows a second process to use the "same" lockfile and not block.
-//	(because the lock if on the fd, not the file name). Which of course means you can' use a
-//	mixture of blocking flocks and filelocks, but so be it.
-func (l *flock) Release() {
-	if l != nil {
-		syscall.Flock(int(l.file.Fd()), syscall.LOCK_UN)
-		l.file.Close()
-	}
+//	 Does not remove the lockfile because another process may open it in blocking mode, in which
+//		case deleting the lockfile allows a second process to use the "same" lockfile and not block.
+//		(because the lock if on the fd, not the file name). Which of course means you can' use a
+//		mixture of blocking flocks and filelocks, but so be it.
+//
+// Ref. https://stackoverflow.com/questions/17708885/flock-removing-locked-file-without-race-condition
+func (l flock) Release() {
+	handle := int(l.file.Fd())
+	syscall.Flock(handle, syscall.LOCK_UN)
+	l.file.Close()
 }

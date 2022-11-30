@@ -1,14 +1,22 @@
 package lockfile
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
+	"syscall"
 )
 
 type flock struct {
-	file string
+	file *os.File
 }
+
+var (
+	kernel32, _       = syscall.LoadLibrary("kernel32.dll")
+	procLockFile, _   = syscall.GetProcAddress(kernel32, "LockFile")
+	procUnlockFile, _ = syscall.GetProcAddress(kernel32, "UnlockFile")
+)
 
 // Windows doesn't have 'flock' so fall back to ordinary file lock
 func makeFLock(file string) (*flock, error) {
@@ -17,25 +25,111 @@ func makeFLock(file string) (*flock, error) {
 		return nil, err
 	}
 
-	pid := fmt.Sprintf("%d\n", os.Getpid())
-
-	if _, err := os.Stat(file); err == nil {
-		return nil, fmt.Errorf("lockfile '%v' already in use", file)
-	} else if !os.IsNotExist(err) {
+	f, err := os.OpenFile(file, os.O_RDWR|os.O_CREATE, 0660)
+	if err != nil {
 		return nil, err
 	}
 
-	if err := os.WriteFile(file, []byte(pid), 0644); err != nil {
+	handle := syscall.Handle(f.Fd())
+	if err := lock(handle); err != nil {
+		if errors.Is(err, syscall.EWOULDBLOCK) {
+			return nil, fmt.Errorf("lockfile '%v' in use (%v)", file, err)
+		} else {
+			return nil, fmt.Errorf("failed to lock '%v' (%v)", file, err)
+		}
+	}
+
+	pid := fmt.Sprintf("%d\n", os.Getpid())
+
+	if _, err := f.Write([]byte(pid)); err != nil {
+		return nil, err
+	} else if err := f.Sync(); err != nil {
 		return nil, err
 	}
 
 	return &flock{
-		file: file,
+		file: f,
 	}, nil
 }
 
-func (l *flock) Release() {
-	if l != nil {
-		os.Remove(l.file)
+func (l flock) Release() {
+	handle := syscall.Handle(l.file.Fd())
+	unlock(handle)
+	l.file.Close()
+}
+
+// Ref. https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile
+//
+// BOOL LockFile(
+//
+//	[in] HANDLE hFile,
+//	[in] DWORD  dwFileOffsetLow,
+//	[in] DWORD  dwFileOffsetHigh,
+//	[in] DWORD  nNumberOfBytesToLockLow,
+//	[in] DWORD  nNumberOfBytesToLockHigh
+//
+// );
+//
+// Ref. https://github.com/gofrs/flock/blob/master/flock_winapi.go
+func lock(handle syscall.Handle) error {
+	var dwFileOffsetLow uint32 = 0
+	var dwFileOffsetHigh uint32 = 0
+	var nNumberOfBytesToLockLow uint32 = 1024
+	var nNumberOfBytesToLockHigh uint32 = 0
+
+	rc, _, err := syscall.Syscall6(
+		uintptr(procLockFile),
+		5,
+		uintptr(handle),
+		uintptr(dwFileOffsetLow),          // [in] DWORD  dwFileOffsetLow
+		uintptr(dwFileOffsetHigh),         // [in] DWORD  dwFileOffsetHigh
+		uintptr(nNumberOfBytesToLockLow),  // [in] DWORD  nNumberOfBytesToLockLow
+		uintptr(nNumberOfBytesToLockHigh), // [in] DWORD  nNumberOfBytesToLockHigh
+		uintptr(0))                        // unused
+
+	if rc != 1 && err == 0 {
+		return syscall.EINVAL
+	} else if rc != 1 {
+		return fmt.Errorf("LockFile failed (%v)", err)
+	} else {
+		return nil
+	}
+}
+
+// https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-unlockfile
+//
+// BOOL UnlockFile(
+//
+//	[in] HANDLE hFile,
+//	[in] DWORD  dwFileOffsetLow,
+//	[in] DWORD  dwFileOffsetHigh,
+//	[in] DWORD  nNumberOfBytesToUnlockLow,
+//	[in] DWORD  nNumberOfBytesToUnlockHigh
+//
+// );
+//
+// Ref. https://github.com/gofrs/flock/blob/master/flock_winapi.go
+func unlock(handle syscall.Handle) error {
+	var dwFileOffsetLow uint32 = 0
+	var dwFileOffsetHigh uint32 = 0
+	var nNumberOfBytesToLockLow uint32 = 1024
+	var nNumberOfBytesToLockHigh uint32 = 0
+
+	rc, _, err := syscall.Syscall6(
+		uintptr(procUnlockFile),
+		5,
+		uintptr(handle),
+		uintptr(dwFileOffsetLow),          // [in] DWORD  dwFileOffsetLow
+		uintptr(dwFileOffsetHigh),         // [in] DWORD  dwFileOffsetHigh
+		uintptr(nNumberOfBytesToLockLow),  // [in] DWORD  nNumberOfBytesToLockLow
+		uintptr(nNumberOfBytesToLockHigh), // [in] DWORD  nNumberOfBytesToLockHigh
+		uintptr(0))                        // unused
+
+	if rc != 1 && err == 0 {
+		return syscall.EINVAL
+	} else if rc != 1 {
+		return fmt.Errorf("UnlockFile failed (%v)", err)
+	} else {
+		return nil
 	}
 }

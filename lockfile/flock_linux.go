@@ -52,9 +52,9 @@ func makeFLock(file string) (*flock, error) {
 //	case deleting the lockfile allows a second process to use the "same" lockfile and not block.
 //	(because the lock if on the fd, not the file name). Which of course means you can' use a
 //	mixture of blocking flocks and filelocks, but so be it.
+//
+// Ref. https://stackoverflow.com/questions/17708885/flock-removing-locked-file-without-race-condition
 func (l *flock) Release() {
-	if l != nil {
-		syscall.Flock(int(l.file.Fd()), syscall.LOCK_UN)
-		l.file.Close()
-	}
+	syscall.Flock(int(l.file.Fd()), syscall.LOCK_UN)
+	l.file.Close()
 }

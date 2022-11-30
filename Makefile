@@ -51,7 +51,7 @@ build-all: test vet
 release: build-all
 
 debug: build
-	go test ./... -run TestDefaultConfigWrite
+	env GOOS=windows GOARCH=amd64       GOWORK=off go build -trimpath ./...
 
 godoc:
 	godoc -http=:80	-index_interval=60s
