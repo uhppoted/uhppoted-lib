@@ -18,7 +18,7 @@ var (
 	procUnlockFile, _ = syscall.GetProcAddress(kernel32, "UnlockFile")
 )
 
-// Windows doesn't have 'flock' so fall back to ordinary file lock
+// Windows doesn't have 'flock' so use LockFile/UnlockFile API
 func makeFLock(file string) (*flock, error) {
 	dir := filepath.Dir(file)
 	if err := os.MkdirAll(dir, os.ModeDir|os.ModePerm); err != nil {
@@ -52,10 +52,15 @@ func makeFLock(file string) (*flock, error) {
 	}, nil
 }
 
+// NTS
+// Unlike Linux and Darwin, removes lockfile because the LockFile and UnlockFile calls acquire
+// an exclusive lock.
 func (l flock) Release() {
 	handle := syscall.Handle(l.file.Fd())
+
 	unlock(handle)
 	l.file.Close()
+	os.Remove(l.file.Name())
 }
 
 // Ref. https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile
@@ -74,8 +79,8 @@ func (l flock) Release() {
 func lock(handle syscall.Handle) error {
 	var dwFileOffsetLow uint32 = 0
 	var dwFileOffsetHigh uint32 = 0
-	var nNumberOfBytesToLockLow uint32 = 1024
-	var nNumberOfBytesToLockHigh uint32 = 0
+	var nNumberOfBytesToLockLow uint32 = 0xfffffff  // MAX_DWORD
+	var nNumberOfBytesToLockHigh uint32 = 0xfffffff // MAX_DWORD
 
 	rc, _, err := syscall.Syscall6(
 		uintptr(procLockFile),
@@ -90,7 +95,7 @@ func lock(handle syscall.Handle) error {
 	if rc != 1 && err == 0 {
 		return syscall.EINVAL
 	} else if rc != 1 {
-		return fmt.Errorf("LockFile failed (%v)", err)
+		return fmt.Errorf("%v", err)
 	} else {
 		return nil
 	}
@@ -112,8 +117,8 @@ func lock(handle syscall.Handle) error {
 func unlock(handle syscall.Handle) error {
 	var dwFileOffsetLow uint32 = 0
 	var dwFileOffsetHigh uint32 = 0
-	var nNumberOfBytesToLockLow uint32 = 1024
-	var nNumberOfBytesToLockHigh uint32 = 0
+	var nNumberOfBytesToLockLow uint32 = 0xfffffff  // MAX_DWORD
+	var nNumberOfBytesToLockHigh uint32 = 0xfffffff // MAX_DWORD
 
 	rc, _, err := syscall.Syscall6(
 		uintptr(procUnlockFile),
@@ -128,7 +133,7 @@ func unlock(handle syscall.Handle) error {
 	if rc != 1 && err == 0 {
 		return syscall.EINVAL
 	} else if rc != 1 {
-		return fmt.Errorf("UnlockFile failed (%v)", err)
+		return fmt.Errorf("%v", err)
 	} else {
 		return nil
 	}

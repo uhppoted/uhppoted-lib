@@ -47,14 +47,16 @@ func makeFLock(file string) (*flock, error) {
 	}, nil
 }
 
-// NTS: does not remove the lockfile because another process may open it in blocking mode, in which
-//
-//	case deleting the lockfile allows a second process to use the "same" lockfile and not block.
-//	(because the lock if on the fd, not the file name). Which of course means you can' use a
-//	mixture of blocking flocks and filelocks, but so be it.
+// NTS
+// Does not remove the lockfile because another process may open it in blocking mode, in which
+// case deleting the lockfile allows a second process to use the "same" lockfile and not block.
+// (because the lock if on the fd, not the file name). Which of course means you can' use a
+// mixture of blocking flocks and filelocks, but so be it.
 //
 // Ref. https://stackoverflow.com/questions/17708885/flock-removing-locked-file-without-race-condition
 func (l *flock) Release() {
-	syscall.Flock(int(l.file.Fd()), syscall.LOCK_UN)
+	handle := int(l.file.Fd())
+
+	syscall.Flock(handle, syscall.LOCK_UN)
 	l.file.Close()
 }
