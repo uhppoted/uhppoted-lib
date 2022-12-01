@@ -9,13 +9,14 @@ import (
 )
 
 type flock struct {
-	file *os.File
+	file   *os.File
+	remove bool
 }
 
 // Use 'flock' to manage file locks
 //
 // Ref. https://linux.die.net/man/2/flock
-func makeFLock(file string) (*flock, error) {
+func makeFLock(file string, remove bool) (*flock, error) {
 	dir := filepath.Dir(file)
 	if err := os.MkdirAll(dir, os.ModeDir|os.ModePerm); err != nil {
 		return nil, err
@@ -43,15 +44,16 @@ func makeFLock(file string) (*flock, error) {
 	}
 
 	return &flock{
-		file: f,
+		file:   f,
+		remove: remove,
 	}, nil
 }
 
 // NTS
-// Does not remove the lockfile because another process may open it in blocking mode, in which
-// case deleting the lockfile allows a second process to use the "same" lockfile and not block.
-// (because the lock if on the fd, not the file name). Which of course means you can' use a
-// mixture of blocking flocks and filelocks, but so be it.
+// Does not remove the lockfile unless explicitly configured to do so because another process may open
+// it in blocking mode, in which case deleting the lockfile allows a second process to use the "same"
+// lockfile and not block (because the lock if on the fd, not the file name). Which of course means you
+// can' use a mixture of blocking flocks and filelocks, but so be it.
 //
 // Ref. https://stackoverflow.com/questions/17708885/flock-removing-locked-file-without-race-condition
 func (l *flock) Release() {
@@ -59,4 +61,8 @@ func (l *flock) Release() {
 
 	syscall.Flock(handle, syscall.LOCK_UN)
 	l.file.Close()
+
+	if l.remove {
+		os.Remove(l.file.Name())
+	}
 }

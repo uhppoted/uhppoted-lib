@@ -136,7 +136,7 @@ type System struct {
 
 type Lockfile struct {
 	File     string        `conf:"file"`
-	Keep     bool          `conf:"keep"`
+	Remove   bool          `conf:"remove"`
 	Interval time.Duration `conf:"interval"`
 	Wait     time.Duration `conf:"wait"`
 }

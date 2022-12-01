@@ -10,6 +10,7 @@ import (
 
 type flock struct {
 	file *os.File
+	remove bool
 }
 
 var (
@@ -19,7 +20,7 @@ var (
 )
 
 // Windows doesn't have 'flock' so use LockFile/UnlockFile API
-func makeFLock(file string) (*flock, error) {
+func makeFLock(file string, remove bool) (*flock, error) {
 	dir := filepath.Dir(file)
 	if err := os.MkdirAll(dir, os.ModeDir|os.ModePerm); err != nil {
 		return nil, err
@@ -49,18 +50,22 @@ func makeFLock(file string) (*flock, error) {
 
 	return &flock{
 		file: f,
+		remove:remove,
 	}, nil
 }
 
 // NTS
-// Unlike Linux and Darwin, removes lockfile because the LockFile and UnlockFile calls acquire
-// an exclusive lock.
+// Unlike Linux and Darwin, should actuall remove lockfile because the LockFile and UnlockFile calls
+// acquire an exclusive lock. Keeping it configurable though.
 func (l flock) Release() {
 	handle := syscall.Handle(l.file.Fd())
 
 	unlock(handle)
 	l.file.Close()
-	os.Remove(l.file.Name())
+
+	if l.remove {
+		os.Remove(l.file.Name())		
+	}
 }
 
 // Ref. https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile
