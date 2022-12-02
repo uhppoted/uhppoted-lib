@@ -24,7 +24,7 @@ type MQTT struct {
 	Nonce           Nonce       `conf:"security.nonce"`
 	SignOutgoing    bool        `conf:"security.outgoing.sign"`
 	EncryptOutgoing bool        `conf:"security.outgoing.encrypt"`
-	Softlock        Softlock    `conf:"softlock"`
+	LockfileRemove  bool        `conf:"lockfile.remove"`
 	Disconnects     Disconnects `conf:"disconnects"`
 	ACL             ACL         `conf:"acl"`
 }
@@ -77,12 +77,6 @@ type Permissions struct {
 	Enabled bool   `conf:"enabled"`
 	Users   string `conf:"users"`
 	Groups  string `conf:"groups"`
-}
-
-type Softlock struct {
-	Enabled  bool          `conf:"enabled"`
-	Interval time.Duration `conf:"interval"`
-	Wait     time.Duration `conf:"wait"`
 }
 
 type Disconnects struct {
@@ -157,11 +151,6 @@ func NewMQTT() *MQTT {
 		},
 		Cards:    mqttCards,
 		EventIDs: eventIDs,
-		Softlock: Softlock{
-			Enabled:  true,
-			Interval: 60 * time.Second,
-			Wait:     90 * time.Second,
-		},
 		Disconnects: Disconnects{
 			Enabled:  true,
 			Interval: 5 * time.Minute,

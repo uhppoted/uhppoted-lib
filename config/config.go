@@ -135,10 +135,8 @@ type System struct {
 }
 
 type Lockfile struct {
-	File     string        `conf:"file"`
-	Remove   bool          `conf:"remove"`
-	Interval time.Duration `conf:"interval"`
-	Wait     time.Duration `conf:"wait"`
+	File   string `conf:"file"`
+	Remove bool   `conf:"remove"`
 }
 
 func NewConfig() *Config {

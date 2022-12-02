@@ -9,7 +9,7 @@ import (
 )
 
 type flock struct {
-	file *os.File
+	file   *os.File
 	remove bool
 }
 
@@ -49,8 +49,8 @@ func makeFLock(file string, remove bool) (*flock, error) {
 	}
 
 	return &flock{
-		file: f,
-		remove:remove,
+		file:   f,
+		remove: remove,
 	}, nil
 }
 
@@ -64,7 +64,7 @@ func (l flock) Release() {
 	l.file.Close()
 
 	if l.remove {
-		os.Remove(l.file.Name())		
+		os.Remove(l.file.Name())
 	}
 }
 
