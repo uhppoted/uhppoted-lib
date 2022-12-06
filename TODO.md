@@ -17,6 +17,14 @@
 
 ### uhppoted-lib
 
+- [ ] Logging
+      - log.Warnf+ should default to stderr
+      - MacOS: use [system logging](https://developer.apple.com/documentation/os/logging)
+      - Windows: event logging
+      - Windows eventlog message file
+        - https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/deaa0055-7770-4e55-a5b8-6d08b80b74af/creating-event-log-message-files
+        - FormatMessage (https://go.dev/src/syscall/syscall_windows.go)
+
 - [ ] websocket + GraphQL (?)
 - [ ] IFTTT
 - [ ] Braid (?)
