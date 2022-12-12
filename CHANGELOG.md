@@ -3,7 +3,8 @@
 ## [Unreleased]
 
 ### Added
-1. Lockfile implementation based on the `flock` _syscall_ (`FileLock` and `FileUnlock` on _Windows_)
+1. Lockfile implementation based on the `flock` _syscall_ (`FileLock` and `FileUnlock` on _Windows_).
+2. Added `mqtt.connection.verify` to configuration for _uhppoted-mqtt_.
 
 ### Changed
 1. Added OTP section to _uhppoted-httpd_ config.

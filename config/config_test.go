@@ -328,6 +328,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; mqtt.connection.broker.certificate = %[7]s
 ; mqtt.connection.client.certificate = %[8]s
 ; mqtt.connection.client.key = %[9]s
+; mqtt.connection.verify = 
 ; mqtt.topic.root = uhppoted/gateway
 ; mqtt.topic.requests = ./requests
 ; mqtt.topic.replies = ./replies
@@ -518,6 +519,7 @@ timeout = %[4]v
 ; mqtt.connection.broker.certificate = %[8]s
 ; mqtt.connection.client.certificate = %[9]s
 ; mqtt.connection.client.key = %[10]s
+; mqtt.connection.verify = 
 ; mqtt.topic.root = uhppoted/gateway
 ; mqtt.topic.requests = ./requests
 ; mqtt.topic.replies = ./replies

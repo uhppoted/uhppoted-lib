@@ -37,6 +37,7 @@ type Connection struct {
 	BrokerCertificate string `conf:"broker.certificate"`
 	ClientCertificate string `conf:"client.certificate"`
 	ClientKey         string `conf:"client.key"`
+	Verify            string `conf:"verify"`
 }
 
 type Topics struct {
