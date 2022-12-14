@@ -12,6 +12,7 @@ import (
 type Config struct {
 	Application string
 	Config      string
+	debug       bool
 }
 
 func (cmd *Config) Name() string {
@@ -19,7 +20,11 @@ func (cmd *Config) Name() string {
 }
 
 func (cmd *Config) FlagSet() *flag.FlagSet {
-	return flag.NewFlagSet("config", flag.ExitOnError)
+	flagset := flag.NewFlagSet("config", flag.ExitOnError)
+
+	flagset.BoolVar(&cmd.debug, "debug", cmd.debug, "Displays internal information for diagnosing errors")
+
+	return flagset
 }
 
 func (cmd *Config) Description() string {
@@ -39,16 +44,19 @@ func (cmd *Config) Help() {
 }
 
 func (cmd *Config) Execute(args ...interface{}) error {
-	if err := dump(cmd.Config); err != nil {
+	if err := dump(cmd.Config, cmd.debug); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func dump(path string) error {
-	fmt.Println()
-	fmt.Printf("   ... displaying configuration information from '%s'\n", path)
+func dump(path string, debug bool) error {
+	if debug {
+		fmt.Println()
+		fmt.Printf("   ... displaying configuration information from '%s'\n", path)
+		fmt.Println()
+	}
 
 	cfg := config.NewConfig()
 	if f, err := os.Open(path); err != nil {
@@ -69,7 +77,6 @@ func dump(path string) error {
 		return err
 	}
 
-	fmt.Println()
 	fmt.Printf("%s\n", s.String())
 	fmt.Println()
 
