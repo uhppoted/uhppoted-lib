@@ -13,6 +13,7 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.8.3    | Added lockfile implementation using `flock` _syscall_                                     |
 | v0.8.2    | Fixed address resolution bug in health-check                                              |
 | v0.8.1    | Maintenance release for version compatibility with `uhppote-core` `v0.8.1`                |
 | v0.8.0    | Maintenance release for version compatibility with `uhppote-core` `v0.8.0`                |

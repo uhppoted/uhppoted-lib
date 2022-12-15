@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [Unreleased]
+## [0.8.3](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.3) - 2022-12-16
 
 ### Added
 1. Lockfile implementation based on the `flock` _syscall_ (`FileLock` and `FileUnlock` on _Windows_).
@@ -8,6 +8,7 @@
 
 ### Changed
 1. Added OTP section to _uhppoted-httpd_ config.
+2. Suppressed '... displaying configuration' message from _config_ command.
 
 
 ## [0.8.2](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.1) - 2022-10-14
