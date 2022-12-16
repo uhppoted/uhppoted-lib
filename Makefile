@@ -52,7 +52,7 @@ release: build-all
 
 publish: release
 	echo "Releasing version $(VERSION)"
-	gh release create "$(VERSION)"" --draft --prerelease --title "($VERSION)-beta" --notes-file release-notes.md
+	gh release create "$(VERSION)" --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
 
 debug: build
 	env GOOS=windows GOARCH=amd64       GOWORK=off go build -trimpath ./...
