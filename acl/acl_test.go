@@ -158,19 +158,19 @@ var deviceB = uhppote.Device{
 	Doors:    []string{"D1", "D2", "D3", "D4"},
 }
 
-var aclA = ACL{
-	12345: map[uint32]types.Card{
-		65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-		65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-	},
-}
+// var aclA = ACL{
+// 	12345: map[uint32]types.Card{
+// 		65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+// 		65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+// 		65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+// 	},
+// }
 
-var cardsA = []types.Card{
-	types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-	types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-	types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-}
+// var cardsA = []types.Card{
+// 	types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+// 	types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+// 	types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+// }
 
 func TestACLPrintf(t *testing.T) {
 	expected := `12345
@@ -200,8 +200,8 @@ func TestACLPrintf(t *testing.T) {
 
 	acl.Print(&b)
 
-	if string(b.Bytes()) != expected {
-		t.Errorf("Invalid result from ACL.Print\n   expected:\n%s\n   got:\n%s\n", expected, string(b.Bytes()))
+	if b.String() != expected {
+		t.Errorf("Invalid result from ACL.Print\n   expected:\n%s\n   got:\n%s\n", expected, b.String())
 	}
 }
 

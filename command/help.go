@@ -99,7 +99,7 @@ func (h *HelpV) usage() {
 	})
 
 	if count > 0 {
-		fmt.Printf(string(options.Bytes()))
+		fmt.Printf("%v", options.String())
 	}
 
 	fmt.Println()

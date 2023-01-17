@@ -1,7 +1,6 @@
 package plist
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"reflect"
@@ -52,7 +51,7 @@ func (d *Decoder) Decode(p interface{}) error {
 
 			if n != nil {
 				if !f.CanSet() {
-					return fmt.Errorf("Cannot set struct field '%s'", k)
+					return fmt.Errorf("cannot set struct field '%s'", k)
 				}
 
 				if g, ok := decoders[t.Type]; ok {
@@ -60,12 +59,12 @@ func (d *Decoder) Decode(p interface{}) error {
 						return err
 					}
 				} else {
-					panic(errors.New(fmt.Sprintf("Cannot decode  plist field '%s' with type '%v'", k, t.Type)))
+					panic(fmt.Errorf("cannot decode  plist field '%s' with type '%v'", k, t.Type))
 				}
 			}
 		}
 	} else {
-		panic(errors.New(fmt.Sprintf("Expecting struct, got '%v'", s.Kind())))
+		panic(fmt.Errorf("expecting struct, got '%v'", s.Kind()))
 	}
 
 	return nil
@@ -73,7 +72,7 @@ func (d *Decoder) Decode(p interface{}) error {
 
 func decodeString(n *node, field string, f reflect.Value) error {
 	if n.tag != "string" {
-		return fmt.Errorf("Invalid plist XML element '%s' for field '%s': expected 'string'", n.tag, field)
+		return fmt.Errorf("invalid plist XML element '%s' for field '%s': expected 'string'", n.tag, field)
 	}
 
 	f.SetString(n.text)
@@ -86,7 +85,7 @@ func decodeBool(n *node, field string, f reflect.Value) error {
 	} else if n.tag == "false" {
 		f.SetBool(false)
 	} else {
-		return fmt.Errorf("Invalid plist XML element '%s' for field '%s': expected 'bool'", n.tag, field)
+		return fmt.Errorf("invalid plist XML element '%s' for field '%s': expected 'bool'", n.tag, field)
 	}
 
 	return nil
@@ -94,7 +93,7 @@ func decodeBool(n *node, field string, f reflect.Value) error {
 
 func decodeInt(n *node, field string, f reflect.Value) error {
 	if n.tag != "integer" {
-		return fmt.Errorf("Invalid plist XML element '%s' for field '%s': expected 'integer'", n.tag, field)
+		return fmt.Errorf("invalid plist XML element '%s' for field '%s': expected 'integer'", n.tag, field)
 	}
 
 	if ivalue, err := strconv.ParseInt(n.text, 10, 64); err != nil {
@@ -108,7 +107,7 @@ func decodeInt(n *node, field string, f reflect.Value) error {
 
 func decodeStringArray(n *node, field string, f reflect.Value) error {
 	if n.tag != "array" {
-		return fmt.Errorf("Invalid plist XML element '%s' for field '%s': expected 'array'", n.tag, field)
+		return fmt.Errorf("invalid plist XML element '%s' for field '%s': expected 'array'", n.tag, field)
 	}
 
 	strings := []string{}
@@ -116,7 +115,7 @@ func decodeStringArray(n *node, field string, f reflect.Value) error {
 	p := n.children.first
 	for p != nil {
 		if p.tag != "string" {
-			return fmt.Errorf("Invalid plist XML array element '%s' for field '%s': expected 'string'", p.tag, field)
+			return fmt.Errorf("invalid plist XML array element '%s' for field '%s': expected 'string'", p.tag, field)
 		}
 
 		strings = append(strings, p.text)

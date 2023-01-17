@@ -81,7 +81,7 @@ func (doc *document) query(xpath string) (*node, error) {
 
 		match := re.FindStringSubmatch(s)
 		if match == nil {
-			return nil, fmt.Errorf("Invalid query: '%s'", xpath)
+			return nil, fmt.Errorf("invalid query: '%s'", xpath)
 		}
 
 		tag := match[1]
@@ -105,19 +105,19 @@ func (doc *document) query(xpath string) (*node, error) {
 	return p, nil
 }
 
-func (doc *document) print() {
-	print(&doc.root, 0)
-}
+// func (doc *document) print() {
+// 	print(&doc.root, 0)
+// }
 
-func print(n *node, depth int) {
-	indent := strings.Repeat(" ", depth)
-	if n != nil {
-		fmt.Printf("%p%s (%v)\n", n, indent, *n)
-		if n.children.first != nil {
-			print(n.children.first, depth+1)
-		}
-		if n.next != nil {
-			print(n.next, depth)
-		}
-	}
-}
+// func print(n *node, depth int) {
+// 	indent := strings.Repeat(" ", depth)
+// 	if n != nil {
+// 		fmt.Printf("%p%s (%v)\n", n, indent, *n)
+// 		if n.children.first != nil {
+// 			print(n.children.first, depth+1)
+// 		}
+// 		if n.next != nil {
+// 			print(n.next, depth)
+// 		}
+// 	}
+// }

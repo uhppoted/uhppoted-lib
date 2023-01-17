@@ -115,7 +115,7 @@ func TestParseHeaderWithMissingColumn(t *testing.T) {
 func TestParseHeaderWithInvalidColumn(t *testing.T) {
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "D1", "D2", "D3X", "D4"}
 
-	expected := fmt.Errorf("No configured door matches 'D3X'")
+	expected := fmt.Errorf("no configured door matches 'D3X'")
 
 	devices := []uhppote.Device{
 		uhppote.Device{

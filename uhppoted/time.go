@@ -11,7 +11,7 @@ func (u *UHPPOTED) GetTime(request GetTimeRequest) (*GetTimeResponse, error) {
 	device := uint32(request.DeviceID)
 	result, err := u.UHPPOTE.GetTime(device)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting time for %v (%w)", device, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error getting time for %v (%w)", device, err))
 	}
 
 	response := GetTimeResponse{
@@ -30,7 +30,7 @@ func (u *UHPPOTED) SetTime(request SetTimeRequest) (*SetTimeResponse, error) {
 	device := uint32(request.DeviceID)
 	result, err := u.UHPPOTE.SetTime(device, time.Time(request.DateTime))
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error setting time for %v (%w)", device, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error setting time for %v (%w)", device, err))
 	}
 
 	response := SetTimeResponse{

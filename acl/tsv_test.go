@@ -145,7 +145,7 @@ func TestParseTSVWithDuplicateCards(t *testing.T) {
 	}
 
 	errors := []error{
-		fmt.Errorf("Duplicate card number (%v)", 65537),
+		fmt.Errorf("duplicate card number (%v)", 65537),
 	}
 
 	d := uhppote.Device{

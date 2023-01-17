@@ -1,11 +1,8 @@
 package eventlog
 
 import (
-	"compress/gzip"
 	"fmt"
 	"io"
-	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -116,67 +113,67 @@ func (l *Ticker) openNew() error {
 	return nil
 }
 
-func (l *Ticker) archive() error {
-	name := l.filename()
-	info, err := os.Stat(name)
+// func (l *Ticker) archive() error {
+// 	name := l.filename()
+// 	info, err := os.Stat(name)
+//
+// 	if err == nil {
+// 		newname := backupName(name, l.LocalTime)
+// 		if err := os.Rename(name, newname); err != nil {
+// 			return err
+// 		}
+//
+// 		if err := chown(name, info); err != nil {
+// 			return err
+// 		}
+//
+// 		if err := l.compress(newname); err != nil {
+// 			log.Printf("Error compressing archive file: %v\n", err)
+// 		} else if err := os.Remove(newname); err != nil {
+// 			log.Printf("Error deleting log file '%v'  %v\n", newname, err)
+// 		}
+// 	}
+//
+// 	return nil
+// }
 
-	if err == nil {
-		newname := backupName(name, l.LocalTime)
-		if err := os.Rename(name, newname); err != nil {
-			return err
-		}
-
-		if err := chown(name, info); err != nil {
-			return err
-		}
-
-		if err := l.compress(newname); err != nil {
-			log.Printf("Error compressing archive file: %v\n", err)
-		} else if err := os.Remove(newname); err != nil {
-			log.Printf("Error deleting log file '%v'  %v\n", newname, err)
-		}
-	}
-
-	return nil
-}
-
-func (l *Ticker) compress(filepath string) error {
-	f, err := os.Open(filepath)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	s, err := ioutil.ReadAll(f)
-	if err != nil {
-		return err
-	}
-
-	gzfile := filepath + ".gz"
-	gz, err := os.Create(gzfile)
-	if err != nil {
-		return err
-	}
-
-	defer gz.Close()
-
-	w, err := gzip.NewWriterLevel(gz, 9)
-	if err != nil {
-		return err
-	}
-
-	_, err = w.Write(s)
-	if err != nil {
-		return err
-	}
-
-	err = w.Close()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
+// func (l *Ticker) compress(filepath string) error {
+// 	f, err := os.Open(filepath)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	defer f.Close()
+//
+// 	s, err := ioutil.ReadAll(f)
+// 	if err != nil {
+// 		return err
+// 	}
+//
+// 	gzfile := filepath + ".gz"
+// 	gz, err := os.Create(gzfile)
+// 	if err != nil {
+// 		return err
+// 	}
+//
+// 	defer gz.Close()
+//
+// 	w, err := gzip.NewWriterLevel(gz, 9)
+// 	if err != nil {
+// 		return err
+// 	}
+//
+// 	_, err = w.Write(s)
+// 	if err != nil {
+// 		return err
+// 	}
+//
+// 	err = w.Close()
+// 	if err != nil {
+// 		return err
+// 	}
+//
+// 	return nil
+// }
 
 func backupName(name string, local bool) string {
 	dir := filepath.Dir(name)
@@ -265,7 +262,7 @@ func (l *Ticker) cleanup() error {
 }
 
 func (l *Ticker) oldLogFiles() ([]logInfo, error) {
-	files, err := ioutil.ReadDir(l.dir())
+	files, err := os.ReadDir(l.dir())
 	if err != nil {
 		return nil, fmt.Errorf("can't read log file directory: %s", err)
 	}
@@ -276,14 +273,14 @@ func (l *Ticker) oldLogFiles() ([]logInfo, error) {
 	for _, f := range files {
 		if f.IsDir() {
 			continue
-		}
-		name := l.timeFromName(f.Name(), prefix, ext)
-		if name == "" {
+		} else if name := l.timeFromName(f.Name(), prefix, ext); name == "" {
 			continue
-		}
-		t, err := time.Parse(backupTimeFormat, name)
-		if err == nil {
-			logFiles = append(logFiles, logInfo{t, f})
+		} else if t, err := time.Parse(backupTimeFormat, name); err != nil {
+			continue
+		} else if info, err := f.Info(); err != nil {
+			continue
+		} else {
+			logFiles = append(logFiles, logInfo{t, info})
 		}
 	}
 

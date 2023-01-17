@@ -95,10 +95,10 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 		msg = fmt.Sprintf("%s, %s", Errors(errors), Warnings(warnings))
 	} else if errors > 0 {
 		level = "WARN"
-		msg = fmt.Sprintf("%s", Errors(errors))
+		msg = fmt.Sprintf("%v", Errors(errors))
 	} else if warnings > 0 {
 		level = "WARN"
-		msg = fmt.Sprintf("%s", Warnings(warnings))
+		msg = fmt.Sprintf("%v", Warnings(warnings))
 	}
 
 	w.log.Printf("%-6s %-12s %s", level, "watchdog", msg)

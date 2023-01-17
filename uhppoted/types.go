@@ -17,7 +17,7 @@ func (id *DeviceID) UnmarshalJSON(bytes []byte) (err error) {
 	}
 
 	if v == 0 {
-		err = fmt.Errorf("Invalid DeviceID: %v", v)
+		err = fmt.Errorf("invalid device ID: %v", v)
 		return
 	}
 

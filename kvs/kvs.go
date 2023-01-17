@@ -239,7 +239,7 @@ func (kv *KeyValueStore) merge(store map[string]interface{}) error {
 			kv.store[k] = v
 		}
 
-		for k, _ := range kv.store {
+		for k := range kv.store {
 			if _, ok := store[k]; !ok {
 				delete(kv.store, k)
 			}

@@ -11,7 +11,7 @@ func (u *UHPPOTED) GetCardRecords(request GetCardRecordsRequest) (*GetCardRecord
 
 	N, err := u.UHPPOTE.GetCards(device)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving number of cards from %v (%w)", device, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error retrieving number of cards from %v (%w)", device, err))
 	}
 
 	response := GetCardRecordsResponse{
@@ -31,7 +31,7 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 
 	N, err := u.UHPPOTE.GetCards(device)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error retrieving cards from %v (%w)", device, err))
 	}
 
 	cards := make([]uint32, 0)
@@ -40,7 +40,7 @@ func (u *UHPPOTED) GetCards(request GetCardsRequest) (*GetCardsResponse, error) 
 	for count := uint32(0); count < N; {
 		record, err := u.UHPPOTE.GetCardByIndex(device, index)
 		if err != nil {
-			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving cards from %v (%w)", device, err))
+			return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error retrieving cards from %v (%w)", device, err))
 		}
 
 		if record != nil {
@@ -68,7 +68,7 @@ func (u *UHPPOTED) DeleteCards(request DeleteCardsRequest) (*DeleteCardsResponse
 
 	deleted, err := u.UHPPOTE.DeleteCards(deviceID)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error deleting cards from %v (%w)", deviceID, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error deleting cards from %v (%w)", deviceID, err))
 	}
 
 	response := DeleteCardsResponse{
@@ -89,11 +89,11 @@ func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
 
 	card, err := u.UHPPOTE.GetCardByID(device, cardID)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving card %v from %v (%w)", cardID, device, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error retrieving card %v from %v (%w)", cardID, device, err))
 	}
 
 	if card == nil {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("Error retrieving card %v from %v", request.CardNumber, device))
+		return nil, fmt.Errorf("%w: %v", ErrNotFound, fmt.Errorf("error retrieving card %v from %v", request.CardNumber, device))
 	}
 
 	response := GetCardResponse{
@@ -114,11 +114,11 @@ func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {
 
 	authorised, err := u.UHPPOTE.PutCard(deviceID, card)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error writing card %v to %v (%w)", card.CardNumber, deviceID, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error writing card %v to %v (%w)", card.CardNumber, deviceID, err))
 	}
 
 	if !authorised {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Failed to write card %v to %v (%w)", card.CardNumber, deviceID, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("failed to write card %v to %v (%w)", card.CardNumber, deviceID, err))
 	}
 
 	response := PutCardResponse{
@@ -139,7 +139,7 @@ func (u *UHPPOTED) DeleteCard(request DeleteCardRequest) (*DeleteCardResponse, e
 
 	deleted, err := u.UHPPOTE.DeleteCard(deviceID, cardNo)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error deleting card %v from %v (%w)", cardNo, deviceID, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error deleting card %v from %v (%w)", cardNo, deviceID, err))
 	}
 
 	response := DeleteCardResponse{

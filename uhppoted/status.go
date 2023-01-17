@@ -31,7 +31,7 @@ type Status struct {
 func (u *UHPPOTED) GetStatus(deviceID uint32) (*Status, error) {
 	status, err := u.UHPPOTE.GetStatus(deviceID)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving status for %v (%w)", deviceID, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error retrieving status for %v (%w)", deviceID, err))
 	}
 
 	response := Status{

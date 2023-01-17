@@ -42,7 +42,7 @@ type card struct {
 func (acl *ACL) Print(w io.Writer) {
 	if acl != nil {
 		devices := []uint32{}
-		for k, _ := range *acl {
+		for k := range *acl {
 			devices = append(devices, k)
 		}
 
@@ -52,7 +52,7 @@ func (acl *ACL) Print(w io.Writer) {
 			v := (*acl)[k]
 
 			cards := []uint32{}
-			for c, _ := range v {
+			for c := range v {
 				cards = append(cards, c)
 			}
 
@@ -78,7 +78,7 @@ func mapDeviceDoors(devices []uhppote.Device) (doormap, error) {
 		for i, dd := range d.Doors {
 			door := strings.ToLower(strings.ReplaceAll(dd, " ", ""))
 			if e, ok := m[door]; ok {
-				return m, fmt.Errorf("Ambiguous reference to door '%s': defined for both devices %v and %v", dd, e.deviceID, d.DeviceID)
+				return m, fmt.Errorf("ambiguous reference to door '%s': defined for both devices %v and %v", dd, e.deviceID, d.DeviceID)
 			}
 
 			m[door] = struct {

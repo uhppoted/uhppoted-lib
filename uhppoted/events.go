@@ -47,11 +47,11 @@ func (u *UHPPOTED) GetEventIndices(deviceID uint32) (uint32, uint32, uint32, err
 func (u *UHPPOTED) GetEvent(deviceID uint32, index uint32) (*Event, error) {
 	event, err := u.UHPPOTE.GetEvent(deviceID, index)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, err)
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, err)
 	} else if event == nil {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("%v: no event %v", deviceID, index))
+		return nil, fmt.Errorf("%w: %v", ErrNotFound, fmt.Errorf("%v: no event %v", deviceID, index))
 	} else if index != 0 && index != 0xffffffff && event.Index != index {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("%v: no event %v", deviceID, index))
+		return nil, fmt.Errorf("%w: %v", ErrNotFound, fmt.Errorf("%v: no event %v", deviceID, index))
 	}
 
 	return &Event{
@@ -120,11 +120,11 @@ func (u *UHPPOTED) GetEvents(deviceID uint32, N int) ([]Event, error) {
 
 	response, err := u.UHPPOTE.SetEventIndex(deviceID, current)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, err)
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, err)
 	} else if response == nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("No response to set-event-index %v for %v", current, deviceID))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("no response to set-event-index %v for %v", current, deviceID))
 	} else if response.Index != current {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Failed to update %v event index to %v", deviceID, current))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("failed to update %v event index to %v", deviceID, current))
 	}
 
 	return events, nil
@@ -137,7 +137,7 @@ func (u *UHPPOTED) RecordSpecialEvents(deviceID uint32, enable bool) (bool, erro
 
 	updated, err := u.UHPPOTE.RecordSpecialEvents(deviceID, enable)
 	if err != nil {
-		return false, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("%v  error enabling/disabling 'record special events' (%w)", deviceID, err))
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error enabling/disabling 'record special events' (%w)", deviceID, err))
 	}
 
 	u.debug("record-special-events", fmt.Sprintf("updated %+v", updated))

@@ -243,7 +243,7 @@ func TestConfigUnmarshal(t *testing.T) {
 		t.Errorf("Incorrect httpd retention:\nexpected:%+v,\ngot:     %+v", expected.HTTPD.Retention, config.HTTPD.Retention)
 	}
 
-	if d, _ := config.Devices[405419896]; d == nil {
+	if d := config.Devices[405419896]; d == nil {
 		t.Errorf("Expected 'device' for ID '%v', got:'%v'", 405419896, d)
 	} else {
 		if d.Name != "Q405419896" {
@@ -451,7 +451,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 		t.Fatalf("Unexpected error: %v", err)
 	}
 
-	if s := string(b.Bytes()); s != expected {
+	if s := b.String(); s != expected {
 		re := regexp.MustCompile(`(\r)?\n`)
 		p := re.Split(s, -1)
 		q := re.Split(expected, -1)
@@ -671,7 +671,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 		t.Fatalf("Unexpected error: %v", err)
 	}
 
-	if s := string(b.Bytes()); s != expected {
+	if s := b.String(); s != expected {
 		re := regexp.MustCompile(`(\r)?\n`)
 		p := re.Split(s, -1)
 		q := re.Split(expected, -1)
@@ -812,7 +812,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 		t.Fatalf("Unexpected error: %v", err)
 	}
 
-	expected := fmt.Errorf("Door 'Front Door' is defined more than once in configuration")
+	expected := fmt.Errorf("door 'Front Door' is defined more than once in configuration")
 
 	err := config.Validate()
 	if err == nil || err.Error() != expected.Error() {

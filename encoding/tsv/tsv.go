@@ -31,7 +31,7 @@ func Unmarshal(b []byte, array interface{}) error {
 	v := reflect.ValueOf(array)
 
 	if v.Kind() != reflect.Ptr || v.Elem().Kind() != reflect.Slice {
-		return fmt.Errorf("Cannot unmarshal TSV to value with kind '%s'", v.Type())
+		return fmt.Errorf("cannot unmarshal TSV to value with kind '%s'", v.Type())
 	}
 
 	buffer := bytes.NewBuffer(b)
@@ -90,9 +90,9 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 			field := clean(tag)
 			ix, ok := index[field]
 			if !ok {
-				return fmt.Errorf("Required field '%s' not included in TSV", tag)
+				return fmt.Errorf("required field '%s' not included in TSV", tag)
 			} else if ix >= len(record) {
-				return fmt.Errorf("Record %v: missing required field '%s'", rid, tag)
+				return fmt.Errorf("record %v: missing required field '%s'", rid, tag)
 			}
 
 			value := strings.TrimSpace(record[ix])
@@ -125,13 +125,13 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 				case "N":
 					f.SetBool(false)
 				default:
-					return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+					return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 				}
 
 			case tUint8:
 				if value != "" {
 					if v, err := strconv.ParseUint(value, 10, 8); err != nil {
-						return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+						return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 					} else {
 						f.SetUint(v)
 					}
@@ -140,7 +140,7 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 			case tInt:
 				if value != "" {
 					if v, err := strconv.Atoi(value); err != nil {
-						return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+						return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 					} else {
 						f.SetInt(int64(v))
 					}
@@ -148,9 +148,9 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 
 			case tDate:
 				if v, err := types.DateFromString(value); err != nil {
-					return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+					return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 				} else if !v.IsValid() {
-					return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+					return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 				} else {
 					f.Set(reflect.ValueOf(v))
 				}
@@ -158,9 +158,9 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 			case tDatePtr:
 				if value != "" {
 					if v, err := types.DateFromString(value); err != nil {
-						return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+						return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 					} else if !v.IsValid() {
-						return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+						return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 					} else {
 						f.Set(reflect.ValueOf(&v))
 					}
@@ -168,9 +168,9 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 
 			case tHHmm:
 				if v, err := types.HHmmFromString(value); err != nil {
-					return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+					return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 				} else if v == nil {
-					return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+					return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 				} else {
 					f.Set(reflect.ValueOf(*v))
 				}
@@ -178,16 +178,16 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 			case tHHmmPtr:
 				if value != "" {
 					if v, err := types.HHmmFromString(value); err != nil {
-						return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+						return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 					} else if v == nil {
-						return fmt.Errorf("Record %v: invalid value '%s' for field '%s'", rid, value, tag)
+						return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 					} else {
 						f.Set(reflect.ValueOf(v))
 					}
 				}
 
 			default:
-				panic(fmt.Errorf("Cannot unmarshal field with type '%v'", t.Type))
+				panic(fmt.Errorf("cannot unmarshal field with type '%v'", t.Type))
 			}
 		}
 	}

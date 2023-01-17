@@ -28,7 +28,7 @@ func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to
 	for _, dd := range doors {
 		door := strings.ToLower(strings.ReplaceAll(dd, " ", ""))
 		if _, ok := m[door]; !ok {
-			return fmt.Errorf("Door '%v' is not defined in the device configuration", dd)
+			return fmt.Errorf("door '%v' is not defined in the device configuration", dd)
 		}
 	}
 
@@ -59,7 +59,7 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 		if profile, err := u.GetTimeProfile(deviceID, uint8(profileID)); err != nil {
 			return err
 		} else if profile == nil {
-			return fmt.Errorf("Time profile %v is not defined for %v", profileID, deviceID)
+			return fmt.Errorf("time profile %v is not defined for %v", profileID, deviceID)
 		}
 	}
 
@@ -109,7 +109,7 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 	if ok, err := u.PutCard(deviceID, *card); err != nil {
 		return err
 	} else if !ok {
-		return fmt.Errorf("Failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
+		return fmt.Errorf("failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
 	}
 
 	return nil
@@ -131,7 +131,7 @@ func grantAll(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types
 	if ok, err := u.PutCard(deviceID, *card); err != nil {
 		return err
 	} else if !ok {
-		return fmt.Errorf("Failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
+		return fmt.Errorf("failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
 	}
 
 	return nil

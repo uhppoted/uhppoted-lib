@@ -39,7 +39,7 @@ var usort = func(a []uint32) {
 
 func Summarize(report map[uint32]Report) ReportSummary {
 	list := []uint32{}
-	for k, _ := range report {
+	for k := range report {
 		list = append(list, k)
 	}
 

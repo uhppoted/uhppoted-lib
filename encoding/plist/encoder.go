@@ -117,7 +117,7 @@ func (e *Encoder) encode(s reflect.Value) error {
 					return err
 				}
 			} else {
-				panic(fmt.Errorf("Cannot encode plist field '%s' with type '%v'", k, t.Type))
+				panic(fmt.Errorf("cannot encode plist field '%s' with type '%v'", k, t.Type))
 			}
 		}
 
@@ -126,7 +126,7 @@ func (e *Encoder) encode(s reflect.Value) error {
 		}
 
 	} else {
-		panic(fmt.Errorf("Expecting struct, got '%v'", s.Kind()))
+		panic(fmt.Errorf("expecting struct, got '%v'", s.Kind()))
 	}
 
 	if err := e.encoder.EncodeToken(body.End()); err != nil {

@@ -202,7 +202,7 @@ func TestPutACLWithInvalidTimeProfile(t *testing.T) {
 			Deleted:   []uint32{65539},
 			Failed:    []uint32{},
 			Errored:   []uint32{65538},
-			Errors:    []error{fmt.Errorf("Time profile 55 is not defined for 12345")},
+			Errors:    []error{fmt.Errorf("time profile 55 is not defined for 12345")},
 		},
 	}
 

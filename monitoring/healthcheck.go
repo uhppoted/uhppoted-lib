@@ -125,10 +125,10 @@ func (h *HealthCheck) Exec(handler MonitoringHandler) {
 		msg = fmt.Sprintf("%s, %s", Errors(errors), Warnings(warnings))
 	} else if errors > 0 {
 		level = "WARN"
-		msg = fmt.Sprintf("%s", Errors(errors))
+		msg = fmt.Sprintf("%v", Errors(errors))
 	} else if warnings > 0 {
 		level = "WARN"
-		msg = fmt.Sprintf("%s", Warnings(warnings))
+		msg = fmt.Sprintf("%v", Warnings(warnings))
 	}
 
 	h.log.Printf("%-6s %-12s %s", level, "health-check", msg)
@@ -136,28 +136,25 @@ func (h *HealthCheck) Exec(handler MonitoringHandler) {
 }
 
 func (h *HealthCheck) update(now time.Time) {
-	if dt := time.Now().Sub(cache.touched); dt > 60*time.Second {
+	if dt := time.Since(cache.touched); dt > 60*time.Second {
 		go h.resolve()
 	}
 
 	devices := make(map[uint32]bool)
 
-	found, err := h.uhppote.GetDevices()
-	if err != nil {
+	if found, err := h.uhppote.GetDevices(); err != nil {
 		h.log.Printf("WARN  'keep-alive' error: %v", err)
-	}
-
-	if found != nil {
+	} else {
 		for _, id := range found {
 			devices[uint32(id.SerialNumber)] = true
 		}
 	}
 
-	for id, _ := range h.uhppote.DeviceList() {
+	for id := range h.uhppote.DeviceList() {
 		devices[id] = true
 	}
 
-	for id, _ := range devices {
+	for id := range devices {
 		s, err := h.uhppote.GetStatus(id)
 		if err == nil {
 			h.state.Devices.Status.Store(id, status{
@@ -183,7 +180,7 @@ func (h *HealthCheck) known(now time.Time, handler MonitoringHandler) (uint, uin
 	errors := uint(0)
 	warnings := uint(0)
 
-	for id, _ := range h.uhppote.DeviceList() {
+	for id := range h.uhppote.DeviceList() {
 		alerted := alerts{
 			missing:      false,
 			unexpected:   false,
@@ -253,7 +250,7 @@ func (h *HealthCheck) unexpected(now time.Time, handler MonitoringHandler) (uint
 			alerted.listener = v.(alerts).listener
 		}
 
-		for id, _ := range h.uhppote.DeviceList() {
+		for id := range h.uhppote.DeviceList() {
 			if id == key {
 				if alerted.unexpected {
 					if alert(h, handler, key.(uint32), "added to configuration") {
@@ -494,7 +491,7 @@ func alert(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message s
 	msg := fmt.Sprintf("UTC0311-L0x %s %s", types.SerialNumber(deviceID), message)
 	known := false
 
-	for id, _ := range h.uhppote.DeviceList() {
+	for id := range h.uhppote.DeviceList() {
 		if deviceID == id {
 			known = true
 		}

@@ -4,7 +4,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"net"
 	"os"
@@ -74,43 +73,43 @@ UT0311-L0x.{{$id}}.timezone = {{$device.TimeZone}}
 # UT0311-L0x.405419896.timezone = UTC+2
 {{end}}`
 
-const dump = `# SYSTEM{{range .system}}
-{{.Key}} = {{.Value}}{{end}}
-
-# REST{{range .rest}}
-{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-
-# MQTT{{range .mqtt}}
-{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-
-# AWS{{range .aws}}
-{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-
-# HTTPD{{range .httpd}}
-{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-
-# WildApricot{{range .wildapricot}}
-{{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-
-# OPEN API{{range .openapi}}
-{{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
-
-# DEVICES{{range $id,$device := .devices}}
-UT0311-L0x.{{$id}}.name = {{$device.Name}}
-UT0311-L0x.{{$id}}.address = {{$device.Address}}
-UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
-UT0311-L0x.{{$id}}.door.2 = {{index $device.Doors 1}}
-UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
-UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
-{{else}}
-# Example configuration for UTO311-L04 with serial number 405419896
-# UT0311-L0x.405419896.name = D405419896
-# UT0311-L0x.405419896.address = 192.168.1.100:60000
-# UT0311-L0x.405419896.door.1 = Front Door
-# UT0311-L0x.405419896.door.2 = Side Door
-# UT0311-L0x.405419896.door.3 = Garage
-# UT0311-L0x.405419896.door.4 = Workshop
-{{end}}`
+// const dump = `# SYSTEM{{range .system}}
+// {{.Key}} = {{.Value}}{{end}}
+//
+// # REST{{range .rest}}
+// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+//
+// # MQTT{{range .mqtt}}
+// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+//
+// # AWS{{range .aws}}
+// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+//
+// # HTTPD{{range .httpd}}
+// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+//
+// # WildApricot{{range .wildapricot}}
+// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
+//
+// # OPEN API{{range .openapi}}
+// {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
+//
+// # DEVICES{{range $id,$device := .devices}}
+// UT0311-L0x.{{$id}}.name = {{$device.Name}}
+// UT0311-L0x.{{$id}}.address = {{$device.Address}}
+// UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
+// UT0311-L0x.{{$id}}.door.2 = {{index $device.Doors 1}}
+// UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
+// UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
+// {{else}}
+// # Example configuration for UTO311-L04 with serial number 405419896
+// # UT0311-L0x.405419896.name = D405419896
+// # UT0311-L0x.405419896.address = 192.168.1.100:60000
+// # UT0311-L0x.405419896.door.1 = Front Door
+// # UT0311-L0x.405419896.door.2 = Side Door
+// # UT0311-L0x.405419896.door.3 = Garage
+// # UT0311-L0x.405419896.door.4 = Workshop
+// {{end}}`
 
 type Config struct {
 	System      `conf:""`
@@ -232,7 +231,7 @@ func (c *Config) Validate() error {
 				d := strings.ReplaceAll(strings.ToLower(door), " ", "")
 
 				if d != "" && doors[d] {
-					return fmt.Errorf("Door '%s' is defined more than once in configuration", door)
+					return fmt.Errorf("door '%s' is defined more than once in configuration", door)
 				}
 
 				doors[d] = true
@@ -244,7 +243,7 @@ func (c *Config) Validate() error {
 }
 
 func (c *Config) Read(r io.Reader) error {
-	bytes, err := ioutil.ReadAll(r)
+	bytes, err := io.ReadAll(r)
 	if err != nil {
 		return err
 	}
@@ -376,7 +375,7 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 	re := regexp.MustCompile(`^/(.*?)/$`)
 	match := re.FindStringSubmatch(tag)
 	if len(match) < 2 {
-		return f, fmt.Errorf("Invalid 'conf' regular expression tag: %s", tag)
+		return f, fmt.Errorf("invalid 'conf' regular expression tag: %s", tag)
 	}
 
 	re, err := regexp.Compile(match[1])
@@ -389,7 +388,7 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 		if len(match) > 1 {
 			id, err := strconv.ParseUint(match[1], 10, 32)
 			if err != nil {
-				return f, fmt.Errorf("Invalid 'testMap' key %s: %v", key, err)
+				return f, fmt.Errorf("invalid 'testMap' key %s: %v", key, err)
 			}
 
 			d, ok := (*f)[uint32(id)]
@@ -408,7 +407,7 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 			case "address":
 				address, err := net.ResolveUDPAddr("udp", value)
 				if err != nil {
-					return f, fmt.Errorf("Device %v, invalid address '%s': %v", id, value, err)
+					return f, fmt.Errorf("device %v, invalid address '%s': %v", id, value, err)
 				} else {
 					d.Address = &net.UDPAddr{
 						IP:   make(net.IP, net.IPv4len),
@@ -440,19 +439,19 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interfa
 	return f, nil
 }
 
-func resolve(v string) (*net.UDPAddr, error) {
-	address, err := net.ResolveUDPAddr("udp", v)
-	if err != nil {
-		return nil, err
-	}
-
-	addr := net.UDPAddr{
-		IP:   make(net.IP, net.IPv4len),
-		Port: address.Port,
-		Zone: "",
-	}
-
-	copy(addr.IP, address.IP.To4())
-
-	return &addr, nil
-}
+// func resolve(v string) (*net.UDPAddr, error) {
+// 	address, err := net.ResolveUDPAddr("udp", v)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+//
+// 	addr := net.UDPAddr{
+// 		IP:   make(net.IP, net.IPv4len),
+// 		Port: address.Port,
+// 		Zone: "",
+// 	}
+//
+// 	copy(addr.IP, address.IP.To4())
+//
+// 	return &addr, nil
+// }

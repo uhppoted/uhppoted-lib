@@ -16,7 +16,7 @@ func Revoke(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, doors [
 
 	list := []string{}
 	if reflect.DeepEqual(doors, []string{"ALL"}) {
-		for k, _ := range m {
+		for k := range m {
 			list = append(list, k)
 		}
 	} else {
@@ -26,7 +26,7 @@ func Revoke(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, doors [
 	for _, dd := range list {
 		door := strings.ToLower(strings.ReplaceAll(dd, " ", ""))
 		if _, ok := m[door]; !ok {
-			return fmt.Errorf("Door '%v' is not defined in the device configuration", dd)
+			return fmt.Errorf("door '%v' is not defined in the device configuration", dd)
 		}
 	}
 
@@ -67,7 +67,7 @@ func revoke(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, doors []uint8) e
 	if ok, err := u.PutCard(deviceID, *card); err != nil {
 		return err
 	} else if !ok {
-		return fmt.Errorf("Failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
+		return fmt.Errorf("failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
 	}
 
 	return nil

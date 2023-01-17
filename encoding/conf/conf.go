@@ -3,7 +3,6 @@ package conf
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -152,7 +151,7 @@ func marshal(s reflect.Value) ([]byte, error) {
 				fmt.Fprintf(&c, "%s = %v\n", tag, f)
 
 			default:
-				panic(errors.New(fmt.Sprintf("Cannot marshal field with type '%v'", t.Type)))
+				panic(fmt.Errorf("cannot marshal field with type '%v'", t.Type))
 			}
 		}
 	}
@@ -164,7 +163,7 @@ func Unmarshal(b []byte, m interface{}) error {
 	v := reflect.ValueOf(m)
 	s := v.Elem()
 	if s.Kind() != reflect.Struct {
-		return fmt.Errorf("Cannot unmarshal %s: expected 'struct'", s.Kind())
+		return fmt.Errorf("cannot unmarshal %s: expected 'struct'", s.Kind())
 	}
 
 	values, err := parse(bytes.NewBuffer(b))
@@ -192,7 +191,7 @@ func parse(r io.Reader) (map[string]string, error) {
 
 func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 	if s.Kind() != reflect.Struct {
-		return fmt.Errorf("Cannot unmarshal %s: expected 'struct'", s.Kind())
+		return fmt.Errorf("cannot unmarshal %s: expected 'struct'", s.Kind())
 	}
 
 	N := s.NumField()
@@ -263,7 +262,7 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 				} else if value == "false" {
 					f.SetBool(false)
 				} else {
-					return fmt.Errorf("Invalid boolean value: %s:", value)
+					return fmt.Errorf("invalid boolean value: %s", value)
 				}
 			}
 
@@ -520,7 +519,7 @@ func iterate(parent string, s reflect.Value, g func(string, interface{}) bool) b
 				}
 
 			default:
-				panic(errors.New(fmt.Sprintf("Cannot apply Range to field with type '%v'", t.Type)))
+				panic(fmt.Errorf("cannot apply Range to field with type '%v'", t.Type))
 			}
 		}
 	}

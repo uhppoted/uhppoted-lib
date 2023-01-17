@@ -28,7 +28,7 @@ func ParseTSV(f io.Reader, devices []uhppote.Device, strict bool) (ACL, []error,
 	if err != nil {
 		return nil, nil, err
 	} else if index == nil {
-		return nil, nil, fmt.Errorf("Invalid TSV header")
+		return nil, nil, fmt.Errorf("invalid TSV header")
 	}
 
 	line := 0
@@ -44,7 +44,7 @@ func ParseTSV(f io.Reader, devices []uhppote.Device, strict bool) (ACL, []error,
 		line += 1
 		cards, err := parseRecord(record, *index)
 		if err != nil {
-			return nil, nil, fmt.Errorf("Error parsing TSV - line %d: %w\n", line, err)
+			return nil, nil, fmt.Errorf("error parsing TSV - line %d: %w", line, err)
 		}
 
 		list = append(list, cards)
@@ -53,7 +53,7 @@ func ParseTSV(f io.Reader, devices []uhppote.Device, strict bool) (ACL, []error,
 	duplicates := map[uint32]int{}
 	for _, cards := range list {
 		for _, card := range cards {
-			count, _ := duplicates[card.CardNumber]
+			count := duplicates[card.CardNumber]
 			duplicates[card.CardNumber] = count + 1
 			break
 		}
@@ -64,18 +64,18 @@ func ParseTSV(f io.Reader, devices []uhppote.Device, strict bool) (ACL, []error,
 	loop:
 		for id, card := range cards {
 			if acl[id] != nil {
-				if count, _ := duplicates[card.CardNumber]; count > 1 {
+				if count := duplicates[card.CardNumber]; count > 1 {
 					if strict {
-						return nil, nil, fmt.Errorf("Duplicate card number (%v)", card.CardNumber)
+						return nil, nil, fmt.Errorf("duplicate card number (%v)", card.CardNumber)
 					} else {
-						warning := fmt.Errorf("Duplicate card number (%v)", card.CardNumber)
+						warning := fmt.Errorf("duplicate card number (%v)", card.CardNumber)
 						for _, w := range warnings {
 							if reflect.DeepEqual(w, warning) {
 								continue loop
 							}
 						}
 
-						warnings = append(warnings, fmt.Errorf("Duplicate card number (%v)", card.CardNumber))
+						warnings = append(warnings, fmt.Errorf("duplicate card number (%v)", card.CardNumber))
 					}
 
 					continue

@@ -28,7 +28,7 @@ func (u *UHPPOTED) GetTimeProfiles(request GetTimeProfilesRequest) (*GetTimeProf
 	for i := from; i <= to; i++ {
 		profile, err := u.UHPPOTE.GetTimeProfile(deviceID, uint8(i))
 		if err != nil {
-			return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving time profile %v from %v (%w)", i, deviceID, err))
+			return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error retrieving time profile %v from %v (%w)", i, deviceID, err))
 		}
 
 		if profile != nil {
@@ -59,10 +59,10 @@ func (u *UHPPOTED) PutTimeProfiles(request PutTimeProfilesRequest) (*PutTimeProf
 	for i, profile := range profiles {
 		if index, ok := set[profile.ID]; ok {
 			if !reflect.DeepEqual(profile, profiles[index-1]) {
-				return nil, http.StatusBadRequest, fmt.Errorf("Profile %v has more than one definition (records %v and %v)", profile.ID, index, i+1)
+				return nil, http.StatusBadRequest, fmt.Errorf("profile %v has more than one definition (records %v and %v)", profile.ID, index, i+1)
 			}
 
-			prewarn = append(prewarn, fmt.Errorf("Profile %-3v is defined twice (records %v and %v)", profile.ID, index, i+1))
+			prewarn = append(prewarn, fmt.Errorf("profile %-3v is defined twice (records %v and %v)", profile.ID, index, i+1))
 		}
 
 		set[profile.ID] = i + 1
@@ -144,11 +144,11 @@ func (u *UHPPOTED) GetTimeProfile(request GetTimeProfileRequest) (*GetTimeProfil
 
 	profile, err := u.UHPPOTE.GetTimeProfile(deviceID, profileID)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error retrieving time profile %v from %v (%w)", profileID, deviceID, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error retrieving time profile %v from %v (%w)", profileID, deviceID, err))
 	}
 
 	if profile == nil {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("Error retrieving time profile %v from %v", profileID, deviceID))
+		return nil, fmt.Errorf("%w: %v", ErrNotFound, fmt.Errorf("error retrieving time profile %v from %v", profileID, deviceID))
 	}
 
 	response := GetTimeProfileResponse{
@@ -169,18 +169,18 @@ func (u *UHPPOTED) PutTimeProfile(request PutTimeProfileRequest) (*PutTimeProfil
 	linked := profile.LinkedProfileID
 
 	if profile.ID < 2 || profile.ID > 254 {
-		return nil, fmt.Errorf("Invalid time profile ID (%v) - valid range is [1..254]", profile.ID)
+		return nil, fmt.Errorf("invalid time profile ID (%v) - valid range is [1..254]", profile.ID)
 	}
 
 	if linked != 0 {
 		if linked == profile.ID {
-			return nil, fmt.Errorf("Link to self creates circular reference")
+			return nil, fmt.Errorf("link to self creates circular reference")
 		}
 
 		if p, err := u.UHPPOTE.GetTimeProfile(deviceID, linked); err != nil {
 			return nil, err
 		} else if p == nil {
-			return nil, fmt.Errorf("Linked time profile %v is not defined", linked)
+			return nil, fmt.Errorf("linked time profile %v is not defined", linked)
 		}
 
 		profiles := map[uint8]bool{profile.ID: true}
@@ -189,11 +189,11 @@ func (u *UHPPOTED) PutTimeProfile(request PutTimeProfileRequest) (*PutTimeProfil
 			if p, err := u.UHPPOTE.GetTimeProfile(deviceID, l); err != nil {
 				return nil, err
 			} else if p == nil {
-				return nil, fmt.Errorf("Linked time profile %v is not defined", l)
+				return nil, fmt.Errorf("linked time profile %v is not defined", l)
 			} else {
 				links = append(links, p.ID)
 				if profiles[p.ID] {
-					return nil, fmt.Errorf("Linking to time profile %v creates a circular reference (%v)", linked, links)
+					return nil, fmt.Errorf("linking to time profile %v creates a circular reference (%v)", linked, links)
 				}
 
 				profiles[p.ID] = true
@@ -204,11 +204,11 @@ func (u *UHPPOTED) PutTimeProfile(request PutTimeProfileRequest) (*PutTimeProfil
 
 	ok, err := u.UHPPOTE.SetTimeProfile(deviceID, profile)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error writing time profile %v to %v (%w)", profile.ID, deviceID, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error writing time profile %v to %v (%w)", profile.ID, deviceID, err))
 	}
 
 	if !ok {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Failed to write time profile %v to %v", profile.ID, deviceID))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("failed to write time profile %v to %v", profile.ID, deviceID))
 	}
 
 	response := PutTimeProfileResponse{
@@ -228,7 +228,7 @@ func (u *UHPPOTED) ClearTimeProfiles(request ClearTimeProfilesRequest) (*ClearTi
 
 	cleared, err := u.UHPPOTE.ClearTimeProfiles(deviceID)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error clearing time profiles from %v (%w)", deviceID, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error clearing time profiles from %v (%w)", deviceID, err))
 	}
 
 	response := ClearTimeProfilesResponse{

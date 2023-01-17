@@ -24,7 +24,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 	list := sync.Map{}
 	devices := u.UHPPOTE.DeviceList()
 
-	for id, _ := range devices {
+	for id := range devices {
 		deviceID := id
 		wg.Add(1)
 		go func() {
@@ -78,11 +78,11 @@ func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, erro
 
 	device, err := u.UHPPOTE.GetDevice(uint32(request.DeviceID))
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("Error getting device info for %v (%w)", device, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error getting device info for %v (%w)", device, err))
 	}
 
 	if device == nil {
-		return nil, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("No device found for device ID %v", device))
+		return nil, fmt.Errorf("%w: %v", ErrNotFound, fmt.Errorf("no device found for device ID %v", device))
 	}
 
 	response := GetDeviceResponse{
@@ -108,11 +108,11 @@ func (u *UHPPOTED) SetEventListener(deviceID uint32, address types.ListenAddr) (
 
 	result, err := u.UHPPOTE.SetListener(deviceID, net.UDPAddr(address))
 	if err != nil {
-		return false, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("set-event-listener: %v %w", deviceID, err))
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v %w", deviceID, err))
 	} else if result == nil {
-		return false, fmt.Errorf("%w: %v", NotFound, fmt.Errorf("set-event-listener: %v  no response", deviceID))
+		return false, fmt.Errorf("%w: %v", ErrNotFound, fmt.Errorf("set-event-listener: %v  no response", deviceID))
 	} else if !result.Succeeded {
-		return false, fmt.Errorf("%w: %v", InternalServerError, fmt.Errorf("set-event-listener: %v  failed", deviceID))
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v  failed", deviceID))
 	}
 
 	return true, nil

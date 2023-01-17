@@ -13,7 +13,7 @@ func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool) (map[uint32]Report, []erro
 	errors := []error{}
 	guard := sync.RWMutex{}
 
-	for id, _ := range acl {
+	for id := range acl {
 		report.Store(id, Report{
 			Unchanged: []uint32{},
 			Updated:   []uint32{},
@@ -178,7 +178,7 @@ func validate(u uhppote.IUHPPOTE, deviceID uint32, card types.Card) error {
 			if profile, err := u.GetTimeProfile(deviceID, uint8(v)); err != nil {
 				return err
 			} else if profile == nil {
-				return fmt.Errorf("Time profile %v is not defined for %v", v, deviceID)
+				return fmt.Errorf("time profile %v is not defined for %v", v, deviceID)
 			}
 		}
 	}

@@ -55,8 +55,8 @@ Row 4.1	Row 4.2	Row 4.3
 		t.Fatalf("Unexpected error (%v)", err)
 	}
 
-	if string(b.Bytes()) != expected {
-		t.Errorf("ToTSV produced incorrect output:\n  expected:\n%v\n  got:\n%v", expected, string(b.Bytes()))
+	if b.String() != expected {
+		t.Errorf("ToTSV produced incorrect output:\n  expected:\n%v\n  got:\n%v", expected, b.String())
 		t.Errorf("ToTSV produced incorrect output:\n  expected:\n%v\n  got:\n%v", []byte(expected), b.Bytes())
 	}
 }

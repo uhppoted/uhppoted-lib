@@ -4,7 +4,6 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -99,7 +98,7 @@ func (l *Console) openNew() error {
 	mode := os.FileMode(0644)
 	err = l.archive()
 	if err != nil {
-		return fmt.Errorf("Error archiving log file: %s", err)
+		return fmt.Errorf("error archiving log file: %s", err)
 	}
 
 	f, err := os.OpenFile(name, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, mode)
@@ -148,7 +147,7 @@ func (l *Console) compress(file string) error {
 	}
 	defer f.Close()
 
-	s, err := ioutil.ReadAll(f)
+	s, err := io.ReadAll(f)
 	if err != nil {
 		return err
 	}
@@ -254,7 +253,7 @@ func (l *Console) cleanup() error {
 }
 
 func (l *Console) oldLogFiles() ([]logInfo, error) {
-	files, err := ioutil.ReadDir(l.dir())
+	files, err := os.ReadDir(l.dir())
 	if err != nil {
 		return nil, fmt.Errorf("can't read log file directory: %s", err)
 	}
@@ -265,14 +264,14 @@ func (l *Console) oldLogFiles() ([]logInfo, error) {
 	for _, f := range files {
 		if f.IsDir() {
 			continue
-		}
-		name := l.timeFromName(f.Name(), prefix, ext)
-		if name == "" {
+		} else if name := l.timeFromName(f.Name(), prefix, ext); name == "" {
 			continue
-		}
-		t, err := time.Parse(backupTimeFormat, name)
-		if err == nil {
-			logFiles = append(logFiles, logInfo{t, f})
+		} else if t, err := time.Parse(backupTimeFormat, name); err != nil {
+			continue
+		} else if info, err := f.Info(); err != nil {
+			continue
+		} else {
+			logFiles = append(logFiles, logInfo{t, info})
 		}
 	}
 

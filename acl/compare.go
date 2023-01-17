@@ -10,15 +10,15 @@ import (
 func Compare(src, dst ACL) (map[uint32]Diff, error) {
 	m := map[uint32]Diff{}
 
-	for k, _ := range src {
+	for k := range src {
 		m[k] = Diff{}
 	}
 
-	for k, _ := range dst {
+	for k := range dst {
 		m[k] = Diff{}
 	}
 
-	for k, _ := range m {
+	for k := range m {
 		p := src[k]
 		q := dst[k]
 		m[k] = compare(k, p, q)
@@ -30,11 +30,11 @@ func Compare(src, dst ACL) (map[uint32]Diff, error) {
 func compare(device uint32, p, q map[uint32]types.Card) Diff {
 	cards := map[uint32]struct{}{}
 
-	for k, _ := range p {
+	for k := range p {
 		cards[k] = struct{}{}
 	}
 
-	for k, _ := range q {
+	for k := range q {
 		cards[k] = struct{}{}
 	}
 
@@ -45,7 +45,7 @@ func compare(device uint32, p, q map[uint32]types.Card) Diff {
 		Deleted:   []types.Card{},
 	}
 
-	for k, _ := range cards {
+	for k := range cards {
 		u, hasu := p[k]
 		v, hasv := q[k]
 

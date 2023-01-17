@@ -28,14 +28,14 @@ func ParseTable(table *Table, devices []uhppote.Device, strict bool) (*ACL, []er
 	if err != nil {
 		return nil, nil, err
 	} else if index == nil {
-		return nil, nil, fmt.Errorf("Invalid table header")
+		return nil, nil, fmt.Errorf("invalid table header")
 	}
 
 	list := []map[uint32]types.Card{}
 	for row, record := range table.Records {
 		cards, err := parseRecord(record, *index)
 		if err != nil {
-			return nil, nil, fmt.Errorf("Error parsing table - row %d: %w", row+1, err)
+			return nil, nil, fmt.Errorf("error parsing table - row %d: %w", row+1, err)
 		}
 
 		list = append(list, cards)
@@ -44,7 +44,7 @@ func ParseTable(table *Table, devices []uhppote.Device, strict bool) (*ACL, []er
 	duplicates := map[uint32]int{}
 	for _, cards := range list {
 		for _, card := range cards {
-			count, _ := duplicates[card.CardNumber]
+			count := duplicates[card.CardNumber]
 			duplicates[card.CardNumber] = count + 1
 			break
 		}
@@ -55,9 +55,9 @@ func ParseTable(table *Table, devices []uhppote.Device, strict bool) (*ACL, []er
 	loop:
 		for id, card := range cards {
 			if acl[id] != nil {
-				if count, _ := duplicates[card.CardNumber]; count > 1 {
+				if count := duplicates[card.CardNumber]; count > 1 {
 					if strict {
-						return nil, nil, fmt.Errorf("Duplicate card number (%v)", card.CardNumber)
+						return nil, nil, fmt.Errorf("duplicate card number (%v)", card.CardNumber)
 					} else {
 						warning := &DuplicateCardError{card.CardNumber}
 						for i := range warnings {
@@ -97,7 +97,7 @@ func MakeTable(acl ACL, devices []uhppote.Device) (*Table, error) {
 	for _, d := range devices {
 		v, ok := acl[d.DeviceID]
 		if !ok {
-			return nil, fmt.Errorf("ACL missing for device %v", d.DeviceID)
+			return nil, fmt.Errorf("aCL missing for device %v", d.DeviceID)
 		}
 
 		jndex := []int{0, 0, 0, 0}
@@ -130,7 +130,7 @@ func MakeTable(acl ACL, devices []uhppote.Device) (*Table, error) {
 				ix := jndex[i-1]
 
 				if ix == 0 && clean(d.Doors[i-1]) != "" {
-					return nil, fmt.Errorf("Missing door ID for device %v, door:%v", d.DeviceID, i)
+					return nil, fmt.Errorf("missing door ID for device %v, door:%v", d.DeviceID, i)
 				}
 
 				if ix != 0 {
@@ -143,7 +143,7 @@ func MakeTable(acl ACL, devices []uhppote.Device) (*Table, error) {
 	}
 
 	keys := []uint32{}
-	for k, _ := range cards {
+	for k := range cards {
 		keys = append(keys, k)
 	}
 
@@ -154,8 +154,8 @@ func MakeTable(acl ACL, devices []uhppote.Device) (*Table, error) {
 		c := cards[k]
 		record := []string{
 			fmt.Sprintf("%v", c.cardnumber),
-			fmt.Sprintf("%s", c.from),
-			fmt.Sprintf("%s", c.to),
+			fmt.Sprintf("%v", c.from),
+			fmt.Sprintf("%v", c.to),
 		}
 
 		for _, v := range c.doors {

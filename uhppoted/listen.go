@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/uhppoted/uhppote-core/types"
-	"io/ioutil"
 	"log"
 	"os"
 	"regexp"
@@ -70,7 +69,7 @@ func (u *UHPPOTED) retrieve(deviceID uint32, received *EventMap, handler EventHa
 
 		event, err := u.UHPPOTE.GetEvent(deviceID, 0xffffffff)
 		if err != nil {
-			u.warn("listen", fmt.Errorf("Unable to retrieve events for device ID %v (%w)", deviceID, err))
+			u.warn("listen", fmt.Errorf("unable to retrieve events for device ID %v (%w)", deviceID, err))
 			return
 		}
 
@@ -170,19 +169,19 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to uint32, handler EventHandler)
 
 	first, err := u.UHPPOTE.GetEvent(deviceID, 0)
 	if err != nil {
-		u.warn("listen", fmt.Errorf("Failed to retrieve 'first' event for device %d (%w)", deviceID, err))
+		u.warn("listen", fmt.Errorf("failed to retrieve 'first' event for device %d (%w)", deviceID, err))
 		return
 	} else if first == nil {
-		u.warn("listen", fmt.Errorf("No 'first' event record returned for device %d", deviceID))
+		u.warn("listen", fmt.Errorf("no 'first' event record returned for device %d", deviceID))
 		return
 	}
 
 	last, err := u.UHPPOTE.GetEvent(deviceID, 0xffffffff)
 	if err != nil {
-		u.warn("listen", fmt.Errorf("Failed to retrieve 'last' event for device %d (%w)", deviceID, err))
+		u.warn("listen", fmt.Errorf("failed to retrieve 'last' event for device %d (%w)", deviceID, err))
 		return
 	} else if first == nil {
-		u.warn("listen", fmt.Errorf("No 'last' event record returned for device %d", deviceID))
+		u.warn("listen", fmt.Errorf("no 'last' event record returned for device %d", deviceID))
 		return
 	}
 
@@ -214,11 +213,11 @@ func (u *UHPPOTED) fetch(deviceID uint32, from, to uint32, handler EventHandler)
 
 		record, err := u.UHPPOTE.GetEvent(deviceID, uint32(index))
 		if err != nil {
-			u.warn("listen", fmt.Errorf("Failed to retrieve event for device %d, ID %d (%w)", deviceID, index, err))
+			u.warn("listen", fmt.Errorf("failed to retrieve event for device %d, ID %d (%w)", deviceID, index, err))
 		} else if record == nil {
-			u.warn("listen", fmt.Errorf("No event record for device %d, ID %d", deviceID, index))
+			u.warn("listen", fmt.Errorf("no event record for device %d, ID %d", deviceID, index))
 		} else if record.Index != uint32(index) {
-			u.warn("listen", fmt.Errorf("No event record for device %d, ID %d", deviceID, index))
+			u.warn("listen", fmt.Errorf("no event record for device %d, ID %d", deviceID, index))
 		} else {
 			event := Event{
 				DeviceID:   uint32(record.SerialNumber),
@@ -298,7 +297,7 @@ func (m *EventMap) store() error {
 		return nil
 	}
 
-	f, err := ioutil.TempFile(os.TempDir(), "uhppoted*.tmp")
+	f, err := os.CreateTemp(os.TempDir(), "uhppoted*.tmp")
 	if err != nil {
 		return err
 	}

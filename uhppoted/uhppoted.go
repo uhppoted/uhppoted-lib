@@ -17,10 +17,10 @@ const (
 )
 
 var (
-	BadRequest          = errors.New("Bad Request")
-	NotFound            = errors.New("Not Found")
-	Unauthorized        = errors.New("Not Authorized")
-	InternalServerError = errors.New("INTERNAL SERVER ERROR")
+	ErrBadRequest          = errors.New("bad request")
+	ErrNotFound            = errors.New("not found")
+	ErrUnauthorized        = errors.New("not authorized")
+	ErrInternalServerError = errors.New("internal server error")
 )
 
 type UHPPOTED struct {
