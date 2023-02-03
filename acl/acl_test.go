@@ -153,10 +153,10 @@ var deviceA = uhppote.Device{
 	Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 }
 
-var deviceB = uhppote.Device{
-	DeviceID: 54321,
-	Doors:    []string{"D1", "D2", "D3", "D4"},
-}
+// var deviceB = uhppote.Device{
+// 	DeviceID: 54321,
+// 	Doors:    []string{"D1", "D2", "D3", "D4"},
+// }
 
 // var aclA = ACL{
 // 	12345: map[uint32]types.Card{
