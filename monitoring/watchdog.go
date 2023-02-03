@@ -2,16 +2,15 @@ package monitoring
 
 import (
 	"fmt"
-	"log"
 	"math"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppoted-lib/log"
 )
 
 type Watchdog struct {
 	healthcheck *HealthCheck
-	log         *log.Logger
 	state       struct {
 		Started     time.Time
 		HealthCheck struct {
@@ -20,10 +19,9 @@ type Watchdog struct {
 	}
 }
 
-func NewWatchdog(h *HealthCheck, l *log.Logger) Watchdog {
+func NewWatchdog(h *HealthCheck) Watchdog {
 	return Watchdog{
 		healthcheck: h,
-		log:         l,
 		state: struct {
 			Started     time.Time
 			HealthCheck struct {
@@ -45,7 +43,7 @@ func (w *Watchdog) ID() string {
 }
 
 func (w *Watchdog) Exec(handler MonitoringHandler) error {
-	w.log.Printf("DEBUG  %-20s", "watchdog")
+	log.Debugf("watchdog")
 
 	warnings := uint(0)
 	errors := uint(0)
@@ -68,14 +66,14 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 		if !w.state.HealthCheck.Alerted {
 			msg := fmt.Sprintf("'health-check' subsystem has not run since %v (%v)", types.DateTime(w.state.Started), dt)
 
-			w.log.Printf("ERROR  %s", msg)
+			log.Errorf("%v", msg)
 			if err := handler.Alert(w, msg); err == nil {
 				w.state.HealthCheck.Alerted = true
 			}
 		}
 	} else {
 		if w.state.HealthCheck.Alerted {
-			w.log.Printf("INFO   'health-check' subsystem is running")
+			log.Infof("'health-check' subsystem is running")
 			w.state.HealthCheck.Alerted = false
 		}
 	}
@@ -87,22 +85,25 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 	}
 
 	// 'k, done
-	level := "INFO"
-	msg := "OK"
-
 	if errors > 0 && warnings > 0 {
-		level = "WARN"
-		msg = fmt.Sprintf("%s, %s", Errors(errors), Warnings(warnings))
+		log.Warnf("%-12s %v, %v", "watchdog", Errors(errors), Warnings(warnings))
 	} else if errors > 0 {
-		level = "WARN"
-		msg = fmt.Sprintf("%v", Errors(errors))
+		log.Warnf("%-12s %v", "watchdog", Errors(errors))
 	} else if warnings > 0 {
-		level = "WARN"
-		msg = fmt.Sprintf("%v", Warnings(warnings))
+		log.Warnf("%-12s %v", "watchdog", Warnings(warnings))
+	} else {
+		log.Infof("%-12s OK", "watchdog")
 	}
 
-	w.log.Printf("%-6s %-12s %s", level, "watchdog", msg)
-	handler.Alive(w, msg)
+	if errors > 0 && warnings > 0 {
+		handler.Alive(w, fmt.Sprintf("%s, %s", Errors(errors), Warnings(warnings)))
+	} else if errors > 0 {
+		handler.Alive(w, fmt.Sprintf("%v", Errors(errors)))
+	} else if warnings > 0 {
+		handler.Alive(w, fmt.Sprintf("%v", Warnings(warnings)))
+	} else {
+		handler.Alive(w, "OK")
+	}
 
 	return nil
 }

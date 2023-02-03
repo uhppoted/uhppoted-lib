@@ -2,14 +2,15 @@ package monitoring
 
 import (
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"log"
 	"math"
 	"net"
 	"net/netip"
 	"sync"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
+	"github.com/uhppoted/uhppoted-lib/log"
 )
 
 type HealthCheck struct {
@@ -17,7 +18,6 @@ type HealthCheck struct {
 	interval   time.Duration
 	idleTime   time.Duration
 	ignoreTime time.Duration
-	log        *log.Logger
 	state      struct {
 		Started time.Time
 		Touched *time.Time
@@ -56,13 +56,12 @@ var cache = struct {
 	sync.RWMutex
 }{}
 
-func NewHealthCheck(u uhppote.IUHPPOTE, interval, idleTime, ignoreTime time.Duration, l *log.Logger) HealthCheck {
+func NewHealthCheck(u uhppote.IUHPPOTE, interval, idleTime, ignoreTime time.Duration) HealthCheck {
 	return HealthCheck{
 		uhppote:    u,
 		interval:   interval,
 		idleTime:   idleTime,
 		ignoreTime: ignoreTime,
-		log:        l,
 		state: struct {
 			Started time.Time
 			Touched *time.Time
@@ -96,7 +95,7 @@ func (h *HealthCheck) ID() string {
 }
 
 func (h *HealthCheck) Exec(handler MonitoringHandler) {
-	h.log.Printf("DEBUG  %-20s", "health-check")
+	log.Debugf("health-check")
 
 	now := time.Now()
 	errors := uint(0)
@@ -116,23 +115,25 @@ func (h *HealthCheck) Exec(handler MonitoringHandler) {
 	h.state.Errors = errors
 
 	// 'k, done
-
-	level := "INFO"
-	msg := "OK"
-
 	if errors > 0 && warnings > 0 {
-		level = "WARN"
-		msg = fmt.Sprintf("%s, %s", Errors(errors), Warnings(warnings))
+		log.Warnf("%-12v %v, %v", "health-check", Errors(errors), Warnings(warnings))
 	} else if errors > 0 {
-		level = "WARN"
-		msg = fmt.Sprintf("%v", Errors(errors))
+		log.Warnf("%-12v %v", "health-check", Errors(errors))
 	} else if warnings > 0 {
-		level = "WARN"
-		msg = fmt.Sprintf("%v", Warnings(warnings))
+		log.Warnf("%-12v %v", "health-check", Warnings(warnings))
+	} else {
+		log.Infof("%-12v OK", "health-check")
 	}
 
-	h.log.Printf("%-6s %-12s %s", level, "health-check", msg)
-	handler.Alive(h, msg)
+	if errors > 0 && warnings > 0 {
+		handler.Alive(h, fmt.Sprintf("%v, %v", Errors(errors), Warnings(warnings)))
+	} else if errors > 0 {
+		handler.Alive(h, fmt.Sprintf("%v", Errors(errors)))
+	} else if warnings > 0 {
+		handler.Alive(h, fmt.Sprintf("%v", Warnings(warnings)))
+	} else {
+		handler.Alive(h, "OK")
+	}
 }
 
 func (h *HealthCheck) update(now time.Time) {
@@ -143,7 +144,7 @@ func (h *HealthCheck) update(now time.Time) {
 	devices := make(map[uint32]bool)
 
 	if found, err := h.uhppote.GetDevices(); err != nil {
-		h.log.Printf("WARN  'keep-alive' error: %v", err)
+		log.Warnf("'keep-alive' error: %v", err)
 	} else {
 		for _, id := range found {
 			devices[uint32(id.SerialNumber)] = true
@@ -427,7 +428,7 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 }
 
 func (h *HealthCheck) resolve() {
-	h.log.Printf("INFO   health-check refreshing interface IP address list")
+	log.Infof("health-check refreshing interface IP address list")
 
 	list := []netip.AddrPort{}
 
@@ -468,7 +469,7 @@ func (h *HealthCheck) resolve() {
 func info(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message string) bool {
 	msg := fmt.Sprintf("UTC0311-L0x %s %s", types.SerialNumber(deviceID), message)
 
-	h.log.Printf("%-6s %s", "INFO", msg)
+	log.Infof("%v", msg)
 	if err := handler.Alert(h, msg); err != nil {
 		return false
 	}
@@ -479,7 +480,7 @@ func info(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message st
 func warn(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message string) bool {
 	msg := fmt.Sprintf("UTC0311-L0x %s %s", types.SerialNumber(deviceID), message)
 
-	h.log.Printf("%-6s %s", "WARN", msg)
+	log.Warnf("%v", msg)
 	if err := handler.Alert(h, msg); err != nil {
 		return false
 	}
@@ -498,9 +499,9 @@ func alert(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message s
 	}
 
 	if known {
-		h.log.Printf("%-6s %s", "ERROR", msg)
+		log.Errorf("%v", msg)
 	} else {
-		h.log.Printf("%-6s %s", "WARN", msg)
+		log.Warnf("%v", msg)
 	}
 
 	if err := handler.Alert(h, msg); err != nil {
