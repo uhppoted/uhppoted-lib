@@ -29,13 +29,13 @@ type UHPPOTED struct {
 }
 
 func (u *UHPPOTED) debug(tag string, msg interface{}) {
-		log.Debugf("%-12s %v", tag, msg)
+	log.Debugf("%-12s %v", tag, msg)
 }
 
 func (u *UHPPOTED) info(tag string, msg interface{}) {
-		log.Infof("%-12s %v", tag, msg)
+	log.Infof("%-12s %v", tag, msg)
 }
 
 func (u *UHPPOTED) warn(tag string, err error) {
-		log.Warnf("%-12s %v", tag, err)
+	log.Warnf("%-12s %v", tag, err)
 }

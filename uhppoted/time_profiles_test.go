@@ -68,7 +68,6 @@ func TestGetTimeProfiles(t *testing.T) {
 	u := UHPPOTED{
 		UHPPOTE:         &mock,
 		ListenBatchSize: 0,
-		Log:             nil,
 	}
 
 	response, err := u.GetTimeProfiles(request)
@@ -130,7 +129,6 @@ func TestGetTimeProfile(t *testing.T) {
 	u := UHPPOTED{
 		UHPPOTE:         &mock,
 		ListenBatchSize: 0,
-		Log:             nil,
 	}
 
 	response, err := u.GetTimeProfile(request)
@@ -220,7 +218,6 @@ func TestSetTimeProfile(t *testing.T) {
 	u := UHPPOTED{
 		UHPPOTE:         &mock,
 		ListenBatchSize: 0,
-		Log:             nil,
 	}
 
 	response, err := u.PutTimeProfile(request)
@@ -260,7 +257,6 @@ func TestClearTimeProfiles(t *testing.T) {
 	u := UHPPOTED{
 		UHPPOTE:         &mock,
 		ListenBatchSize: 0,
-		Log:             nil,
 	}
 
 	response, err := u.ClearTimeProfiles(request)

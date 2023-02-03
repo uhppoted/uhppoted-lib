@@ -73,7 +73,6 @@ func TestGetEventIndices(t *testing.T) {
 	u := UHPPOTED{
 		UHPPOTE:         &mock,
 		ListenBatchSize: 0,
-		Log:             nil,
 	}
 
 	first, last, current, err := u.GetEventIndices(405419896)
@@ -111,7 +110,6 @@ func TestRecordSpecialEvents(t *testing.T) {
 	u := UHPPOTED{
 		UHPPOTE:         &mock,
 		ListenBatchSize: 0,
-		Log:             nil,
 	}
 
 	updated, err := u.RecordSpecialEvents(deviceID, enabled)
@@ -137,7 +135,6 @@ func TestRecordSpecialEventsWithFail(t *testing.T) {
 	u := UHPPOTED{
 		UHPPOTE:         &mock,
 		ListenBatchSize: 0,
-		Log:             nil,
 	}
 
 	updated, err := u.RecordSpecialEvents(deviceID, enabled)
