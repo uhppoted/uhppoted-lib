@@ -3,6 +3,8 @@ package monitoring
 import (
 	"fmt"
 	"time"
+
+	"github.com/uhppoted/uhppoted-lib/log"
 )
 
 type Monitor interface {
@@ -40,3 +42,27 @@ const (
 	MIN_DELAY = 30
 	PADDING   = 15
 )
+
+func debugf(subsystem string, format string, args ...any) {
+	f := fmt.Sprintf("%-12v %v", subsystem, format)
+
+	log.Debugf(f, args...)
+}
+
+func infof(subsystem string, format string, args ...any) {
+	f := fmt.Sprintf("%-12v %v", subsystem, format)
+
+	log.Infof(f, args...)
+}
+
+func warnf(subsystem string, format string, args ...any) {
+	f := fmt.Sprintf("%-12v %v", subsystem, format)
+
+	log.Warnf(f, args...)
+}
+
+func errorf(subsystem string, format string, args ...any) {
+	f := fmt.Sprintf("%-12v %v", subsystem, format)
+
+	log.Errorf(f, args...)
+}

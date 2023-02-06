@@ -10,7 +10,6 @@ import (
 
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-lib/log"
 )
 
 type HealthCheck struct {
@@ -95,7 +94,7 @@ func (h *HealthCheck) ID() string {
 }
 
 func (h *HealthCheck) Exec(handler MonitoringHandler) {
-	log.Debugf("health-check")
+	debugf("health-check", "exec")
 
 	now := time.Now()
 	errors := uint(0)
@@ -116,13 +115,13 @@ func (h *HealthCheck) Exec(handler MonitoringHandler) {
 
 	// 'k, done
 	if errors > 0 && warnings > 0 {
-		log.Warnf("%-12v %v, %v", "health-check", Errors(errors), Warnings(warnings))
+		warnf("health-check", "%v, %v", Errors(errors), Warnings(warnings))
 	} else if errors > 0 {
-		log.Warnf("%-12v %v", "health-check", Errors(errors))
+		warnf("health-check", "%v", Errors(errors))
 	} else if warnings > 0 {
-		log.Warnf("%-12v %v", "health-check", Warnings(warnings))
+		warnf("health-check", "%v", Warnings(warnings))
 	} else {
-		log.Infof("%-12v OK", "health-check")
+		infof("health-check", "OK")
 	}
 
 	if errors > 0 && warnings > 0 {
@@ -144,7 +143,7 @@ func (h *HealthCheck) update(now time.Time) {
 	devices := make(map[uint32]bool)
 
 	if found, err := h.uhppote.GetDevices(); err != nil {
-		log.Warnf("'keep-alive' error: %v", err)
+		warnf("health-check", "'keep-alive' error: %v", err)
 	} else {
 		for _, id := range found {
 			devices[uint32(id.SerialNumber)] = true
@@ -428,7 +427,7 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 }
 
 func (h *HealthCheck) resolve() {
-	log.Infof("health-check refreshing interface IP address list")
+	infof("health-check", "refreshing interface IP address list")
 
 	list := []netip.AddrPort{}
 
@@ -469,7 +468,7 @@ func (h *HealthCheck) resolve() {
 func info(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message string) bool {
 	msg := fmt.Sprintf("UTC0311-L0x %s %s", types.SerialNumber(deviceID), message)
 
-	log.Infof("%v", msg)
+	infof("health-check", msg)
 	if err := handler.Alert(h, msg); err != nil {
 		return false
 	}
@@ -480,7 +479,7 @@ func info(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message st
 func warn(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message string) bool {
 	msg := fmt.Sprintf("UTC0311-L0x %s %s", types.SerialNumber(deviceID), message)
 
-	log.Warnf("%v", msg)
+	warnf("health-check", msg)
 	if err := handler.Alert(h, msg); err != nil {
 		return false
 	}
@@ -499,9 +498,9 @@ func alert(h *HealthCheck, handler MonitoringHandler, deviceID uint32, message s
 	}
 
 	if known {
-		log.Errorf("%v", msg)
+		errorf("health-check", msg)
 	} else {
-		log.Warnf("%v", msg)
+		warnf("health-check", msg)
 	}
 
 	if err := handler.Alert(h, msg); err != nil {

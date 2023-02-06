@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted-lib/log"
 )
 
 type Watchdog struct {
@@ -43,7 +42,7 @@ func (w *Watchdog) ID() string {
 }
 
 func (w *Watchdog) Exec(handler MonitoringHandler) error {
-	log.Debugf("watchdog")
+	debugf("watchdog", "exec")
 
 	warnings := uint(0)
 	errors := uint(0)
@@ -66,14 +65,14 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 		if !w.state.HealthCheck.Alerted {
 			msg := fmt.Sprintf("'health-check' subsystem has not run since %v (%v)", types.DateTime(w.state.Started), dt)
 
-			log.Errorf("%v", msg)
+			errorf("watchdog", msg)
 			if err := handler.Alert(w, msg); err == nil {
 				w.state.HealthCheck.Alerted = true
 			}
 		}
 	} else {
 		if w.state.HealthCheck.Alerted {
-			log.Infof("'health-check' subsystem is running")
+			infof("watchdog", "'health-check' subsystem is running")
 			w.state.HealthCheck.Alerted = false
 		}
 	}
@@ -86,13 +85,13 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 
 	// 'k, done
 	if errors > 0 && warnings > 0 {
-		log.Warnf("%-12s %v, %v", "watchdog", Errors(errors), Warnings(warnings))
+		warnf("watchdog", "%v, %v", Errors(errors), Warnings(warnings))
 	} else if errors > 0 {
-		log.Warnf("%-12s %v", "watchdog", Errors(errors))
+		warnf("watchdog", "%%v", Errors(errors))
 	} else if warnings > 0 {
-		log.Warnf("%-12s %v", "watchdog", Warnings(warnings))
+		warnf("watchdog", "%v", Warnings(warnings))
 	} else {
-		log.Infof("%-12s OK", "watchdog")
+		infof("watchdog", "OK")
 	}
 
 	if errors > 0 && warnings > 0 {
