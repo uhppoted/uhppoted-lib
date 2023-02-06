@@ -3,14 +3,15 @@ package uhppoted
 import (
 	"bufio"
 	"fmt"
-	"github.com/uhppoted/uhppote-core/types"
-	"log"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppoted-lib/log"
 )
 
 type EventMap struct {
@@ -255,7 +256,7 @@ func NewEventMap(file string) *EventMap {
 	}
 }
 
-func (m *EventMap) Load(log *log.Logger) error {
+func (m *EventMap) Load() error {
 	if m.file == "" {
 		return nil
 	}
@@ -280,9 +281,9 @@ func (m *EventMap) Load(log *log.Logger) error {
 			value := strings.TrimSpace(match[2])
 
 			if device, err := strconv.ParseUint(key, 10, 32); err != nil {
-				log.Printf("WARN: Error parsing event map entry '%s': %v", s.Text(), err)
+				log.Warnf("error parsing event map entry '%s': %v", s.Text(), err)
 			} else if eventID, err := strconv.ParseUint(value, 10, 32); err != nil {
-				log.Printf("WARN: Error parsing event map entry '%s': %v", s.Text(), err)
+				log.Warnf("error parsing event map entry '%s': %v", s.Text(), err)
 			} else {
 				m.retrieved[uint32(device)] = uint32(eventID)
 			}
