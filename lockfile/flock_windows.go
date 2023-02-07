@@ -87,9 +87,8 @@ func lock(handle syscall.Handle) error {
 	var nNumberOfBytesToLockLow uint32 = 0xfffffff  // MAX_DWORD
 	var nNumberOfBytesToLockHigh uint32 = 0xfffffff // MAX_DWORD
 
-	rc, _, err := syscall.Syscall6(
+	rc, _, err := syscall.SyscallN(
 		uintptr(procLockFile),
-		5,
 		uintptr(handle),
 		uintptr(dwFileOffsetLow),          // [in] DWORD  dwFileOffsetLow
 		uintptr(dwFileOffsetHigh),         // [in] DWORD  dwFileOffsetHigh
@@ -125,9 +124,8 @@ func unlock(handle syscall.Handle) error {
 	var nNumberOfBytesToLockLow uint32 = 0xfffffff  // MAX_DWORD
 	var nNumberOfBytesToLockHigh uint32 = 0xfffffff // MAX_DWORD
 
-	rc, _, err := syscall.Syscall6(
+	rc, _, err := syscall.SyscallN(
 		uintptr(procUnlockFile),
-		5,
 		uintptr(handle),
 		uintptr(dwFileOffsetLow),          // [in] DWORD  dwFileOffsetLow
 		uintptr(dwFileOffsetHigh),         // [in] DWORD  dwFileOffsetHigh
