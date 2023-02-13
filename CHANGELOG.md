@@ -8,6 +8,7 @@
 ### Updated
 1. Fixed initial round of _staticcheck_ lint errors and permanently added _staticcheck_ to
    CI build.
+2. Reworked ACL functions to retain stored card PIN
 
 ## [0.8.3](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.3) - 2022-12-16
 

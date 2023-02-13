@@ -1,10 +1,11 @@
 package config
 
 import (
+	"crypto/rand"
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 	"io"
-	"math/rand"
 	"net"
 	"os"
 	"regexp"
@@ -182,16 +183,12 @@ func (c *Config) Load(path string) error {
 
 	// generate random 'temporary' HMAC key just to avoid defaulting to ""
 	if c.MQTT.HMAC.Key == "" {
-		const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-		rand.Seed(time.Now().UnixNano())
-
-		hmac := make([]byte, 32)
-		for i := range hmac {
-			hmac[i] = charset[rand.Intn(len(charset))]
+		hmac := make([]byte, 16)
+		if _, err := rand.Read(hmac); err != nil {
+			return err
 		}
 
-		c.MQTT.HMAC.Key = string(hmac)
+		c.MQTT.HMAC.Key = fmt.Sprintf("%032v", hex.EncodeToString(hmac))
 	}
 
 	return nil

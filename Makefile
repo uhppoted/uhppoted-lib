@@ -59,7 +59,7 @@ publish: release
 	gh release create "$(VERSION)" --draft --prerelease --title "$(VERSION)-beta" --notes-file release-notes.md
 
 debug: build
-	env GOOS=windows GOARCH=amd64       GOWORK=off go build -trimpath ./...
+	go test -v -run TestPutACLWithMultipleDevices ./acl/...
 
 godoc:
 	godoc -http=:80	-index_interval=60s

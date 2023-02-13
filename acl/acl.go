@@ -95,3 +95,18 @@ func mapDeviceDoors(devices []uhppote.Device) (doormap, error) {
 
 	return m, nil
 }
+
+func putCard(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
+	card, err := u.GetCardByID(deviceID, c.CardNumber)
+	if err != nil {
+		return false, err
+	} else if card == nil {
+		card = &types.Card{CardNumber: c.CardNumber}
+	}
+
+	card.From = c.From
+	card.To = c.To
+	card.Doors = c.Doors
+
+	return u.PutCard(deviceID, *card)
+}

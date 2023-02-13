@@ -134,6 +134,10 @@ func (m *mock) OpenDoor(deviceID uint32, door uint8) (*types.Result, error) {
 	return nil, nil
 }
 
+func (m *mock) SetPCControl(deviceID uint32, enable bool) (bool, error) {
+	return true, nil
+}
+
 func (m *mock) DeviceList() map[uint32]uhppote.Device {
 	return map[uint32]uhppote.Device{}
 }

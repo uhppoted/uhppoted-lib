@@ -1,17 +1,18 @@
 package acl
 
 import (
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
 	"reflect"
 	"testing"
+
+	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
 func TestGrant(t *testing.T) {
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+		types.Card{CardNumber: 65538, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 1}, PIN: 5432},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
 	devices := []uhppote.Device{
@@ -22,9 +23,9 @@ func TestGrant(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+		types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 5432},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
 	u := mock{
@@ -50,7 +51,7 @@ func TestGrant(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Garage"})
+	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -62,9 +63,9 @@ func TestGrant(t *testing.T) {
 
 func TestGrantWithTimeProfile(t *testing.T) {
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 29, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+		types.Card{CardNumber: 65538, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 29, 4: 1}, PIN: 5432},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
 	devices := []uhppote.Device{
@@ -75,9 +76,9 @@ func TestGrantWithTimeProfile(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+		types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 5432},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
 	u := mock{
@@ -112,7 +113,7 @@ func TestGrantWithTimeProfile(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 29, []string{"Garage"})
+	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 29, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -131,9 +132,9 @@ func TestGrantWithUndefinedTimeProfile(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+		types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 5432},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
 	u := mock{
@@ -168,7 +169,7 @@ func TestGrantWithUndefinedTimeProfile(t *testing.T) {
 		},
 	}
 
-	if err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 55, []string{"Garage"}); err == nil {
+	if err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 55, []string{"Garage"}); err == nil {
 		t.Fatalf("Expected error invoking 'grant' with undefined time profile, got: %v", err)
 	}
 }
@@ -187,7 +188,7 @@ func TestGrantWithAmbiguousDoors(t *testing.T) {
 
 	u := mock{}
 
-	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Garage"})
+	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Garage"})
 	if err == nil {
 		t.Fatalf("Expected error invoking 'grant', got '%v'", err)
 	}
@@ -195,10 +196,10 @@ func TestGrantWithAmbiguousDoors(t *testing.T) {
 
 func TestGrantWithNewCard(t *testing.T) {
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65536, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 1, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+		types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 5432},
+		types.Card{CardNumber: 65536, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 1, 4: 0}},
 	}
 
 	devices := []uhppote.Device{
@@ -209,9 +210,9 @@ func TestGrantWithNewCard(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+		types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 5432},
 	}
 
 	u := mock{
@@ -237,7 +238,7 @@ func TestGrantWithNewCard(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65536, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Side Door", "Garage"})
+	err := Grant(&u, devices, 65536, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Side Door", "Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -249,9 +250,9 @@ func TestGrantWithNewCard(t *testing.T) {
 
 func TestGrantWithNarrowerDateRange(t *testing.T) {
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+		types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 1}, PIN: 5432},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
 	d := uhppote.Device{
@@ -262,9 +263,9 @@ func TestGrantWithNarrowerDateRange(t *testing.T) {
 	devices := []uhppote.Device{d}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-		types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-		types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+		types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 5432},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 	}
 
 	u := mock{
@@ -290,7 +291,7 @@ func TestGrantWithNarrowerDateRange(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-04-01"), *date("2020-10-31"), 0, []string{"Garage"})
+	err := Grant(&u, devices, 65538, *date("2023-04-01"), *date("2023-10-31"), 0, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -303,14 +304,14 @@ func TestGrantWithNarrowerDateRange(t *testing.T) {
 func TestGrantAcrossMultipleDevices(t *testing.T) {
 	expected := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 1}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+			types.Card{CardNumber: 65538, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 1}, PIN: 5432},
+			types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 		54321: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-02-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 1222},
+			types.Card{CardNumber: 65538, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 0}, PIN: 4321},
+			types.Card{CardNumber: 65539, From: date("2023-04-03"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 	}
 
@@ -327,14 +328,14 @@ func TestGrantAcrossMultipleDevices(t *testing.T) {
 
 	cards := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+			types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 5432},
+			types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 		54321: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-02-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 1222},
+			types.Card{CardNumber: 65538, From: date("2023-03-02"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 4321},
+			types.Card{CardNumber: 65539, From: date("2023-04-03"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 	}
 
@@ -361,7 +362,7 @@ func TestGrantAcrossMultipleDevices(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Garage", "D2"})
+	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Garage", "D2"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -371,17 +372,17 @@ func TestGrantAcrossMultipleDevices(t *testing.T) {
 	}
 }
 
-func TestGrantALL(t *testing.T) {
+func TestGrantAll(t *testing.T) {
 	expected := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 1, 4: 1}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+			types.Card{CardNumber: 65538, From: date("2023-03-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 1, 4: 1}, PIN: 5432},
+			types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 		54321: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 1, 4: 1}},
-			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-02-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 1222},
+			types.Card{CardNumber: 65538, From: date("2023-03-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 1, 4: 1}, PIN: 4321},
+			types.Card{CardNumber: 65539, From: date("2023-04-03"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 	}
 
@@ -398,14 +399,14 @@ func TestGrantALL(t *testing.T) {
 
 	cards := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+			types.Card{CardNumber: 65538, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 5432},
+			types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 		54321: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-02-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 1222},
+			types.Card{CardNumber: 65538, From: date("2023-03-02"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 4321},
+			types.Card{CardNumber: 65539, From: date("2023-04-03"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 	}
 
@@ -432,7 +433,7 @@ func TestGrantALL(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-03-02"), *date("2020-10-31"), 0, []string{"ALL"})
+	err := Grant(&u, devices, 65538, *date("2023-03-02"), *date("2023-10-31"), 0, []string{"ALL"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant ALL': %v", err)
 	}
@@ -445,14 +446,14 @@ func TestGrantALL(t *testing.T) {
 func TestGrantWithInvalidDoor(t *testing.T) {
 	expected := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+			types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 5432},
+			types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 		54321: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-02-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 1222},
+			types.Card{CardNumber: 65538, From: date("2023-03-02"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 4321},
+			types.Card{CardNumber: 65539, From: date("2023-04-03"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 	}
 
@@ -469,14 +470,14 @@ func TestGrantWithInvalidDoor(t *testing.T) {
 
 	cards := map[uint32][]types.Card{
 		12345: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-			types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 1221},
+			types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 5432},
+			types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 		54321: []types.Card{
-			types.Card{CardNumber: 65537, From: date("2020-02-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65538, From: date("2020-03-02"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-			types.Card{CardNumber: 65539, From: date("2020-04-03"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			types.Card{CardNumber: 65537, From: date("2023-02-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 1222},
+			types.Card{CardNumber: 65538, From: date("2023-03-02"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 4321},
+			types.Card{CardNumber: 65539, From: date("2023-04-03"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 	}
 
@@ -503,7 +504,7 @@ func TestGrantWithInvalidDoor(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2020-01-01"), *date("2020-12-31"), 0, []string{"Garage", "D2X"})
+	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Garage", "D2X"})
 	if err == nil {
 		t.Errorf("Expected error invoking 'grant' with invalid door")
 	}
@@ -515,7 +516,7 @@ func TestGrantWithInvalidDoor(t *testing.T) {
 
 func TestGrantWithNoCurrentPermissions(t *testing.T) {
 	expected := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-04-01"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-04-01"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 1221},
 	}
 
 	devices := []uhppote.Device{
@@ -526,7 +527,7 @@ func TestGrantWithNoCurrentPermissions(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65537, From: date("2020-01-01"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{CardNumber: 65537, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 1221},
 	}
 
 	u := mock{
@@ -552,7 +553,7 @@ func TestGrantWithNoCurrentPermissions(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65537, *date("2020-04-01"), *date("2020-10-31"), 0, []string{"Garage"})
+	err := Grant(&u, devices, 65537, *date("2023-04-01"), *date("2023-10-31"), 0, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}

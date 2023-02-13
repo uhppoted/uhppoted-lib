@@ -1,7 +1,6 @@
 package acl
 
 import (
-	"reflect"
 	"sort"
 
 	"github.com/uhppoted/uhppote-core/types"
@@ -50,7 +49,7 @@ func compare(device uint32, p, q map[uint32]types.Card) Diff {
 		v, hasv := q[k]
 
 		if hasu && hasv {
-			if reflect.DeepEqual(u, v) {
+			if equals(u, v) {
 				diff.Unchanged = append(diff.Unchanged, u)
 			} else {
 				diff.Updated = append(diff.Updated, v)
@@ -71,4 +70,37 @@ func compare(device uint32, p, q map[uint32]types.Card) Diff {
 	}
 
 	return diff
+}
+
+/*
+ * Compares two cards, ignoring PIN
+ */
+func equals(p, q types.Card) bool {
+	if p.CardNumber != q.CardNumber {
+		return false
+	}
+
+	if p.From != nil && q.From != nil {
+		if !p.From.Equals(*q.From) {
+			return false
+		}
+	} else if p.From != nil || q.From != nil {
+		return false
+	}
+
+	if p.To != nil && q.To != nil {
+		if !p.To.Equals(*q.To) {
+			return false
+		}
+	} else if p.To != nil || q.To != nil {
+		return false
+	}
+
+	for _, i := range []uint8{1, 2, 3, 4} {
+		if p.Doors[i] != q.Doors[i] {
+			return false
+		}
+	}
+
+	return true
 }

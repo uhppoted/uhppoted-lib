@@ -94,7 +94,7 @@ func putACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card) (*
 			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else {
-			if ok, err := u.PutCard(deviceID, card); err != nil {
+			if ok, err := putCard(u, deviceID, card); err != nil {
 				report.Errored = append(report.Errored, card.CardNumber)
 				report.Errors = append(report.Errors, err)
 			} else if !ok {
@@ -110,7 +110,7 @@ func putACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card) (*
 			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else {
-			if ok, err := u.PutCard(deviceID, card); err != nil {
+			if ok, err := putCard(u, deviceID, card); err != nil {
 				report.Errored = append(report.Errored, card.CardNumber)
 				report.Errors = append(report.Errors, err)
 			} else if !ok {
