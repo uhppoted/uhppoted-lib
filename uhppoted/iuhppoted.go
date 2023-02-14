@@ -18,7 +18,6 @@ type IUHPPOTED interface {
 	GetCards(request GetCardsRequest) (*GetCardsResponse, error)
 	DeleteCards(request DeleteCardsRequest) (*DeleteCardsResponse, error)
 	GetCard(request GetCardRequest) (*GetCardResponse, error)
-	PutCard(request PutCardRequest) (*PutCardResponse, error)
 	DeleteCard(request DeleteCardRequest) (*DeleteCardResponse, error)
 	GetTimeProfiles(request GetTimeProfilesRequest) (*GetTimeProfilesResponse, error)
 	PutTimeProfiles(request PutTimeProfilesRequest) (*PutTimeProfilesResponse, int, error)
@@ -35,6 +34,7 @@ type IUHPPOTED interface {
 	GetEvent(deviceID uint32, index uint32) (*Event, error)
 	GetEvents(deviceID uint32, N int) ([]Event, error)
 	RecordSpecialEvents(deviceID uint32, enable bool) (bool, error)
+	PutCard(deviceID uint32, card types.Card) (bool, error)
 }
 
 type GetDevicesRequest struct {
@@ -135,16 +135,6 @@ type GetCardRequest struct {
 }
 
 type GetCardResponse struct {
-	DeviceID DeviceID   `json:"device-id"`
-	Card     types.Card `json:"card"`
-}
-
-type PutCardRequest struct {
-	DeviceID DeviceID
-	Card     types.Card
-}
-
-type PutCardResponse struct {
 	DeviceID DeviceID   `json:"device-id"`
 	Card     types.Card `json:"card"`
 }

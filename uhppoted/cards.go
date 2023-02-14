@@ -2,6 +2,8 @@ package uhppoted
 
 import (
 	"fmt"
+
+	"github.com/uhppoted/uhppote-core/types"
 )
 
 func (u *UHPPOTED) GetCardRecords(request GetCardRecordsRequest) (*GetCardRecordsResponse, error) {
@@ -106,29 +108,18 @@ func (u *UHPPOTED) GetCard(request GetCardRequest) (*GetCardResponse, error) {
 	return &response, nil
 }
 
-func (u *UHPPOTED) PutCard(request PutCardRequest) (*PutCardResponse, error) {
-	u.debug("put-card", fmt.Sprintf("request  %+v", request))
+func (u *UHPPOTED) PutCard(deviceID uint32, card types.Card) (bool, error) {
+	u.debug("put-card", fmt.Sprintf("%v card:%v", deviceID, card))
 
-	deviceID := uint32(request.DeviceID)
-	card := request.Card
+	if ok, err := u.UHPPOTE.PutCard(deviceID, card); err != nil {
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error writing card %v to %v (%w)", card.CardNumber, deviceID, err))
+	} else if !ok {
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("failed to write card %v to %v (%w)", card.CardNumber, deviceID, err))
+	} else {
+		u.debug("put-card", fmt.Sprintf("response %+v", ok))
 
-	authorised, err := u.UHPPOTE.PutCard(deviceID, card)
-	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error writing card %v to %v (%w)", card.CardNumber, deviceID, err))
+		return ok, nil
 	}
-
-	if !authorised {
-		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("failed to write card %v to %v (%w)", card.CardNumber, deviceID, err))
-	}
-
-	response := PutCardResponse{
-		DeviceID: DeviceID(deviceID),
-		Card:     card,
-	}
-
-	u.debug("put-card", fmt.Sprintf("response %+v", response))
-
-	return &response, nil
 }
 
 func (u *UHPPOTED) DeleteCard(request DeleteCardRequest) (*DeleteCardResponse, error) {
