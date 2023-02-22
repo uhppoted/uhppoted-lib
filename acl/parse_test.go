@@ -17,9 +17,42 @@ func TestParseHeader(t *testing.T) {
 		doors: map[uint32][]int{
 			12345: []int{6, 5, 7, 4},
 		},
+		PIN: 0,
 	}
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage"}
+
+	devices := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	ix, err := parseHeader(header, devices)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing header: %v", err)
+	} else if ix == nil {
+		t.Fatalf("parseHeader returned 'nil'")
+	}
+
+	if !reflect.DeepEqual(*ix, expected) {
+		t.Errorf("Invalid index\n   expected: %+v\n   got:      %+v", expected, *ix)
+	}
+}
+
+func TestParseHeaderWithPIN(t *testing.T) {
+	expected := index{
+		cardnumber: 1,
+		from:       3,
+		to:         4,
+		doors: map[uint32][]int{
+			12345: []int{7, 6, 8, 5},
+		},
+		PIN: 2,
+	}
+
+	header := []string{"Card Number", "PIN", "From", "To", "Workshop", "Side Door", "Front Door", "Garage"}
 
 	devices := []uhppote.Device{
 		uhppote.Device{
@@ -49,6 +82,7 @@ func TestParseHeaderWithMultipleDevices(t *testing.T) {
 			12345: []int{6, 5, 7, 4},
 			54321: []int{8, 9, 10, 11},
 		},
+		PIN: 0,
 	}
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "D1", "D2", "D3", "D4"}
@@ -85,6 +119,7 @@ func TestParseHeaderWithMissingColumn(t *testing.T) {
 			12345: []int{6, 5, 7, 4},
 			54321: []int{8, 9, 0, 10},
 		},
+		PIN: 0,
 	}
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "D1", "D2", "D4"}
@@ -159,6 +194,44 @@ func TestParseRecord(t *testing.T) {
 				3: 29,
 				4: 1,
 			},
+		},
+	}
+
+	cards, err := parseRecord(record, ix)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing valid record - %v", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Incorrect cards list\n   expected: %v\n   got:      %v", expected, cards)
+	}
+}
+
+func TestParseRecordWithPIN(t *testing.T) {
+	ix := index{
+		cardnumber: 1,
+		from:       3,
+		to:         4,
+		doors: map[uint32][]int{
+			12345: []int{7, 6, 8, 5},
+		},
+		PIN: 2,
+	}
+
+	record := []string{"8165535", "7531", "2021-01-01", "2021-12-31", "Y", "Y", "N", "29", "N", "N", "Y", "Y"}
+
+	expected := map[uint32]types.Card{
+		12345: types.Card{
+			CardNumber: 8165535,
+			From:       date("2021-01-01"),
+			To:         date("2021-12-31"),
+			Doors: map[uint8]uint8{
+				1: 0,
+				2: 1,
+				3: 29,
+				4: 1,
+			},
+			PIN: 7531,
 		},
 	}
 

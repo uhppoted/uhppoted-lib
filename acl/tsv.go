@@ -112,3 +112,27 @@ func MakeTSV(acl ACL, devices []uhppote.Device, f io.Writer) error {
 
 	return nil
 }
+
+func MakeTSVWithPIN(acl ACL, devices []uhppote.Device, f io.Writer) error {
+	t, err := MakeTableWithPIN(acl, devices)
+	if err != nil {
+		return err
+	}
+
+	w := csv.NewWriter(f)
+	w.Comma = '\t'
+
+	if err := w.Write(t.Header); err != nil {
+		return err
+	}
+
+	for _, r := range t.Records {
+		if err := w.Write(r); err != nil {
+			return err
+		}
+	}
+
+	w.Flush()
+
+	return nil
+}

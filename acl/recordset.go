@@ -2,6 +2,7 @@ package acl
 
 import (
 	"fmt"
+	"math"
 	"reflect"
 	"sort"
 	"strings"
@@ -81,107 +82,251 @@ func ParseTable(table *Table, devices []uhppote.Device, strict bool) (*ACL, []er
 }
 
 func MakeTable(acl ACL, devices []uhppote.Device) (*Table, error) {
-	header, err := makeHeader(devices)
-	if err != nil {
+	if header, err := makeHeader(devices); err != nil {
 		return nil, err
-	}
-
-	index := map[string]int{}
-	for i, h := range header {
-		if i > 2 {
-			index[clean(h)] = i - 2
-		}
-	}
-
-	cards := map[uint32]card{}
-	for _, d := range devices {
-		v, ok := acl[d.DeviceID]
-		if !ok {
-			return nil, fmt.Errorf("aCL missing for device %v", d.DeviceID)
-		}
-
-		jndex := []int{0, 0, 0, 0}
-		for i, door := range d.Doors {
-			if clean(door) != "" {
-				jndex[i] = index[clean(door)]
+	} else {
+		index := map[string]int{}
+		for i, h := range header {
+			if i > 2 {
+				index[clean(h)] = i - 2
 			}
 		}
 
-		for cardno, c := range v {
-			record, ok := cards[cardno]
+		cards := map[uint32]card{}
+		for _, d := range devices {
+			v, ok := acl[d.DeviceID]
 			if !ok {
-				record = card{
-					cardnumber: c.CardNumber,
-					from:       *c.From,
-					to:         *c.To,
-					doors:      make([]int, len(index)),
+				return nil, fmt.Errorf("ACL missing for device %v", d.DeviceID)
+			}
+
+			jndex := []int{0, 0, 0, 0}
+			for i, door := range d.Doors {
+				if clean(door) != "" {
+					jndex[i] = index[clean(door)]
 				}
 			}
 
-			if c.From.Before(record.from) {
-				record.from = *c.From
-			}
-
-			if c.To.After(record.to) {
-				record.to = *c.To
-			}
-
-			for i := uint8(1); i <= 4; i++ {
-				ix := jndex[i-1]
-
-				if ix == 0 && clean(d.Doors[i-1]) != "" {
-					return nil, fmt.Errorf("missing door ID for device %v, door:%v", d.DeviceID, i)
+			for cardno, c := range v {
+				record, ok := cards[cardno]
+				if !ok {
+					record = card{
+						cardnumber: c.CardNumber,
+						from:       *c.From,
+						to:         *c.To,
+						doors:      make([]int, len(index)),
+					}
 				}
 
-				if ix != 0 {
-					record.doors[ix-1] = int(c.Doors[i])
+				if c.From.Before(record.from) {
+					record.from = *c.From
 				}
-			}
 
-			cards[cardno] = record
+				if c.To.After(record.to) {
+					record.to = *c.To
+				}
+
+				for i := uint8(1); i <= 4; i++ {
+					ix := jndex[i-1]
+
+					if ix == 0 && clean(d.Doors[i-1]) != "" {
+						return nil, fmt.Errorf("missing door ID for device %v, door:%v", d.DeviceID, i)
+					}
+
+					if ix != 0 {
+						record.doors[ix-1] = int(c.Doors[i])
+					}
+				}
+
+				cards[cardno] = record
+			}
 		}
-	}
 
+		keys := []uint32{}
+		for k := range cards {
+			keys = append(keys, k)
+		}
+
+		sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+
+		records := [][]string{}
+		for _, k := range keys {
+			c := cards[k]
+			record := []string{
+				fmt.Sprintf("%v", c.cardnumber),
+				fmt.Sprintf("%v", c.from),
+				fmt.Sprintf("%v", c.to),
+			}
+
+			for _, v := range c.doors {
+				switch {
+				case v == 0:
+					record = append(record, "N")
+
+				case v == 1:
+					record = append(record, "Y")
+
+				case v > 1 && v < 255:
+					record = append(record, fmt.Sprintf("%v", v))
+				default:
+					record = append(record, "N")
+				}
+			}
+
+			records = append(records, record)
+		}
+
+		rs := Table{
+			Header:  header,
+			Records: records,
+		}
+
+		return &rs, nil
+	}
+}
+
+func MakeTableWithPIN(acl ACL, devices []uhppote.Device) (*Table, error) {
+	if header, err := makeHeaderWithPIN(devices); err != nil {
+		return nil, err
+	} else {
+		index := map[string]int{}
+		for i, h := range header {
+			if i > 3 {
+				index[clean(h)] = i - 3
+			}
+		}
+
+		cards := map[uint32]card{}
+		for _, d := range devices {
+			v, ok := acl[d.DeviceID]
+			if !ok {
+				return nil, fmt.Errorf("ACL missing for device %v", d.DeviceID)
+			}
+
+			jndex := []int{0, 0, 0, 0}
+			for i, door := range d.Doors {
+				if clean(door) != "" {
+					jndex[i] = index[clean(door)]
+				}
+			}
+
+			for cardno, c := range v {
+				record, ok := cards[cardno]
+				if !ok {
+					record = card{
+						cardnumber: c.CardNumber,
+						PIN:        uint32(c.PIN),
+						from:       *c.From,
+						to:         *c.To,
+						doors:      make([]int, len(index)),
+					}
+				}
+
+				if c.From.Before(record.from) {
+					record.from = *c.From
+				}
+
+				if c.To.After(record.to) {
+					record.to = *c.To
+				}
+
+				if uint32(c.PIN) != record.PIN {
+					record.PIN = math.MaxUint32
+				}
+
+				for i := uint8(1); i <= 4; i++ {
+					ix := jndex[i-1]
+
+					if ix == 0 && clean(d.Doors[i-1]) != "" {
+						return nil, fmt.Errorf("missing door ID for device %v, door:%v", d.DeviceID, i)
+					}
+
+					if ix != 0 {
+						record.doors[ix-1] = int(c.Doors[i])
+					}
+				}
+
+				cards[cardno] = record
+			}
+		}
+
+		keys := []uint32{}
+		for k := range cards {
+			keys = append(keys, k)
+		}
+
+		sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+
+		records := [][]string{}
+		for _, k := range keys {
+			c := cards[k]
+
+			pin := fmt.Sprintf("%v", c.PIN)
+			if c.PIN == math.MaxUint32 {
+				pin = "****"
+			}
+
+			record := []string{
+				fmt.Sprintf("%v", c.cardnumber),
+				fmt.Sprintf("%v", pin),
+				fmt.Sprintf("%v", c.from),
+				fmt.Sprintf("%v", c.to),
+			}
+
+			for _, v := range c.doors {
+				switch {
+				case v == 0:
+					record = append(record, "N")
+
+				case v == 1:
+					record = append(record, "Y")
+
+				case v > 1 && v < 255:
+					record = append(record, fmt.Sprintf("%v", v))
+				default:
+					record = append(record, "N")
+				}
+			}
+
+			records = append(records, record)
+		}
+
+		rs := Table{
+			Header:  header,
+			Records: records,
+		}
+
+		return &rs, nil
+	}
+}
+
+func makeHeaderWithPIN(devices []uhppote.Device) ([]string, error) {
 	keys := []uint32{}
-	for k := range cards {
-		keys = append(keys, k)
+	for _, d := range devices {
+		keys = append(keys, d.DeviceID)
 	}
 
 	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
 
-	records := [][]string{}
-	for _, k := range keys {
-		c := cards[k]
-		record := []string{
-			fmt.Sprintf("%v", c.cardnumber),
-			fmt.Sprintf("%v", c.from),
-			fmt.Sprintf("%v", c.to),
-		}
+	header := []string{
+		"Card Number",
+		"PIN",
+		"From",
+		"To",
+	}
 
-		for _, v := range c.doors {
-			switch {
-			case v == 0:
-				record = append(record, "N")
-
-			case v == 1:
-				record = append(record, "Y")
-
-			case v > 1 && v < 255:
-				record = append(record, fmt.Sprintf("%v", v))
-			default:
-				record = append(record, "N")
+	for _, id := range keys {
+		for _, d := range devices {
+			if d.DeviceID == id {
+				for _, door := range d.Doors {
+					if clean(door) != "" {
+						header = append(header, strings.TrimSpace(door))
+					}
+				}
 			}
 		}
-
-		records = append(records, record)
 	}
 
-	rs := Table{
-		Header:  header,
-		Records: records,
-	}
-
-	return &rs, nil
+	return header, nil
 }
 
 func makeHeader(devices []uhppote.Device) ([]string, error) {

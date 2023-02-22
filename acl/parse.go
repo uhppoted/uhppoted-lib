@@ -22,6 +22,7 @@ func parseHeader(header []string, devices []uhppote.Device) (*index, error) {
 		from:       0,
 		to:         0,
 		doors:      make(map[uint32][]int),
+		PIN:        0,
 	}
 
 	for _, d := range devices {
@@ -47,7 +48,7 @@ func parseHeader(header []string, devices []uhppote.Device) (*index, error) {
 
 loop:
 	for c, v := range columns {
-		if c != "cardnumber" && c != "from" && c != "to" {
+		if c != "cardnumber" && c != "from" && c != "to" && c != "pin" {
 			for _, device := range devices {
 				for _, door := range device.Doors {
 					if d := clean(door); d == c {
@@ -70,6 +71,10 @@ loop:
 
 	if c, ok := columns["to"]; ok {
 		index.to = c.index
+	}
+
+	if c, ok := columns["pin"]; ok {
+		index.PIN = c.index
 	}
 
 	for _, device := range devices {
@@ -116,6 +121,11 @@ func parseRecord(record []string, index index) (map[uint32]types.Card, error) {
 			return nil, err
 		}
 
+		pin, err := getPIN(record, index)
+		if err != nil {
+			return nil, err
+		}
+
 		from, err := getFromDate(record, index)
 		if err != nil {
 			return nil, err
@@ -136,6 +146,7 @@ func parseRecord(record []string, index index) (map[uint32]types.Card, error) {
 			From:       from,
 			To:         to,
 			Doors:      doors,
+			PIN:        types.PIN(pin),
 		}
 	}
 
@@ -150,6 +161,22 @@ func getCardNumber(record []string, index index) (uint32, error) {
 	}
 
 	return uint32(cardnumber), nil
+}
+
+func getPIN(record []string, index index) (uint32, error) {
+	if index.PIN > 0 {
+		f := field(record, index.PIN)
+
+		if pin, err := strconv.ParseUint(f, 10, 32); err != nil {
+			return 0, fmt.Errorf("invalid card PIN '%s' (%w)", f, err)
+		} else if pin > 999999 {
+			return 0, fmt.Errorf("invalid card PIN '%s' (%v)", f, pin)
+		} else {
+			return uint32(pin), nil
+		}
+	}
+
+	return 0, nil
 }
 
 func getFromDate(record []string, index index) (*types.Date, error) {

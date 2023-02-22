@@ -24,6 +24,7 @@ type index struct {
 	from       int
 	to         int
 	doors      map[uint32][]int
+	PIN        int
 }
 
 type doormap map[string]struct {
@@ -34,6 +35,7 @@ type doormap map[string]struct {
 
 type card struct {
 	cardnumber uint32
+	PIN        uint32
 	from       types.Date
 	to         types.Date
 	doors      []int

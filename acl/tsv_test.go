@@ -285,3 +285,99 @@ func TestMakeTSV(t *testing.T) {
 		t.Errorf("Returned incorrect TSV - expected:\n%v\ngot:\n%v\n", expected, s)
 	}
 }
+
+func TestMakeTSVWithPIN(t *testing.T) {
+	acl := ACL{
+		12345: map[uint32]types.Card{
+			65536: types.Card{CardNumber: 65536, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 7531},
+			65537: types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 0},
+			65538: types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 1357},
+			65539: types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 0},
+		},
+		54321: map[uint32]types.Card{
+			65537: types.Card{CardNumber: 65537, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 0, 4: 1}, PIN: 0},
+			65538: types.Card{CardNumber: 65538, From: date("2023-03-01"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 1}, PIN: 1357},
+			65539: types.Card{CardNumber: 65539, From: date("2023-01-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 1, 4: 1}, PIN: 0},
+			65540: types.Card{CardNumber: 65540, From: date("2019-01-01"), To: date("2025-12-31"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 1}, PIN: 2468},
+		},
+	}
+
+	expected := `Card Number	PIN	From	To	Front Door	Side Door	Garage	Workshop	D1	D2	D3	D4
+65536	7531	2023-01-01	2023-12-31	Y	N	Y	N	N	N	N	N
+65537	0	2023-01-01	2023-12-31	Y	N	N	N	Y	Y	N	Y
+65538	1357	2023-02-03	2023-11-30	Y	N	N	Y	Y	N	Y	Y
+65539	0	2023-01-03	2023-12-31	N	N	N	N	N	Y	Y	Y
+65540	2468	2019-01-01	2025-12-31	N	N	N	N	N	Y	N	Y
+`
+
+	devices := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+		uhppote.Device{
+			DeviceID: 54321,
+			Doors:    []string{"D1", "D2", "D3", "D4"},
+		},
+	}
+
+	var w strings.Builder
+
+	err := MakeTSVWithPIN(acl, devices, &w)
+	if err != nil {
+		t.Fatalf("Unexpected error creating TSV: %v", err)
+	}
+
+	s := w.String()
+	if s != expected {
+		t.Errorf("Returned incorrect TSV - expected:\n%v\ngot:\n%v\n", expected, s)
+	}
+}
+
+func TestMakeTSVWithInconsistentPINs(t *testing.T) {
+	acl := ACL{
+		12345: map[uint32]types.Card{
+			65536: types.Card{CardNumber: 65536, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 7531},
+			65537: types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 0},
+			65538: types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 1357},
+			65539: types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 8642},
+		},
+		54321: map[uint32]types.Card{
+			65537: types.Card{CardNumber: 65537, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 1, 3: 0, 4: 1}, PIN: 9753},
+			65538: types.Card{CardNumber: 65538, From: date("2023-03-01"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 1}, PIN: 1357},
+			65539: types.Card{CardNumber: 65539, From: date("2023-01-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 1, 4: 1}, PIN: 0},
+			65540: types.Card{CardNumber: 65540, From: date("2019-01-01"), To: date("2025-12-31"), Doors: map[uint8]uint8{1: 0, 2: 1, 3: 0, 4: 1}, PIN: 2468},
+		},
+	}
+
+	expected := `Card Number	PIN	From	To	Front Door	Side Door	Garage	Workshop	D1	D2	D3	D4
+65536	7531	2023-01-01	2023-12-31	Y	N	Y	N	N	N	N	N
+65537	****	2023-01-01	2023-12-31	Y	N	N	N	Y	Y	N	Y
+65538	1357	2023-02-03	2023-11-30	Y	N	N	Y	Y	N	Y	Y
+65539	****	2023-01-03	2023-12-31	N	N	N	N	N	Y	Y	Y
+65540	2468	2019-01-01	2025-12-31	N	N	N	N	N	Y	N	Y
+`
+
+	devices := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+		uhppote.Device{
+			DeviceID: 54321,
+			Doors:    []string{"D1", "D2", "D3", "D4"},
+		},
+	}
+
+	var w strings.Builder
+
+	err := MakeTSVWithPIN(acl, devices, &w)
+	if err != nil {
+		t.Fatalf("Unexpected error creating TSV: %v", err)
+	}
+
+	s := w.String()
+	if s != expected {
+		t.Errorf("Returned incorrect TSV - expected:\n%v\ngot:\n%v\n", expected, s)
+	}
+}
