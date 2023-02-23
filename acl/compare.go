@@ -6,6 +6,8 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
+type equivalent = func(types.Card, types.Card) bool
+
 func Compare(src, dst ACL) (map[uint32]Diff, error) {
 	m := map[uint32]Diff{}
 
@@ -20,13 +22,33 @@ func Compare(src, dst ACL) (map[uint32]Diff, error) {
 	for k := range m {
 		p := src[k]
 		q := dst[k]
-		m[k] = compare(k, p, q)
+		m[k] = compare(k, p, q, equals)
 	}
 
 	return m, nil
 }
 
-func compare(device uint32, p, q map[uint32]types.Card) Diff {
+func CompareWithPIN(src, dst ACL) (map[uint32]Diff, error) {
+	m := map[uint32]Diff{}
+
+	for k := range src {
+		m[k] = Diff{}
+	}
+
+	for k := range dst {
+		m[k] = Diff{}
+	}
+
+	for k := range m {
+		p := src[k]
+		q := dst[k]
+		m[k] = compare(k, p, q, equalsWithPIN)
+	}
+
+	return m, nil
+}
+
+func compare(device uint32, p, q map[uint32]types.Card, eq equivalent) Diff {
 	cards := map[uint32]struct{}{}
 
 	for k := range p {
@@ -49,7 +71,7 @@ func compare(device uint32, p, q map[uint32]types.Card) Diff {
 		v, hasv := q[k]
 
 		if hasu && hasv {
-			if equals(u, v) {
+			if eq(u, v) {
 				diff.Unchanged = append(diff.Unchanged, u)
 			} else {
 				diff.Updated = append(diff.Updated, v)
@@ -100,6 +122,19 @@ func equals(p, q types.Card) bool {
 		if p.Doors[i] != q.Doors[i] {
 			return false
 		}
+	}
+
+	return true
+}
+
+/*
+ * Compares two cards, including PIN
+ */
+func equalsWithPIN(p, q types.Card) bool {
+	if !equals(p, q) {
+		return false
+	} else if p.PIN != q.PIN {
+		return false
 	}
 
 	return true
