@@ -6,8 +6,6 @@ import (
 	"github.com/uhppoted/uhppote-core/types"
 )
 
-type equivalent = func(types.Card, types.Card) bool
-
 func Compare(src, dst ACL) (map[uint32]Diff, error) {
 	m := map[uint32]Diff{}
 
@@ -92,50 +90,4 @@ func compare(device uint32, p, q map[uint32]types.Card, eq equivalent) Diff {
 	}
 
 	return diff
-}
-
-/*
- * Compares two cards, ignoring PIN
- */
-func equals(p, q types.Card) bool {
-	if p.CardNumber != q.CardNumber {
-		return false
-	}
-
-	if p.From != nil && q.From != nil {
-		if !p.From.Equals(*q.From) {
-			return false
-		}
-	} else if p.From != nil || q.From != nil {
-		return false
-	}
-
-	if p.To != nil && q.To != nil {
-		if !p.To.Equals(*q.To) {
-			return false
-		}
-	} else if p.To != nil || q.To != nil {
-		return false
-	}
-
-	for _, i := range []uint8{1, 2, 3, 4} {
-		if p.Doors[i] != q.Doors[i] {
-			return false
-		}
-	}
-
-	return true
-}
-
-/*
- * Compares two cards, including PIN
- */
-func equalsWithPIN(p, q types.Card) bool {
-	if !equals(p, q) {
-		return false
-	} else if p.PIN != q.PIN {
-		return false
-	}
-
-	return true
 }

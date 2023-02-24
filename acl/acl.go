@@ -41,6 +41,9 @@ type card struct {
 	doors      []int
 }
 
+type equivalent = func(types.Card, types.Card) bool
+type put = func(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error)
+
 func (acl *ACL) Print(w io.Writer) {
 	if acl != nil {
 		devices := []uint32{}
@@ -111,4 +114,66 @@ func putCard(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
 	card.Doors = c.Doors
 
 	return u.PutCard(deviceID, *card)
+}
+
+func putCardWithPIN(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
+	card, err := u.GetCardByID(deviceID, c.CardNumber)
+	if err != nil {
+		return false, err
+	} else if card == nil {
+		card = &types.Card{CardNumber: c.CardNumber}
+	}
+
+	card.From = c.From
+	card.To = c.To
+	card.Doors = c.Doors
+	card.PIN = c.PIN
+
+	return u.PutCard(deviceID, *card)
+}
+
+/*
+ * Compares two cards, ignoring PIN
+ */
+func equals(p, q types.Card) bool {
+	if p.CardNumber != q.CardNumber {
+		return false
+	}
+
+	if p.From != nil && q.From != nil {
+		if !p.From.Equals(*q.From) {
+			return false
+		}
+	} else if p.From != nil || q.From != nil {
+		return false
+	}
+
+	if p.To != nil && q.To != nil {
+		if !p.To.Equals(*q.To) {
+			return false
+		}
+	} else if p.To != nil || q.To != nil {
+		return false
+	}
+
+	for _, i := range []uint8{1, 2, 3, 4} {
+		if p.Doors[i] != q.Doors[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+/*
+ * Compares two cards, including PIN
+ */
+func equalsWithPIN(p, q types.Card) bool {
+	if !equals(p, q) {
+		return false
+	} else if p.PIN != q.PIN {
+		return false
+	}
+
+	return true
 }

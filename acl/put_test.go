@@ -99,6 +99,98 @@ func TestPutACL(t *testing.T) {
 	}
 }
 
+func TestPutACLWithPIN(t *testing.T) {
+	acl := ACL{
+		12345: map[uint32]types.Card{
+			65535: types.Card{CardNumber: 65535, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}},
+			65536: types.Card{CardNumber: 65536, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 7531},
+			65537: types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 7532},
+			65538: types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 7533},
+		},
+	}
+
+	expected := []types.Card{
+		types.Card{CardNumber: 65535, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 0},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 7532},
+		types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 7533},
+		types.Card{CardNumber: 65536, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 7531},
+	}
+
+	report := map[uint32]Report{
+		12345: Report{
+			Unchanged: []uint32{65537},
+			Updated:   []uint32{65535, 65538},
+			Added:     []uint32{65536},
+			Deleted:   []uint32{65539},
+			Failed:    []uint32{},
+			Errored:   []uint32{},
+			Errors:    []error{},
+		},
+	}
+
+	cards := []types.Card{
+		types.Card{CardNumber: 65535, From: date("2023-01-01"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 7530},
+		types.Card{CardNumber: 65537, From: date("2023-01-02"), To: date("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 7532},
+		types.Card{CardNumber: 65538, From: date("2023-02-03"), To: date("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 1234},
+		types.Card{CardNumber: 65539, From: date("2023-03-04"), To: date("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+	}
+
+	u := mock{
+		getCards: func(deviceID uint32) (uint32, error) {
+			return uint32(len(cards)), nil
+		},
+		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
+			for _, c := range cards {
+				if c.CardNumber == cardID {
+					return &c, nil
+				}
+			}
+			return nil, nil
+		},
+		getCardByIndex: func(deviceID, index uint32) (*types.Card, error) {
+			if int(index) < 0 || int(index) > len(cards) {
+				return nil, nil
+			}
+			return &cards[index-1], nil
+		},
+		putCard: func(deviceID uint32, card types.Card) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == card.CardNumber {
+					cards[ix] = card
+					return true, nil
+				}
+			}
+
+			cards = append(cards, card)
+
+			return true, nil
+		},
+		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == cardNumber {
+					cards = append(cards[:ix], cards[ix+1:]...)
+					return true, nil
+				}
+			}
+
+			return false, nil
+		},
+	}
+
+	rpt, err := PutACLWithPIN(&u, acl, false)
+	if len(err) > 0 {
+		t.Fatalf("Unexpected error putting ACL: %v", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Device internal card list not updated correctly:\n    expected:%+v\n    got:     %+v", expected, cards)
+	}
+
+	if !reflect.DeepEqual(rpt, report) {
+		t.Errorf("Returned report does not match expected:\n    expected:%+v\n    got:     %+v", report, rpt)
+	}
+}
+
 func TestPutACLWithTimeProfiles(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{

@@ -9,6 +9,14 @@ import (
 )
 
 func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool) (map[uint32]Report, []error) {
+	return putACLImpl(u, acl, dryrun, putCard, equals)
+}
+
+func PutACLWithPIN(u uhppote.IUHPPOTE, acl ACL, dryrun bool) (map[uint32]Report, []error) {
+	return putACLImpl(u, acl, dryrun, putCardWithPIN, equalsWithPIN)
+}
+
+func putACLImpl(u uhppote.IUHPPOTE, acl ACL, dryrun bool, write put, eq equivalent) (map[uint32]Report, []error) {
 	report := sync.Map{}
 	errors := []error{}
 	guard := sync.RWMutex{}
@@ -39,7 +47,7 @@ func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool) (map[uint32]Report, []erro
 			if dryrun {
 				rpt, err = fakePutACL(u, id, cards)
 			} else {
-				rpt, err = putACL(u, id, cards)
+				rpt, err = putACL(u, id, cards, write, eq)
 			}
 
 			if rpt != nil {
@@ -67,13 +75,13 @@ func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool) (map[uint32]Report, []erro
 	return r, errors
 }
 
-func putACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
+func putACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card, write put, eq equivalent) (*Report, error) {
 	current, err := getACL(u, deviceID)
 	if err != nil {
 		return nil, err
 	}
 
-	diff := compare(deviceID, current, cards, equals)
+	diff := compare(deviceID, current, cards, eq)
 
 	report := Report{
 		Unchanged: []uint32{},
@@ -94,7 +102,7 @@ func putACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card) (*
 			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else {
-			if ok, err := putCard(u, deviceID, card); err != nil {
+			if ok, err := write(u, deviceID, card); err != nil {
 				report.Errored = append(report.Errored, card.CardNumber)
 				report.Errors = append(report.Errors, err)
 			} else if !ok {
@@ -110,7 +118,7 @@ func putACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card) (*
 			report.Errored = append(report.Errored, card.CardNumber)
 			report.Errors = append(report.Errors, err)
 		} else {
-			if ok, err := putCard(u, deviceID, card); err != nil {
+			if ok, err := write(u, deviceID, card); err != nil {
 				report.Errored = append(report.Errored, card.CardNumber)
 				report.Errors = append(report.Errors, err)
 			} else if !ok {
