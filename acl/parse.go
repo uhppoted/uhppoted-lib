@@ -167,7 +167,9 @@ func getPIN(record []string, index index) (uint32, error) {
 	if index.PIN > 0 {
 		f := field(record, index.PIN)
 
-		if pin, err := strconv.ParseUint(f, 10, 32); err != nil {
+		if f == "" {
+			return 0, nil
+		} else if pin, err := strconv.ParseUint(f, 10, 32); err != nil {
 			return 0, fmt.Errorf("invalid card PIN '%s' (%w)", f, err)
 		} else if pin > 999999 {
 			return 0, fmt.Errorf("invalid card PIN '%s' (%v)", f, pin)

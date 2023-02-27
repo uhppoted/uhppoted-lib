@@ -245,6 +245,44 @@ func TestParseRecordWithPIN(t *testing.T) {
 	}
 }
 
+func TestParseRecordWithBlankPIN(t *testing.T) {
+	ix := index{
+		cardnumber: 1,
+		PIN:        2,
+		from:       3,
+		to:         4,
+		doors: map[uint32][]int{
+			12345: []int{7, 6, 8, 5},
+		},
+	}
+
+	record := []string{"8165535", "", "2021-01-01", "2021-12-31", "Y", "Y", "N", "29", "N", "N", "Y", "Y"}
+
+	expected := map[uint32]types.Card{
+		12345: types.Card{
+			CardNumber: 8165535,
+			From:       date("2021-01-01"),
+			To:         date("2021-12-31"),
+			Doors: map[uint8]uint8{
+				1: 0,
+				2: 1,
+				3: 29,
+				4: 1,
+			},
+			PIN: 0,
+		},
+	}
+
+	cards, err := parseRecord(record, ix)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing record with blank PIN - %v", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Incorrect cards list\n   expected: %v\n   got:      %v", expected, cards)
+	}
+}
+
 func TestParseRecordWithInvalidPermission(t *testing.T) {
 	ix := index{
 		cardnumber: 1,
