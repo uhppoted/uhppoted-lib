@@ -13,6 +13,7 @@ type WildApricot struct {
 
 	Fields struct {
 		CardNumber string `conf:"card-number"`
+		PIN        string `conf:"PIN"`
 	} `conf:"fields"`
 
 	DisplayOrder struct {
@@ -37,8 +38,10 @@ func NewWildApricot() *WildApricot {
 
 		Fields: struct {
 			CardNumber string `conf:"card-number"`
+			PIN        string `conf:"PIN"`
 		}{
 			CardNumber: "Card Number",
+			PIN:        "PIN",
 		},
 
 		FacilityCode: "",

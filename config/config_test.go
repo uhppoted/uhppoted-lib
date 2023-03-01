@@ -45,6 +45,7 @@ wild-apricot.http.client-timeout = 12s
 wild-apricot.http.retries = 6
 wild-apricot.http.retry-delay = 9s
 wild-apricot.fields.card-number = Ye Olde Cardde Nymber
+wild-apricot.fields.PIN = LePIN
 wild-apricot.facility-code = 89
 
 # HTTPD
@@ -100,8 +101,10 @@ func TestDefaultConfig(t *testing.T) {
 
 			Fields: struct {
 				CardNumber string `conf:"card-number"`
+				PIN        string `conf:"PIN"`
 			}{
 				CardNumber: "Card Number",
+				PIN:        "PIN",
 			},
 		},
 
@@ -185,8 +188,10 @@ func TestConfigUnmarshal(t *testing.T) {
 
 			Fields: struct {
 				CardNumber string `conf:"card-number"`
+				PIN        string `conf:"PIN"`
 			}{
 				CardNumber: "Ye Olde Cardde Nymber",
+				PIN:        "LePIN",
 			},
 
 			FacilityCode: "89",
@@ -418,6 +423,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; wild-apricot.http.retries = 3
 ; wild-apricot.http.retry-delay = 5s
 ; wild-apricot.fields.card-number = Card Number
+; wild-apricot.fields.PIN = PIN
 ; wild-apricot.display-order.groups = 
 ; wild-apricot.display-order.doors = 
 ; wild-apricot.facility-code = 
@@ -609,6 +615,7 @@ httpd.retention = 5h30m0s
 ; wild-apricot.http.retries = 3
 ; wild-apricot.http.retry-delay = 5s
 ; wild-apricot.fields.card-number = Card Number
+; wild-apricot.fields.PIN = PIN
 ; wild-apricot.display-order.groups = 
 ; wild-apricot.display-order.doors = 
 ; wild-apricot.facility-code = 
