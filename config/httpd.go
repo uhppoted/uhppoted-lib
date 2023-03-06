@@ -62,7 +62,9 @@ type HTTPD struct {
 	} `conf:"audit"`
 	Retention time.Duration `conf:"retention"`
 	Timezones string        `conf:"timezones"`
-	WithPIN   bool          `conf:"with-pin"`
+	PIN       struct {
+		Enabled bool `conf:"enabled"`
+	} `conf:"PIN"`
 }
 
 func NewHTTPD() *HTTPD {
@@ -183,6 +185,10 @@ func NewHTTPD() *HTTPD {
 		},
 		Retention: 6 * time.Hour,
 		Timezones: "",
-		WithPIN:   false,
+		PIN: struct {
+			Enabled bool `conf:"enabled"`
+		}{
+			Enabled: false,
+		},
 	}
 }

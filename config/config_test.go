@@ -417,7 +417,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.audit.file = %[41]s
 ; httpd.retention = 6h0m0s
 ; httpd.timezones = 
-; httpd.with-pin = false
+; httpd.PIN.enabled = false
 
 # Wild Apricot
 ; wild-apricot.http.client-timeout = 10s
@@ -610,7 +610,7 @@ timeout = %[4]v
 ; httpd.audit.file = %[42]s
 httpd.retention = 5h30m0s
 ; httpd.timezones = 
-; httpd.with-pin = false
+; httpd.PIN.enabled = false
 
 # Wild Apricot
 ; wild-apricot.http.client-timeout = 10s
