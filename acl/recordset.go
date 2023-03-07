@@ -263,6 +263,8 @@ func MakeTableWithPIN(acl ACL, devices []uhppote.Device) (*Table, error) {
 			pin := fmt.Sprintf("%v", c.PIN)
 			if c.PIN == math.MaxUint32 {
 				pin = "****"
+			} else if c.PIN == 0 {
+				pin = ""
 			}
 
 			record := []string{
