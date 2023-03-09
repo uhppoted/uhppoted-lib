@@ -2,6 +2,8 @@ package uhppoted
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/uhppoted/uhppote-core/types"
 )
 
@@ -34,11 +36,19 @@ func (u *UHPPOTED) GetStatus(deviceID uint32) (*Status, error) {
 		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error retrieving status for %v (%w)", deviceID, err))
 	}
 
+	sysdatetime := func() types.DateTime {
+		if status.SystemDateTime != nil {
+			return *status.SystemDateTime
+		} else {
+			return types.DateTime(time.Time{})
+		}
+	}
+
 	response := Status{
 		DoorState:      status.DoorState,
 		DoorButton:     status.DoorButton,
 		SystemError:    status.SystemError,
-		SystemDateTime: status.SystemDateTime,
+		SystemDateTime: sysdatetime(),
 		SequenceId:     status.SequenceId,
 		SpecialInfo:    status.SpecialInfo,
 		RelayState:     status.RelayState,

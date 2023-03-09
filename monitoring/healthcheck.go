@@ -299,12 +299,20 @@ func (h *HealthCheck) unexpected(now time.Time, handler MonitoringHandler) (uint
 }
 
 func (h *HealthCheck) checkStatus(id uint32, now time.Time, alerted *alerts, handler MonitoringHandler, known bool) (uint, uint) {
+	sysdatetime := func(v status) time.Time {
+		if t := v.Status.SystemDateTime; t == nil {
+			return time.Time{}
+		} else {
+			return time.Time(*t)
+		}
+	}
+
 	errors := uint(0)
 	warnings := uint(0)
 
 	if v, found := h.state.Devices.Status.Load(id); found {
 		touched := v.(status).Touched
-		t := time.Time(v.(status).Status.SystemDateTime)
+		t := sysdatetime(v.(status))
 		dt := time.Since(t).Round(time.Second)
 		dtt := int64(math.Abs(time.Since(touched).Seconds()))
 
