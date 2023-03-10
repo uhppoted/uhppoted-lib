@@ -2,7 +2,6 @@ package uhppoted
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
 )
@@ -37,10 +36,10 @@ func (u *UHPPOTED) GetStatus(deviceID uint32) (*Status, error) {
 	}
 
 	sysdatetime := func() types.DateTime {
-		if status.SystemDateTime != nil {
-			return *status.SystemDateTime
+		if status.SystemDateTime.IsZero() {
+			return types.DateTime{}
 		} else {
-			return types.DateTime(time.Time{})
+			return status.SystemDateTime
 		}
 	}
 

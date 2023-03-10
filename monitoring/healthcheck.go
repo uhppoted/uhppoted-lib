@@ -300,10 +300,10 @@ func (h *HealthCheck) unexpected(now time.Time, handler MonitoringHandler) (uint
 
 func (h *HealthCheck) checkStatus(id uint32, now time.Time, alerted *alerts, handler MonitoringHandler, known bool) (uint, uint) {
 	sysdatetime := func(v status) time.Time {
-		if t := v.Status.SystemDateTime; t == nil {
+		if t := v.Status.SystemDateTime; t.IsZero() {
 			return time.Time{}
 		} else {
-			return time.Time(*t)
+			return time.Time(t)
 		}
 	}
 
