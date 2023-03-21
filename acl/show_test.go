@@ -9,8 +9,8 @@ import (
 
 func TestGetCard(t *testing.T) {
 	expected := map[string]Permission{
-		"Front Door": Permission{From: *date("2020-02-03"), To: *date("2020-11-30")},
-		"Workshop":   Permission{From: *date("2020-02-03"), To: *date("2020-11-30")},
+		"Front Door": Permission{From: date("2020-02-03"), To: date("2020-11-30")},
+		"Workshop":   Permission{From: date("2020-02-03"), To: date("2020-11-30")},
 	}
 
 	cards := []types.Card{
@@ -86,9 +86,9 @@ func TestGetCardWithUnknownCard(t *testing.T) {
 
 func TestGetCardWithMultipleDevices(t *testing.T) {
 	expected := map[string]Permission{
-		"Front Door": Permission{From: *date("2020-02-03"), To: *date("2020-11-30")},
-		"Workshop":   Permission{From: *date("2020-02-03"), To: *date("2020-11-30")},
-		"D2":         Permission{From: *date("2020-01-01"), To: *date("2020-12-31")},
+		"Front Door": Permission{From: date("2020-02-03"), To: date("2020-11-30")},
+		"Workshop":   Permission{From: date("2020-02-03"), To: date("2020-11-30")},
+		"D2":         Permission{From: date("2020-01-01"), To: date("2020-12-31")},
 	}
 
 	cards := map[uint32][]types.Card{

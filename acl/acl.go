@@ -140,19 +140,11 @@ func equals(p, q types.Card) bool {
 		return false
 	}
 
-	if p.From != nil && q.From != nil {
-		if !p.From.Equals(*q.From) {
-			return false
-		}
-	} else if p.From != nil || q.From != nil {
+	if !p.From.Equals(q.From) {
 		return false
 	}
 
-	if p.To != nil && q.To != nil {
-		if !p.To.Equals(*q.To) {
-			return false
-		}
-	} else if p.To != nil || q.To != nil {
+	if !p.To.Equals(q.To) {
 		return false
 	}
 

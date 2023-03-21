@@ -69,8 +69,8 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 	} else if card == nil {
 		card = &types.Card{
 			CardNumber: cardID,
-			From:       &from,
-			To:         &to,
+			From:       from,
+			To:         to,
 			Doors: map[uint8]uint8{
 				1: 0,
 				2: 0,
@@ -91,11 +91,11 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 	}
 
 	if revoked || card.From.After(from) {
-		card.From = &from
+		card.From = from
 	}
 
 	if revoked || card.To.Before(to) {
-		card.To = &to
+		card.To = to
 	}
 
 	for _, d := range doors {
@@ -118,8 +118,8 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 func grantAll(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Date) error {
 	card := types.Card{
 		CardNumber: cardID,
-		From:       &from,
-		To:         &to,
+		From:       from,
+		To:         to,
 		Doors: map[uint8]uint8{
 			1: 1,
 			2: 1,

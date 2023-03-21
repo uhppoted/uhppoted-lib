@@ -181,28 +181,24 @@ func getPIN(record []string, index index) (uint32, error) {
 	return 0, nil
 }
 
-func getFromDate(record []string, index index) (*types.Date, error) {
+func getFromDate(record []string, index index) (types.Date, error) {
 	f := field(record, index.from)
-	date, err := time.ParseInLocation("2006-01-02", f, time.Local)
-	if err != nil {
-		return nil, fmt.Errorf("invalid 'from' date '%s' (%w)", f, err)
+
+	if date, err := time.ParseInLocation("2006-01-02", f, time.Local); err != nil {
+		return types.Date{}, fmt.Errorf("invalid 'from' date '%s' (%w)", f, err)
+	} else {
+		return types.Date(date), nil
 	}
-
-	from := types.Date(date)
-
-	return &from, nil
 }
 
-func getToDate(record []string, index index) (*types.Date, error) {
+func getToDate(record []string, index index) (types.Date, error) {
 	f := field(record, index.to)
-	date, err := time.ParseInLocation("2006-01-02", f, time.Local)
-	if err != nil {
-		return nil, fmt.Errorf("invalid 'to' date '%s' (%w)", f, err)
+
+	if date, err := time.ParseInLocation("2006-01-02", f, time.Local); err != nil {
+		return types.Date{}, fmt.Errorf("invalid 'to' date '%s' (%w)", f, err)
+	} else {
+		return types.Date(date), nil
 	}
-
-	to := types.Date(date)
-
-	return &to, nil
 }
 
 func getDoors(record []string, v []int) (map[uint8]uint8, error) {

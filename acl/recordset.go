@@ -111,18 +111,18 @@ func MakeTable(acl ACL, devices []uhppote.Device) (*Table, error) {
 				if !ok {
 					record = card{
 						cardnumber: c.CardNumber,
-						from:       *c.From,
-						to:         *c.To,
+						from:       c.From,
+						to:         c.To,
 						doors:      make([]int, len(index)),
 					}
 				}
 
 				if c.From.Before(record.from) {
-					record.from = *c.From
+					record.from = c.From
 				}
 
 				if c.To.After(record.to) {
-					record.to = *c.To
+					record.to = c.To
 				}
 
 				for i := uint8(1); i <= 4; i++ {
@@ -215,18 +215,18 @@ func MakeTableWithPIN(acl ACL, devices []uhppote.Device) (*Table, error) {
 					record = card{
 						cardnumber: c.CardNumber,
 						PIN:        uint32(c.PIN),
-						from:       *c.From,
-						to:         *c.To,
+						from:       c.From,
+						to:         c.To,
 						doors:      make([]int, len(index)),
 					}
 				}
 
 				if c.From.Before(record.from) {
-					record.from = *c.From
+					record.from = c.From
 				}
 
 				if c.To.After(record.to) {
-					record.to = *c.To
+					record.to = c.To
 				}
 
 				if uint32(c.PIN) != record.PIN {

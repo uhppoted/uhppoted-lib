@@ -1,6 +1,7 @@
 DIST   ?= development
 DEBUG  ?= --debug
 
+.DEFAULT_GOAL := test
 .PHONY: bump
 .PHONY: vet
 .PHONY: lint

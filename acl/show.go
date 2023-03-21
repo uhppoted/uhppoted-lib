@@ -38,8 +38,8 @@ func GetCard(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32) (map[s
 					for _, v := range lookup {
 						if v.deviceID == device.DeviceID && v.door == ix {
 							acl[v.name] = Permission{
-								From:    *card.From,
-								To:      *card.To,
+								From:    card.From,
+								To:      card.To,
 								Profile: profile,
 							}
 						}

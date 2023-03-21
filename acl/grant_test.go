@@ -51,7 +51,7 @@ func TestGrant(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Garage"})
+	err := Grant(&u, devices, 65538, date("2023-01-01"), date("2023-12-31"), 0, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -113,7 +113,7 @@ func TestGrantWithTimeProfile(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 29, []string{"Garage"})
+	err := Grant(&u, devices, 65538, date("2023-01-01"), date("2023-12-31"), 29, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -169,7 +169,7 @@ func TestGrantWithUndefinedTimeProfile(t *testing.T) {
 		},
 	}
 
-	if err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 55, []string{"Garage"}); err == nil {
+	if err := Grant(&u, devices, 65538, date("2023-01-01"), date("2023-12-31"), 55, []string{"Garage"}); err == nil {
 		t.Fatalf("Expected error invoking 'grant' with undefined time profile, got: %v", err)
 	}
 }
@@ -188,7 +188,7 @@ func TestGrantWithAmbiguousDoors(t *testing.T) {
 
 	u := mock{}
 
-	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Garage"})
+	err := Grant(&u, devices, 65538, date("2023-01-01"), date("2023-12-31"), 0, []string{"Garage"})
 	if err == nil {
 		t.Fatalf("Expected error invoking 'grant', got '%v'", err)
 	}
@@ -238,7 +238,7 @@ func TestGrantWithNewCard(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65536, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Side Door", "Garage"})
+	err := Grant(&u, devices, 65536, date("2023-01-01"), date("2023-12-31"), 0, []string{"Side Door", "Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -291,7 +291,7 @@ func TestGrantWithNarrowerDateRange(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2023-04-01"), *date("2023-10-31"), 0, []string{"Garage"})
+	err := Grant(&u, devices, 65538, date("2023-04-01"), date("2023-10-31"), 0, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -362,7 +362,7 @@ func TestGrantAcrossMultipleDevices(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Garage", "D2"})
+	err := Grant(&u, devices, 65538, date("2023-01-01"), date("2023-12-31"), 0, []string{"Garage", "D2"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
@@ -433,7 +433,7 @@ func TestGrantAll(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2023-03-02"), *date("2023-10-31"), 0, []string{"ALL"})
+	err := Grant(&u, devices, 65538, date("2023-03-02"), date("2023-10-31"), 0, []string{"ALL"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant ALL': %v", err)
 	}
@@ -504,7 +504,7 @@ func TestGrantWithInvalidDoor(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65538, *date("2023-01-01"), *date("2023-12-31"), 0, []string{"Garage", "D2X"})
+	err := Grant(&u, devices, 65538, date("2023-01-01"), date("2023-12-31"), 0, []string{"Garage", "D2X"})
 	if err == nil {
 		t.Errorf("Expected error invoking 'grant' with invalid door")
 	}
@@ -553,7 +553,7 @@ func TestGrantWithNoCurrentPermissions(t *testing.T) {
 		},
 	}
 
-	err := Grant(&u, devices, 65537, *date("2023-04-01"), *date("2023-10-31"), 0, []string{"Garage"})
+	err := Grant(&u, devices, 65537, date("2023-04-01"), date("2023-10-31"), 0, []string{"Garage"})
 	if err != nil {
 		t.Fatalf("Unexpected error invoking 'grant': %v", err)
 	}
