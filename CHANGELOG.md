@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Updated
+1. Reworked to use cards with pointerless 'from' and 'to' dates
+
 
 ## [0.8.4](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.4) - 2023-03-17
 
