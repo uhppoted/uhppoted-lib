@@ -104,3 +104,16 @@ func (u *UHPPOTED) OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error) 
 
 	return &response, nil
 }
+
+func (u *UHPPOTED) SetInterlock(deviceID uint32, interlock types.Interlock) error {
+	u.debug("set-interlock", fmt.Sprintf("%v  mode:%v", deviceID, interlock))
+
+	response, err := u.UHPPOTE.SetInterlock(deviceID, interlock)
+	if err != nil {
+		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting door interlock %v (%ws)", deviceID, interlock, err))
+	}
+
+	u.debug("set-interlock", fmt.Sprintf("response %+v", response))
+
+	return nil
+}

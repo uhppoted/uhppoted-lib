@@ -92,6 +92,10 @@ func (m *stub) SetDoorControlState(deviceID uint32, door uint8, state types.Cont
 	return nil, nil
 }
 
+func (m *stub) SetInterlock(deviceID uint32, interlock types.Interlock) (bool, error) {
+	return false, nil
+}
+
 func (m *stub) GetTimeProfile(deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
 	if m.getTimeProfile != nil {
 		return m.getTimeProfile(deviceID, profileID)

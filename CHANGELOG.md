@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. `SetInterlock` API function for REST and MQTT `set-interlock` command.
+
 ### Updated
 1. Reworked to use cards with pointerless 'from' and 'to' dates
 

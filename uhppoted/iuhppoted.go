@@ -29,6 +29,7 @@ type IUHPPOTED interface {
 
 	SetDoorControl(deviceID uint32, door uint8, mode types.ControlState) error
 	SetDoorDelay(deviceID uint32, door uint8, delay uint8) error
+	SetInterlock(deviceID uint32, interlock types.Interlock) error
 	GetStatus(deviceID uint32) (*Status, error)
 	GetEventIndices(deviceID uint32) (uint32, uint32, uint32, error)
 	GetEvent(deviceID uint32, index uint32) (*Event, error)

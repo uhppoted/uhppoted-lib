@@ -50,6 +50,10 @@ func (m *mock) SetDoorControlState(deviceID uint32, door uint8, state types.Cont
 	return nil, nil
 }
 
+func (m *mock) SetInterlock(deviceID uint32, interlock types.Interlock) (bool, error) {
+	return false, nil
+}
+
 func (m *mock) GetListener(deviceID uint32) (*types.Listener, error) {
 	return nil, nil
 }
