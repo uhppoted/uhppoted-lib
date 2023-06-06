@@ -113,7 +113,7 @@ func (u *UHPPOTED) SetInterlock(deviceID uint32, interlock types.Interlock) erro
 		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting door interlock %v (%ws)", deviceID, interlock, err))
 	}
 
-	u.debug("set-interlock", fmt.Sprintf("response %+v", response))
+	u.debug("set-interlock", fmt.Sprintf("%v  response:%+v", deviceID, response))
 
 	return nil
 }
