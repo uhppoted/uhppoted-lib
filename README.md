@@ -13,6 +13,7 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 | *Version* | *Description*                                                                             |
 | --------- | ----------------------------------------------------------------------------------------- |
+| v0.8.5    | Added `SetInterlock` wrapper API for `set-interlock` function                             |
 | v0.8.4    | Added support for card keypad PIN to ACL                                                  |
 | v0.8.3    | Added lockfile implementation using `flock` _syscall_                                     |
 | v0.8.2    | Fixed address resolution bug in health-check                                              |
