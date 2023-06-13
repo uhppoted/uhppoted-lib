@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [0.8.5](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.5) - 2023-06-14
+## [0.8.5](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.5) - 2023-06-13
 
 ### Added
 1. `SetInterlock` API function for REST and MQTT `set-interlock` command.
