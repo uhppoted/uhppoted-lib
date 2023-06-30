@@ -132,6 +132,7 @@ type System struct {
 	HealthCheckIdle     time.Duration        `conf:"monitoring.healthcheck.idle"`
 	HealthCheckIgnore   time.Duration        `conf:"monitoring.healthcheck.ignore"`
 	WatchdogInterval    time.Duration        `conf:"monitoring.watchdog.interval"`
+	CardFormat          types.CardFormat     `conf:"card.format"`
 }
 
 type Lockfile struct {
@@ -152,6 +153,7 @@ func NewConfig() *Config {
 			HealthCheckIdle:     monitoring.IDLE,
 			HealthCheckIgnore:   monitoring.IGNORE,
 			WatchdogInterval:    5 * time.Second,
+			CardFormat:          types.Wiegand26,
 		},
 		REST:        *NewREST(),
 		MQTT:        *NewMQTT(),
@@ -368,7 +370,7 @@ func (f DeviceMap) MarshalConf(tag string) ([]byte, error) {
 	return []byte(s.String()), nil
 }
 
-func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (interface{}, error) {
+func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (any, error) {
 	re := regexp.MustCompile(`^/(.*?)/$`)
 	match := re.FindStringSubmatch(tag)
 	if len(match) < 2 {

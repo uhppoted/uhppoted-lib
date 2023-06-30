@@ -72,7 +72,7 @@ func (m *stub) GetCardByID(deviceID, cardNumber uint32) (*types.Card, error) {
 	return nil, nil
 }
 
-func (m *stub) PutCard(deviceID uint32, card types.Card) (bool, error) {
+func (m *stub) PutCard(deviceID uint32, card types.Card, formats ...types.CardFormat) (bool, error) {
 	return false, nil
 }
 

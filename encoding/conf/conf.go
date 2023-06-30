@@ -54,6 +54,7 @@ func Marshal(m interface{}) ([]byte, error) {
 }
 
 func marshal(s reflect.Value) ([]byte, error) {
+	println("marshal")
 	var c strings.Builder
 
 	if s.Kind() == reflect.Struct {
@@ -238,7 +239,6 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 		}
 
 		// Unmarshal embedded structs
-
 		if f.Kind() == reflect.Struct {
 			if tag == "" {
 				if err := unmarshal(f, "", values); err != nil {
@@ -253,7 +253,6 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 		}
 
 		// Unmarshal built-in types
-
 		switch t.Type {
 		case tBool:
 			if value, ok := values[tag]; ok {
@@ -384,7 +383,7 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 	return nil
 }
 
-func Range(m interface{}, g func(string, interface{}) bool) {
+func Range(m any, g func(string, any) bool) {
 	v := reflect.ValueOf(m)
 
 	if v.Type().Kind() == reflect.Ptr {
@@ -422,6 +421,16 @@ func iterate(parent string, s reflect.Value, g func(string, interface{}) bool) b
 				continue
 			}
 
+			// Marshaler{} interface
+			if m, ok := f.Interface().(Marshaler); ok {
+				if v, err := m.MarshalConf(tag); err != nil {
+					return false
+				} else if !g(tag, string(v)) {
+					return false
+				}
+				continue
+			}
+
 			// Range over embedded structs
 			if f.Kind() == reflect.Struct {
 				if !iterate(tag, f, g) {
@@ -431,7 +440,6 @@ func iterate(parent string, s reflect.Value, g func(string, interface{}) bool) b
 			}
 
 			// range over built-in types
-
 			switch t.Type {
 			case tBool:
 				if !g(tag, f.Bool()) {

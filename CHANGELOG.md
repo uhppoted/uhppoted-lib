@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Updated
+1. Added _card.format_ to the configuration to facilitate support for card formats other
+   than Wiegand-26.
+   
 
 ## [0.8.5](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.5) - 2023-06-13
 

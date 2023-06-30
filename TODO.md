@@ -1,6 +1,6 @@
 # TODO
 
-### IN PROGRESS
+- [x] Add card formats to configuration (cf. https://github.com/uhppoted/uhppote-cli/issues/12)
 
 ## TODO
 
