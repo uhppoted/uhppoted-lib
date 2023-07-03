@@ -153,7 +153,7 @@ func NewConfig() *Config {
 			HealthCheckIdle:     monitoring.IDLE,
 			HealthCheckIgnore:   monitoring.IGNORE,
 			WatchdogInterval:    5 * time.Second,
-			CardFormat:          types.Wiegand26,
+			CardFormat:          types.WiegandAny,
 		},
 		REST:        *NewREST(),
 		MQTT:        *NewMQTT(),
@@ -437,20 +437,3 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (any, er
 
 	return f, nil
 }
-
-// func resolve(v string) (*net.UDPAddr, error) {
-// 	address, err := net.ResolveUDPAddr("udp", v)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-//
-// 	addr := net.UDPAddr{
-// 		IP:   make(net.IP, net.IPv4len),
-// 		Port: address.Port,
-// 		Zone: "",
-// 	}
-//
-// 	copy(addr.IP, address.IP.To4())
-//
-// 	return &addr, nil
-// }

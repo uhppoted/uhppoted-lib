@@ -18,7 +18,7 @@ bind.address = 192.168.1.100:54321
 broadcast.address = 192.168.1.255:30000
 listen.address = 192.168.1.100:12345
 timeout = 3.75s
-card.format = any
+card.format = Wiegand-26
 
 monitoring.healthcheck.interval = 31s
 monitoring.healthcheck.idle = 67s
@@ -75,7 +75,7 @@ func TestDefaultConfig(t *testing.T) {
 			HealthCheckIdle:     60 * time.Second,
 			HealthCheckIgnore:   5 * time.Minute,
 			WatchdogInterval:    5 * time.Second,
-			CardFormat:          types.Wiegand26,
+			CardFormat:          types.WiegandAny,
 		},
 
 		MQTT: MQTT{
@@ -149,7 +149,7 @@ func TestConfigUnmarshal(t *testing.T) {
 			HealthCheckIdle:     67 * time.Second,
 			HealthCheckIgnore:   97 * time.Second,
 			WatchdogInterval:    23 * time.Second,
-			CardFormat:          types.WiegandAny,
+			CardFormat:          types.Wiegand26,
 		},
 
 		MQTT: MQTT{
@@ -307,7 +307,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; monitoring.healthcheck.idle = 1m0s
 ; monitoring.healthcheck.ignore = 5m0s
 ; monitoring.watchdog.interval = 5s
-; card.format = Wiegand-26
+; card.format = any
 
 # REST
 ; rest.http.enabled = false
@@ -501,7 +501,7 @@ timeout = %[4]v
 ; monitoring.healthcheck.idle = 1m0s
 ; monitoring.healthcheck.ignore = 5m0s
 ; monitoring.watchdog.interval = 5s
-; card.format = Wiegand-26
+; card.format = any
 
 # REST
 ; rest.http.enabled = false
