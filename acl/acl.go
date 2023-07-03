@@ -101,7 +101,7 @@ func mapDeviceDoors(devices []uhppote.Device) (doormap, error) {
 	return m, nil
 }
 
-func putCard(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
+func putCard(u uhppote.IUHPPOTE, deviceID uint32, c types.Card, formats ...types.CardFormat) (bool, error) {
 	card, err := u.GetCardByID(deviceID, c.CardNumber)
 	if err != nil {
 		return false, err
@@ -113,10 +113,10 @@ func putCard(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
 	card.To = c.To
 	card.Doors = c.Doors
 
-	return u.PutCard(deviceID, *card)
+	return u.PutCard(deviceID, *card, formats...)
 }
 
-func putCardWithPIN(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
+func putCardWithPIN(u uhppote.IUHPPOTE, deviceID uint32, c types.Card, formats ...types.CardFormat) (bool, error) {
 	card, err := u.GetCardByID(deviceID, c.CardNumber)
 	if err != nil {
 		return false, err
@@ -129,7 +129,7 @@ func putCardWithPIN(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, er
 	card.Doors = c.Doors
 	card.PIN = c.PIN
 
-	return u.PutCard(deviceID, *card)
+	return u.PutCard(deviceID, *card, formats...)
 }
 
 /*

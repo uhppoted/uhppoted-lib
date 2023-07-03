@@ -8,12 +8,20 @@ import (
 	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
-func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool) (map[uint32]Report, []error) {
-	return putACLImpl(u, acl, dryrun, putCard, equals)
+func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool, formats ...types.CardFormat) (map[uint32]Report, []error) {
+	f := func(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
+		return putCard(u, deviceID, c, formats...)
+	}
+
+	return putACLImpl(u, acl, dryrun, f, equals)
 }
 
-func PutACLWithPIN(u uhppote.IUHPPOTE, acl ACL, dryrun bool) (map[uint32]Report, []error) {
-	return putACLImpl(u, acl, dryrun, putCardWithPIN, equalsWithPIN)
+func PutACLWithPIN(u uhppote.IUHPPOTE, acl ACL, dryrun bool, formats ...types.CardFormat) (map[uint32]Report, []error) {
+	f := func(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
+		return putCardWithPIN(u, deviceID, c, formats...)
+	}
+
+	return putACLImpl(u, acl, dryrun, f, equalsWithPIN)
 }
 
 func putACLImpl(u uhppote.IUHPPOTE, acl ACL, dryrun bool, write put, eq equivalent) (map[uint32]Report, []error) {

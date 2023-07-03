@@ -5,6 +5,7 @@
 ### Updated
 1. Added _card.format_ to the configuration to facilitate support for card formats other
    than Wiegand-26.
+1. Added _card formats_ parameter to load-acl for optional card number validation.
    
 
 ## [0.8.5](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.5) - 2023-06-13
