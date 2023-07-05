@@ -27,15 +27,16 @@ type IUHPPOTED interface {
 	PutTaskList(request PutTaskListRequest) (*PutTaskListResponse, int, error)
 	OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error)
 
-	SetDoorControl(deviceID uint32, door uint8, mode types.ControlState) error
-	SetDoorDelay(deviceID uint32, door uint8, delay uint8) error
-	SetInterlock(deviceID uint32, interlock types.Interlock) error
-	GetStatus(deviceID uint32) (*Status, error)
-	GetEventIndices(deviceID uint32) (uint32, uint32, uint32, error)
-	GetEvent(deviceID uint32, index uint32) (*Event, error)
-	GetEvents(deviceID uint32, N int) ([]Event, error)
-	RecordSpecialEvents(deviceID uint32, enable bool) (bool, error)
-	PutCard(deviceID uint32, card types.Card) (bool, error)
+	SetDoorControl(controller uint32, door uint8, mode types.ControlState) error
+	SetDoorDelay(controller uint32, door uint8, delay uint8) error
+	SetInterlock(controller uint32, interlock types.Interlock) error
+	ActivateKeypads(controller uint32, keypads map[uint8]bool) error
+	GetStatus(controller uint32) (*Status, error)
+	GetEventIndices(controller uint32) (uint32, uint32, uint32, error)
+	GetEvent(controller uint32, index uint32) (*Event, error)
+	GetEvents(controller uint32, N int) ([]Event, error)
+	RecordSpecialEvents(controller uint32, enable bool) (bool, error)
+	PutCard(controller uint32, card types.Card) (bool, error)
 }
 
 type GetDevicesRequest struct {

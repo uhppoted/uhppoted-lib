@@ -11,13 +11,13 @@ import (
 )
 
 type stub struct {
-	getTimeProfile      func(deviceID uint32, profileID uint8) (*types.TimeProfile, error)
-	setTimeProfile      func(deviceID uint32, profile types.TimeProfile) (bool, error)
-	clearTimeProfiles   func(deviceID uint32) (bool, error)
-	getEventIndex       func(deviceID uint32) (*types.EventIndex, error)
-	setEventIndex       func(deviceID, index uint32) (*types.EventIndexResult, error)
-	getEvent            func(deviceID, index uint32) (*types.Event, error)
-	recordSpecialEvents func(deviceID uint32, enable bool) (bool, error)
+	getTimeProfile      func(controller uint32, profileID uint8) (*types.TimeProfile, error)
+	setTimeProfile      func(controller uint32, profile types.TimeProfile) (bool, error)
+	clearTimeProfiles   func(controller uint32) (bool, error)
+	getEventIndex       func(controller uint32) (*types.EventIndex, error)
+	setEventIndex       func(controller, index uint32) (*types.EventIndexResult, error)
+	getEvent            func(controller, index uint32) (*types.Event, error)
+	recordSpecialEvents func(controller uint32, enable bool) (bool, error)
 }
 
 func (m *stub) DeviceList() map[uint32]uhppote.Device {
@@ -32,11 +32,11 @@ func (m *stub) GetDevices() ([]types.Device, error) {
 	return nil, nil
 }
 
-func (m *stub) GetDevice(deviceID uint32) (*types.Device, error) {
+func (m *stub) GetDevice(controller uint32) (*types.Device, error) {
 	return nil, nil
 }
 
-func (m *stub) SetAddress(deviceID uint32, address, mask, gateway net.IP) (*types.Result, error) {
+func (m *stub) SetAddress(controller uint32, address, mask, gateway net.IP) (*types.Result, error) {
 	return nil, nil
 }
 
@@ -48,11 +48,11 @@ func (m *stub) SetTime(serialNumber uint32, datetime time.Time) (*types.Time, er
 	return nil, nil
 }
 
-func (m *stub) GetListener(deviceID uint32) (*types.Listener, error) {
+func (m *stub) GetListener(controller uint32) (*types.Listener, error) {
 	return nil, nil
 }
 
-func (m *stub) SetListener(deviceID uint32, address net.UDPAddr) (*types.Result, error) {
+func (m *stub) SetListener(controller uint32, address net.UDPAddr) (*types.Result, error) {
 	return nil, nil
 }
 
@@ -60,115 +60,119 @@ func (m *stub) GetStatus(serialNumber uint32) (*types.Status, error) {
 	return nil, nil
 }
 
-func (m *stub) GetCards(deviceID uint32) (uint32, error) {
+func (m *stub) GetCards(controller uint32) (uint32, error) {
 	return 0, nil
 }
 
-func (m *stub) GetCardByIndex(deviceID, index uint32) (*types.Card, error) {
+func (m *stub) GetCardByIndex(controller, index uint32) (*types.Card, error) {
 	return nil, nil
 }
 
-func (m *stub) GetCardByID(deviceID, cardNumber uint32) (*types.Card, error) {
+func (m *stub) GetCardByID(controller, cardNumber uint32) (*types.Card, error) {
 	return nil, nil
 }
 
-func (m *stub) PutCard(deviceID uint32, card types.Card, formats ...types.CardFormat) (bool, error) {
+func (m *stub) PutCard(controller uint32, card types.Card, formats ...types.CardFormat) (bool, error) {
 	return false, nil
 }
 
-func (m *stub) DeleteCard(deviceID uint32, cardNumber uint32) (bool, error) {
+func (m *stub) DeleteCard(controller uint32, cardNumber uint32) (bool, error) {
 	return false, nil
 }
 
-func (m *stub) DeleteCards(deviceID uint32) (bool, error) {
+func (m *stub) DeleteCards(controller uint32) (bool, error) {
 	return false, nil
 }
 
-func (m *stub) GetDoorControlState(deviceID uint32, door byte) (*types.DoorControlState, error) {
+func (m *stub) GetDoorControlState(controller uint32, door byte) (*types.DoorControlState, error) {
 	return nil, nil
 }
 
-func (m *stub) SetDoorControlState(deviceID uint32, door uint8, state types.ControlState, delay uint8) (*types.DoorControlState, error) {
+func (m *stub) SetDoorControlState(controller uint32, door uint8, state types.ControlState, delay uint8) (*types.DoorControlState, error) {
 	return nil, nil
 }
 
-func (m *stub) SetInterlock(deviceID uint32, interlock types.Interlock) (bool, error) {
+func (m *stub) SetInterlock(controller uint32, interlock types.Interlock) (bool, error) {
 	return false, nil
 }
 
-func (m *stub) GetTimeProfile(deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
+func (m *stub) ActivateKeypads(controller uint32, keypads map[uint8]bool) (bool, error) {
+	return false, nil
+}
+
+func (m *stub) GetTimeProfile(controller uint32, profileID uint8) (*types.TimeProfile, error) {
 	if m.getTimeProfile != nil {
-		return m.getTimeProfile(deviceID, profileID)
+		return m.getTimeProfile(controller, profileID)
 	}
 
 	return nil, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) SetTimeProfile(deviceID uint32, profile types.TimeProfile) (bool, error) {
+func (m *stub) SetTimeProfile(controller uint32, profile types.TimeProfile) (bool, error) {
 	if m.setTimeProfile != nil {
-		return m.setTimeProfile(deviceID, profile)
+		return m.setTimeProfile(controller, profile)
 	}
 
 	return false, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) ClearTimeProfiles(deviceID uint32) (bool, error) {
+func (m *stub) ClearTimeProfiles(controller uint32) (bool, error) {
 	if m.clearTimeProfiles != nil {
-		return m.clearTimeProfiles(deviceID)
+		return m.clearTimeProfiles(controller)
 	}
 
 	return false, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) ClearTaskList(deviceID uint32) (bool, error) {
+func (m *stub) ClearTaskList(controller uint32) (bool, error) {
 	return false, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) AddTask(deviceID uint32, task types.Task) (bool, error) {
+func (m *stub) AddTask(controller uint32, task types.Task) (bool, error) {
 	return false, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) RefreshTaskList(deviceID uint32) (bool, error) {
+func (m *stub) RefreshTaskList(controller uint32) (bool, error) {
 	return false, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) OpenDoor(deviceID uint32, door uint8) (*types.Result, error) {
+func (m *stub) OpenDoor(controller uint32, door uint8) (*types.Result, error) {
 	return nil, nil
 }
 
-func (m *stub) GetEventIndex(deviceID uint32) (*types.EventIndex, error) {
+func (m *stub) GetEventIndex(controller uint32) (*types.EventIndex, error) {
 	if m.getEventIndex != nil {
-		return m.getEventIndex(deviceID)
+		return m.getEventIndex(controller)
 	}
 
 	return nil, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) SetEventIndex(deviceID, index uint32) (*types.EventIndexResult, error) {
+func (m *stub) SetEventIndex(controller, index uint32) (*types.EventIndexResult, error) {
 	if m.setEventIndex != nil {
-		return m.setEventIndex(deviceID, index)
+		return m.setEventIndex(controller, index)
 	}
 
 	return nil, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) GetEvent(deviceID, index uint32) (*types.Event, error) {
+func (m *stub) GetEvent(controller, index uint32) (*types.Event, error) {
 	if m.getEvent != nil {
-		return m.getEvent(deviceID, index)
+		return m.getEvent(controller, index)
 	}
 
 	return nil, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) RecordSpecialEvents(deviceID uint32, enable bool) (bool, error) {
+func (m *stub) RecordSpecialEvents(controller uint32, enable bool) (bool, error) {
 	if m.recordSpecialEvents != nil {
-		return m.recordSpecialEvents(deviceID, enable)
+		return m.recordSpecialEvents(controller, enable)
 	}
 
 	return false, fmt.Errorf("Not implemented")
 }
 
-func (m *stub) SetPCControl(deviceID uint32, enable bool) (bool, error) {
+func (m *stub) SetPCControl(controller uint32, enable bool) (bool, error) {
 	return true, nil
 }
 

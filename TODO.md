@@ -1,6 +1,7 @@
 # TODO
 
 - [x] Add card formats to configuration (cf. https://github.com/uhppoted/uhppote-cli/issues/12)
+- [x] Implement `activate-keypads` (cf. https://github.com/uhppoted/uhppoted/issues/35)
 
 ## TODO
 

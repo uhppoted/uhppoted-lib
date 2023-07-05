@@ -26,107 +26,111 @@ func (m *mock) GetDevices() ([]types.Device, error) {
 	return nil, nil
 }
 
-func (m *mock) GetDevice(deviceID uint32) (*types.Device, error) {
+func (m *mock) GetDevice(controller uint32) (*types.Device, error) {
 	return nil, nil
 }
 
-func (m *mock) SetAddress(deviceID uint32, address, mask, gateway net.IP) (*types.Result, error) {
+func (m *mock) SetAddress(controller uint32, address, mask, gateway net.IP) (*types.Result, error) {
 	return nil, nil
 }
 
-func (m *mock) GetTime(deviceID uint32) (*types.Time, error) {
+func (m *mock) GetTime(controller uint32) (*types.Time, error) {
 	return nil, nil
 }
 
-func (m *mock) SetTime(deviceID uint32, datetime time.Time) (*types.Time, error) {
+func (m *mock) SetTime(controller uint32, datetime time.Time) (*types.Time, error) {
 	return nil, nil
 }
 
-func (m *mock) GetDoorControlState(deviceID uint32, door byte) (*types.DoorControlState, error) {
+func (m *mock) GetDoorControlState(controller uint32, door byte) (*types.DoorControlState, error) {
 	return nil, nil
 }
 
-func (m *mock) SetDoorControlState(deviceID uint32, door uint8, state types.ControlState, delay uint8) (*types.DoorControlState, error) {
+func (m *mock) SetDoorControlState(controller uint32, door uint8, state types.ControlState, delay uint8) (*types.DoorControlState, error) {
 	return nil, nil
 }
 
-func (m *mock) SetInterlock(deviceID uint32, interlock types.Interlock) (bool, error) {
+func (m *mock) SetInterlock(controller uint32, interlock types.Interlock) (bool, error) {
 	return false, nil
 }
 
-func (m *mock) GetListener(deviceID uint32) (*types.Listener, error) {
-	return nil, nil
-}
-
-func (m *mock) SetListener(deviceID uint32, address net.UDPAddr) (*types.Result, error) {
-	return nil, nil
-}
-
-func (m *mock) GetStatus(deviceID uint32) (*types.Status, error) {
-	return nil, nil
-}
-
-func (m *mock) GetCards(deviceID uint32) (uint32, error) {
-	return m.getCards(deviceID)
-}
-
-func (m *mock) GetCardByIndex(deviceID, index uint32) (*types.Card, error) {
-	return m.getCardByIndex(deviceID, index)
-}
-
-func (m *mock) GetCardByID(deviceID, cardID uint32) (*types.Card, error) {
-	return m.getCardByID(deviceID, cardID)
-}
-
-func (m *mock) PutCard(deviceID uint32, card types.Card, formats ...types.CardFormat) (bool, error) {
-	return m.putCard(deviceID, card)
-}
-
-func (m *mock) DeleteCard(deviceID uint32, cardNumber uint32) (bool, error) {
-	return m.deleteCard(deviceID, cardNumber)
-}
-
-func (m *mock) DeleteCards(deviceID uint32) (bool, error) {
-	return m.deleteCards(deviceID)
-}
-
-func (m *mock) GetTimeProfile(deviceID uint32, profileID uint8) (*types.TimeProfile, error) {
-	return m.getTimeProfile(deviceID, profileID)
-}
-
-func (m *mock) SetTimeProfile(deviceID uint32, profile types.TimeProfile) (bool, error) {
+func (m *mock) ActivateKeypads(controller uint32, keypads map[uint8]bool) (bool, error) {
 	return false, nil
 }
 
-func (m *mock) ClearTimeProfiles(deviceID uint32) (bool, error) {
+func (m *mock) GetListener(controller uint32) (*types.Listener, error) {
+	return nil, nil
+}
+
+func (m *mock) SetListener(controller uint32, address net.UDPAddr) (*types.Result, error) {
+	return nil, nil
+}
+
+func (m *mock) GetStatus(controller uint32) (*types.Status, error) {
+	return nil, nil
+}
+
+func (m *mock) GetCards(controller uint32) (uint32, error) {
+	return m.getCards(controller)
+}
+
+func (m *mock) GetCardByIndex(controller, index uint32) (*types.Card, error) {
+	return m.getCardByIndex(controller, index)
+}
+
+func (m *mock) GetCardByID(controller, cardID uint32) (*types.Card, error) {
+	return m.getCardByID(controller, cardID)
+}
+
+func (m *mock) PutCard(controller uint32, card types.Card, formats ...types.CardFormat) (bool, error) {
+	return m.putCard(controller, card)
+}
+
+func (m *mock) DeleteCard(controller uint32, cardNumber uint32) (bool, error) {
+	return m.deleteCard(controller, cardNumber)
+}
+
+func (m *mock) DeleteCards(controller uint32) (bool, error) {
+	return m.deleteCards(controller)
+}
+
+func (m *mock) GetTimeProfile(controller uint32, profileID uint8) (*types.TimeProfile, error) {
+	return m.getTimeProfile(controller, profileID)
+}
+
+func (m *mock) SetTimeProfile(controller uint32, profile types.TimeProfile) (bool, error) {
 	return false, nil
 }
 
-func (m *mock) ClearTaskList(deviceID uint32) (bool, error) {
+func (m *mock) ClearTimeProfiles(controller uint32) (bool, error) {
+	return false, nil
+}
+
+func (m *mock) ClearTaskList(controller uint32) (bool, error) {
 	return false, fmt.Errorf("Not implemented")
 }
 
-func (m *mock) AddTask(deviceID uint32, task types.Task) (bool, error) {
+func (m *mock) AddTask(controller uint32, task types.Task) (bool, error) {
 	return false, fmt.Errorf("Not implemented")
 }
 
-func (m *mock) RefreshTaskList(deviceID uint32) (bool, error) {
+func (m *mock) RefreshTaskList(controller uint32) (bool, error) {
 	return false, fmt.Errorf("Not implemented")
 }
 
-func (m *mock) RecordSpecialEvents(deviceID uint32, enable bool) (bool, error) {
+func (m *mock) RecordSpecialEvents(controller uint32, enable bool) (bool, error) {
 	return false, nil
 }
 
-func (m *mock) GetEvent(deviceID, index uint32) (*types.Event, error) {
+func (m *mock) GetEvent(controller, index uint32) (*types.Event, error) {
 	return nil, nil
 }
 
-func (m *mock) GetEventIndex(deviceID uint32) (*types.EventIndex, error) {
+func (m *mock) GetEventIndex(controller uint32) (*types.EventIndex, error) {
 	return nil, nil
 }
 
-func (m *mock) SetEventIndex(deviceID, index uint32) (*types.EventIndexResult, error) {
+func (m *mock) SetEventIndex(controller, index uint32) (*types.EventIndexResult, error) {
 	return nil, nil
 }
 
@@ -134,11 +138,11 @@ func (m *mock) Listen(listener uhppote.Listener, q chan os.Signal) error {
 	return nil
 }
 
-func (m *mock) OpenDoor(deviceID uint32, door uint8) (*types.Result, error) {
+func (m *mock) OpenDoor(controller uint32, door uint8) (*types.Result, error) {
 	return nil, nil
 }
 
-func (m *mock) SetPCControl(deviceID uint32, enable bool) (bool, error) {
+func (m *mock) SetPCControl(controller uint32, enable bool) (bool, error) {
 	return true, nil
 }
 
@@ -162,25 +166,6 @@ var deviceA = uhppote.Device{
 	DeviceID: 12345,
 	Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 }
-
-// var deviceB = uhppote.Device{
-// 	DeviceID: 54321,
-// 	Doors:    []string{"D1", "D2", "D3", "D4"},
-// }
-
-// var aclA = ACL{
-// 	12345: map[uint32]types.Card{
-// 		65537: types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-// 		65538: types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-// 		65539: types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-// 	},
-// }
-
-// var cardsA = []types.Card{
-// 	types.Card{CardNumber: 65537, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-// 	types.Card{CardNumber: 65538, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-// 	types.Card{CardNumber: 65539, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
-// }
 
 func TestACLPrintf(t *testing.T) {
 	expected := `12345

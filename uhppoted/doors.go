@@ -9,11 +9,11 @@ import (
 func (u *UHPPOTED) GetDoorDelay(request GetDoorDelayRequest) (*GetDoorDelayResponse, error) {
 	u.debug("get-door-delay", fmt.Sprintf("request  %+v", request))
 
-	device := uint32(request.DeviceID)
+	controller := uint32(request.DeviceID)
 	door := request.Door
-	result, err := u.UHPPOTE.GetDoorControlState(device, door)
+	result, err := u.UHPPOTE.GetDoorControlState(controller, door)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error getting door %v delay for %v (%w)", door, device, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error getting door %v delay for %v (%w)", door, controller, err))
 	}
 
 	response := GetDoorDelayResponse{
@@ -27,17 +27,17 @@ func (u *UHPPOTED) GetDoorDelay(request GetDoorDelayRequest) (*GetDoorDelayRespo
 	return &response, nil
 }
 
-func (u *UHPPOTED) SetDoorDelay(deviceID uint32, door uint8, delay uint8) error {
-	u.debug("set-door-delay", fmt.Sprintf("%v door:%v delay:%v", deviceID, door, delay))
+func (u *UHPPOTED) SetDoorDelay(controller uint32, door uint8, delay uint8) error {
+	u.debug("set-door-delay", fmt.Sprintf("%v door:%v delay:%v", controller, door, delay))
 
-	state, err := u.UHPPOTE.GetDoorControlState(deviceID, door)
+	state, err := u.UHPPOTE.GetDoorControlState(controller, door)
 	if err != nil {
-		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error getting door %v delay (%w)", deviceID, door, err))
+		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error getting door %v delay (%w)", controller, door, err))
 	}
 
-	response, err := u.UHPPOTE.SetDoorControlState(deviceID, door, state.ControlState, delay)
+	response, err := u.UHPPOTE.SetDoorControlState(controller, door, state.ControlState, delay)
 	if err != nil {
-		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting door %v delay (%ws)", deviceID, door, err))
+		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting door %v delay (%ws)", controller, door, err))
 	}
 
 	u.debug("set-door-delay", fmt.Sprintf("response %+v", response))
@@ -48,11 +48,11 @@ func (u *UHPPOTED) SetDoorDelay(deviceID uint32, door uint8, delay uint8) error 
 func (u *UHPPOTED) GetDoorControl(request GetDoorControlRequest) (*GetDoorControlResponse, error) {
 	u.debug("get-door-control", fmt.Sprintf("request  %+v", request))
 
-	device := uint32(request.DeviceID)
+	controller := uint32(request.DeviceID)
 	door := request.Door
-	result, err := u.UHPPOTE.GetDoorControlState(device, door)
+	result, err := u.UHPPOTE.GetDoorControlState(controller, door)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error getting door %v control for %v (%w)", door, device, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error getting door %v control for %v (%w)", door, controller, err))
 	}
 
 	response := GetDoorControlResponse{
@@ -66,17 +66,17 @@ func (u *UHPPOTED) GetDoorControl(request GetDoorControlRequest) (*GetDoorContro
 	return &response, nil
 }
 
-func (u *UHPPOTED) SetDoorControl(deviceID uint32, door uint8, mode types.ControlState) error {
-	u.debug("set-door-control", fmt.Sprintf("%v door:%v mode:%v", deviceID, door, mode))
+func (u *UHPPOTED) SetDoorControl(controller uint32, door uint8, mode types.ControlState) error {
+	u.debug("set-door-control", fmt.Sprintf("%v door:%v mode:%v", controller, door, mode))
 
-	state, err := u.UHPPOTE.GetDoorControlState(deviceID, door)
+	state, err := u.UHPPOTE.GetDoorControlState(controller, door)
 	if err != nil {
-		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error getting door %v control mode (%w)", deviceID, door, err))
+		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error getting door %v control mode (%w)", controller, door, err))
 	}
 
-	response, err := u.UHPPOTE.SetDoorControlState(deviceID, door, mode, state.Delay)
+	response, err := u.UHPPOTE.SetDoorControlState(controller, door, mode, state.Delay)
 	if err != nil {
-		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting door %v control mode %v (%w)", deviceID, door, mode, err))
+		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting door %v control mode %v (%w)", controller, door, mode, err))
 	}
 
 	u.debug("set-door-control", fmt.Sprintf("response %+v", response))
@@ -87,11 +87,11 @@ func (u *UHPPOTED) SetDoorControl(deviceID uint32, door uint8, mode types.Contro
 func (u *UHPPOTED) OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error) {
 	u.debug("open-door", fmt.Sprintf("request  %+v", request))
 
-	device := uint32(request.DeviceID)
+	controller := uint32(request.DeviceID)
 	door := request.Door
-	result, err := u.UHPPOTE.OpenDoor(device, door)
+	result, err := u.UHPPOTE.OpenDoor(controller, door)
 	if err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error opening door %v on %v (%w)", door, device, err))
+		return nil, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("error opening door %v on %v (%w)", door, controller, err))
 	}
 
 	response := OpenDoorResponse{
@@ -105,15 +105,30 @@ func (u *UHPPOTED) OpenDoor(request OpenDoorRequest) (*OpenDoorResponse, error) 
 	return &response, nil
 }
 
-func (u *UHPPOTED) SetInterlock(deviceID uint32, interlock types.Interlock) error {
-	u.debug("set-interlock", fmt.Sprintf("%v  mode:%v", deviceID, interlock))
+func (u *UHPPOTED) SetInterlock(controller uint32, interlock types.Interlock) error {
+	u.debug("set-interlock", fmt.Sprintf("%v  mode:%v", controller, interlock))
 
-	response, err := u.UHPPOTE.SetInterlock(deviceID, interlock)
+	response, err := u.UHPPOTE.SetInterlock(controller, interlock)
 	if err != nil {
-		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting door interlock %v (%ws)", deviceID, interlock, err))
+		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting door interlock %v (%w)", controller, interlock, err))
 	}
 
-	u.debug("set-interlock", fmt.Sprintf("%v  response:%+v", deviceID, response))
+	u.debug("set-interlock", fmt.Sprintf("%v  response:%+v", controller, response))
+
+	return nil
+}
+
+func (u *UHPPOTED) ActivateKeypads(controller uint32, keypads map[uint8]bool) error {
+	u.debug("activate-keypads", fmt.Sprintf("%v  mode:%v", controller, keypads))
+
+	response, err := u.UHPPOTE.ActivateKeypads(controller, keypads)
+	if err != nil {
+		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error activating controller access keypads (%w)", controller, err))
+	} else if !response {
+		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  failed activate controller access keypads", controller))
+	}
+
+	u.debug("activate-keypads", fmt.Sprintf("%v  response:%+v", controller, response))
 
 	return nil
 }
