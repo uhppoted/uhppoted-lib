@@ -17,7 +17,15 @@ var data = map[string][]byte{
 	"tasks": []byte(`Task	Door	From	To	Mon	Tue	Wed	Thurs	Fri	Sat	Sun	Start	Cards
 1	4	2021-04-01	2021-12-31	N	N	Y	N	Y	N	Y	08:30	0
 5	4	2021-04-01	         	Y	Y	Y	N	N	N	Y	09:15	17
+6	4	2023-07-12	         	Y	Y	Y	N	N	N	Y	09:15	0
+7	4	2023-07-13	         	Y	Y	Y	N	N	N	Y	09:15	0
+8	4	2023-07-14	         	Y	Y	Y	N	N	N	Y	09:15	0
 9	3	2021-01-01	2021-12-31	Y	N	Y	Y	N	Y	N	10:45	23
+control door	4	2021-04-01	2021-12-31	N	N	Y	N	Y	N	Y	08:30	0
+enable time profile	4	2021-04-01	         	Y	Y	Y	N	N	N	Y	09:15	17
+enable card, no password	4	2023-07-12	         	Y	Y	Y	N	N	N	Y	09:15	0
+enable card+in password	4	2023-07-13	         	Y	Y	Y	N	N	N	Y	09:15	0
+enable card+password	4	2023-07-14	         	Y	Y	Y	N	N	N	Y	09:15	0
 trigger once	3	2021-01-01	2021-12-31	Y	N	N	N	N	N	Y	07:00	0
 `),
 }
@@ -152,6 +160,99 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 			Saturday:  false,
 			Sunday:    true,
 			Start:     hhmm("08:30"),
+		},
+
+		task{
+			Task:      types.EnableTimeProfile,
+			Door:      4,
+			From:      date("2021-04-01"),
+			To:        nil,
+			Monday:    true,
+			Tuesday:   true,
+			Wednesday: true,
+			Thursday:  false,
+			Friday:    false,
+			Saturday:  false,
+			Sunday:    true,
+			Start:     hhmm("09:15"),
+			Cards:     17,
+		},
+
+		task{
+			Task:      types.CardNoPassword,
+			Door:      4,
+			From:      date("2023-07-12"),
+			To:        nil,
+			Monday:    true,
+			Tuesday:   true,
+			Wednesday: true,
+			Thursday:  false,
+			Friday:    false,
+			Saturday:  false,
+			Sunday:    true,
+			Start:     hhmm("09:15"),
+		},
+
+		task{
+			Task:      types.CardInPassword,
+			Door:      4,
+			From:      date("2023-07-13"),
+			To:        nil,
+			Monday:    true,
+			Tuesday:   true,
+			Wednesday: true,
+			Thursday:  false,
+			Friday:    false,
+			Saturday:  false,
+			Sunday:    true,
+			Start:     hhmm("09:15"),
+		},
+
+		task{
+			Task:      types.CardInOutPassword,
+			Door:      4,
+			From:      date("2023-07-14"),
+			To:        nil,
+			Monday:    true,
+			Tuesday:   true,
+			Wednesday: true,
+			Thursday:  false,
+			Friday:    false,
+			Saturday:  false,
+			Sunday:    true,
+			Start:     hhmm("09:15"),
+		},
+
+		task{
+			Task:      types.EnableMoreCards,
+			Door:      3,
+			From:      date("2021-01-01"),
+			To:        pdate("2021-12-31"),
+			Monday:    true,
+			Tuesday:   false,
+			Wednesday: true,
+			Thursday:  true,
+			Friday:    false,
+			Saturday:  true,
+			Sunday:    false,
+			Start:     hhmm("10:45"),
+			Cards:     23,
+		},
+
+		// text task types
+		task{
+			Task:      types.DoorControlled,
+			Door:      4,
+			From:      date("2021-04-01"),
+			To:        pdate("2021-12-31"),
+			Monday:    false,
+			Tuesday:   false,
+			Wednesday: true,
+			Thursday:  false,
+			Friday:    true,
+			Saturday:  false,
+			Sunday:    true,
+			Start:     hhmm("08:30"),
 			Cards:     0,
 		},
 
@@ -172,19 +273,48 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		},
 
 		task{
-			Task:      types.EnableMoreCards,
-			Door:      3,
-			From:      date("2021-01-01"),
-			To:        pdate("2021-12-31"),
+			Task:      types.CardNoPassword,
+			Door:      4,
+			From:      date("2023-07-12"),
+			To:        nil,
 			Monday:    true,
-			Tuesday:   false,
+			Tuesday:   true,
 			Wednesday: true,
-			Thursday:  true,
+			Thursday:  false,
 			Friday:    false,
-			Saturday:  true,
-			Sunday:    false,
-			Start:     hhmm("10:45"),
-			Cards:     23,
+			Saturday:  false,
+			Sunday:    true,
+			Start:     hhmm("09:15"),
+		},
+
+		task{
+			Task:      types.CardInPassword,
+			Door:      4,
+			From:      date("2023-07-13"),
+			To:        nil,
+			Monday:    true,
+			Tuesday:   true,
+			Wednesday: true,
+			Thursday:  false,
+			Friday:    false,
+			Saturday:  false,
+			Sunday:    true,
+			Start:     hhmm("09:15"),
+		},
+
+		task{
+			Task:      types.CardInOutPassword,
+			Door:      4,
+			From:      date("2023-07-14"),
+			To:        nil,
+			Monday:    true,
+			Tuesday:   true,
+			Wednesday: true,
+			Thursday:  false,
+			Friday:    false,
+			Saturday:  false,
+			Sunday:    true,
+			Start:     hhmm("09:15"),
 		},
 
 		task{
