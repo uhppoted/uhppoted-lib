@@ -4,6 +4,8 @@
 
 ### Added 
 1. `ActivateKeypads` API function for REST and MQTT `activate-keypads` command.
+2. Robust file rename that falls back to copying the file to be renamed if the 
+   OS relink failed.
 
 ### Updated
 1. Added _card.format_ to the configuration to facilitate support for card formats other
