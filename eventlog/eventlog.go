@@ -119,7 +119,7 @@ func (l *Ticker) openNew() error {
 //
 // 	if err == nil {
 // 		newname := backupName(name, l.LocalTime)
-// 		if err := os.Rename(name, newname); err != nil {
+// 		if err := lib.Rename(name, newname); err != nil {
 // 			return err
 // 		}
 //

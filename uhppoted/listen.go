@@ -12,6 +12,7 @@ import (
 
 	"github.com/uhppoted/uhppote-core/types"
 	"github.com/uhppoted/uhppoted-lib/log"
+	lib "github.com/uhppoted/uhppoted-lib/os"
 )
 
 type EventMap struct {
@@ -314,5 +315,5 @@ func (m *EventMap) store() error {
 
 	f.Close()
 
-	return os.Rename(f.Name(), m.file)
+	return lib.Rename(f.Name(), m.file)
 }

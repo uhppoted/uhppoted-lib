@@ -11,6 +11,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	lib "github.com/uhppoted/uhppoted-lib/os"
 )
 
 var _ io.WriteCloser = (*Console)(nil)
@@ -116,7 +118,7 @@ func (l *Console) archive() error {
 
 	if err == nil {
 		newname := backupName(name, l.LocalTime)
-		if err := os.Rename(name, newname); err != nil {
+		if err := lib.Rename(name, newname); err != nil {
 			return err
 		}
 

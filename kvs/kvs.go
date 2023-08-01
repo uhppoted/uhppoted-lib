@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/uhppoted/uhppoted-lib/log"
+	lib "github.com/uhppoted/uhppoted-lib/os"
 )
 
 type KeyValueStore struct {
@@ -140,7 +141,7 @@ func (kv *KeyValueStore) save(file string) {
 	}
 
 	if version > kv.stored {
-		if err := os.Rename(tmpfile, file); err != nil {
+		if err := lib.Rename(tmpfile, file); err != nil {
 			log.Errorf("%s - %v", kv.name, err)
 		} else {
 			kv.stored = version

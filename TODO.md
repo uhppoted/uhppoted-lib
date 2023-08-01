@@ -3,6 +3,7 @@
 - [x] Add card formats to configuration (cf. https://github.com/uhppoted/uhppote-cli/issues/12)
 - [x] Implement `activate-keypads` (cf. https://github.com/uhppoted/uhppoted/issues/35)\
 - [x] Implement robust Rename (cf. https://github.com/uhppoted/uhppoted-httpd/issues/20)
+- [x] Replace os.Rename with lib implementation for tmpfs support (cf. https://github.com/uhppoted/uhppoted-httpd/issues/20)
 
 ## TODO
 

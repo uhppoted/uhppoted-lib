@@ -11,7 +11,7 @@
 1. Added _card.format_ to the configuration to facilitate support for card formats other
    than Wiegand-26.
 2. Added _card formats_ parameter to load-acl for optional card number validation.
-
+3. Replaced os.Rename with lib implementation for tmpfs support.
    
 
 ## [0.8.5](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.5) - 2023-06-13
