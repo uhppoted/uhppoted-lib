@@ -8,7 +8,6 @@ import (
 )
 
 /*
-*
 Replacement implementation for os.Rename that copies the file if os.Rename fails
 with an error.
 
