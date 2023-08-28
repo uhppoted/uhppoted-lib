@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.6](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.6) - 2023-08-30
 
 ### Added 
 1. `ActivateKeypads` API function for REST and MQTT `activate-keypads` command.
