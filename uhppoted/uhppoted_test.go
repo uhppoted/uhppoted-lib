@@ -92,6 +92,10 @@ func (m *stub) SetDoorControlState(controller uint32, door uint8, state types.Co
 	return nil, nil
 }
 
+func (m *stub) SetSuperPasswords(controller uint32, door uint8, passcodes ...uint32) (bool, error) {
+	return false, nil
+}
+
 func (m *stub) SetInterlock(controller uint32, interlock types.Interlock) (bool, error) {
 	return false, nil
 }

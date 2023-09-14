@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. Added `SetDoorPasscodes` API function to set door supervisor passcodes.
+
 
 ## [0.8.6](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.6) - 2023-08-30
 
