@@ -50,7 +50,7 @@ func (m *mock) SetDoorControlState(controller uint32, door uint8, state types.Co
 	return nil, nil
 }
 
-func (m *mock) SetSuperPasswords(controller uint32, door uint8, passcodes ...uint32) (bool, error) {
+func (m *mock) SetDoorPasscodes(controller uint32, door uint8, passcodes ...uint32) (bool, error) {
 	return false, nil
 }
 

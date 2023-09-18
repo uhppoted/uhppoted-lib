@@ -87,7 +87,7 @@ func (u *UHPPOTED) SetDoorControl(controller uint32, door uint8, mode types.Cont
 func (u *UHPPOTED) SetDoorPasscodes(controller uint32, door uint8, passcodes ...uint32) error {
 	u.debug("set-door-passcodes", fmt.Sprintf("%v door:%v", controller, door))
 
-	response, err := u.UHPPOTE.SetSuperPasswords(controller, door, passcodes...)
+	response, err := u.UHPPOTE.SetDoorPasscodes(controller, door, passcodes...)
 	if err != nil {
 		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting door %v passcodes (%w)", controller, door, err))
 	}
