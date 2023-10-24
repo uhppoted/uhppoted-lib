@@ -2,6 +2,13 @@
 
 - [x] Implement `set-door-passcodes` (cf. https://github.com/uhppoted/uhppoted/issues/40)
 
+- [ ] Replace Event pointer in GetStatusResponse with zero value  (cf. https://github.com/uhppoted/uhppote-core/issues/18)
+      - [x] `GetStatus`
+      - [x] CHANGELOG
+
+- [ ] Windows logging
+      - https://github.com/tc-hib/go-winres
+      - https://hjr265.me/blog/adding-icons-for-go-built-windows-executable/
 
 ## TODO
 

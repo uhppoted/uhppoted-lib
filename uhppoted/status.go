@@ -15,19 +15,8 @@ type Status struct {
 	SpecialInfo    uint8          `json:"special-info"`
 	RelayState     uint8          `json:"relay-state"`
 	InputState     uint8          `json:"input-state"`
-	Event          *Event         `json:"event,omitempty"`
+	Event          Event          `json:"event,omitempty"`
 }
-
-// type StatusEvent struct {
-// 	Index      uint32          `json:"index"`
-// 	Type       byte            `json:"type"`
-// 	Granted    bool            `json:"access-granted"`
-// 	Door       byte            `json:"door"`
-// 	Direction  uint8           `json:"direction"`
-// 	CardNumber uint32          `json:"card-number"`
-// 	Timestamp  *types.DateTime `json:"timestamp,omitempty"`
-// 	Reason     uint8           `json:"reason"`
-// }
 
 func (u *UHPPOTED) GetStatus(deviceID uint32) (*Status, error) {
 	status, err := u.UHPPOTE.GetStatus(deviceID)
@@ -54,8 +43,8 @@ func (u *UHPPOTED) GetStatus(deviceID uint32) (*Status, error) {
 		InputState:     status.InputState,
 	}
 
-	if status.Event != nil {
-		response.Event = &Event{
+	if !status.Event.IsZero() {
+		response.Event = Event{
 			Index:      status.Event.Index,
 			Type:       status.Event.Type,
 			Granted:    status.Event.Granted,
@@ -65,8 +54,8 @@ func (u *UHPPOTED) GetStatus(deviceID uint32) (*Status, error) {
 			Reason:     status.Event.Reason,
 		}
 
-		if status.Event.Timestamp != nil {
-			response.Event.Timestamp = *status.Event.Timestamp
+		if !status.Event.Timestamp.IsZero() {
+			response.Event.Timestamp = status.Event.Timestamp
 		}
 	}
 

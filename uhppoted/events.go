@@ -18,6 +18,10 @@ type Event struct {
 	Reason     uint8          `json:"event-reason"`
 }
 
+func (e Event) IsZero() bool {
+	return e.Index == 0
+}
+
 func (u *UHPPOTED) GetEventIndices(deviceID uint32) (uint32, uint32, uint32, error) {
 	var first uint32 = 0
 	var last uint32 = 0
