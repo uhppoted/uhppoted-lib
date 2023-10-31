@@ -151,8 +151,8 @@ func (u *UHPPOTED) onEvent(e *types.Status, received *EventMap, handler EventHan
 	first := e.Event.Index
 
 	retrieved, ok := received.retrieved[deviceID]
-	if ok && retrieved != uint32(last) {
-		first = retrieved
+	if ok && retrieved < uint32(last) {
+		first = retrieved + 1
 	}
 
 	if eventID := u.fetch(deviceID, first, last, handler); eventID != 0 {

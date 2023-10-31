@@ -6,6 +6,9 @@
       - [x] `GetStatus`
       - [x] CHANGELOG
 
+- [x] Fix [old event published on each card swipe](https://github.com/uhppoted/uhppoted-mqtt/issues/15)
+
+
 - [ ] Windows logging
       - https://github.com/tc-hib/go-winres
       - https://hjr265.me/blog/adding-icons-for-go-built-windows-executable/
