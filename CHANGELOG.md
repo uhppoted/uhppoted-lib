@@ -8,6 +8,7 @@
 ### Updates
 1. Reworked `nil` Event pointer in `GetStatus` as a zero value.
 2. Fixed _double_ events in `events::Listen` (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/15)
+3. Added _FetchEvents_ API function to retrieve a batch of events from a controller.
 
 
 ## [0.8.6](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.6) - 2023-08-30

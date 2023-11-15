@@ -7,7 +7,8 @@
       - [x] CHANGELOG
 
 - [x] Fix [old event published on each card swipe](https://github.com/uhppoted/uhppoted-mqtt/issues/15)
-
+- [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
+      - [x] FetchEvents API function
 
 - [ ] Windows logging
       - https://github.com/tc-hib/go-winres

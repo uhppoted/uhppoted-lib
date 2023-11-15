@@ -148,3 +148,50 @@ func (u *UHPPOTED) RecordSpecialEvents(deviceID uint32, enable bool) (bool, erro
 
 	return updated, nil
 }
+
+func (u *UHPPOTED) FetchEvents(controller uint32, from, to uint32) ([]Event, error) {
+	first, err := u.UHPPOTE.GetEvent(controller, 0)
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve 'first' event for controller %d (%w)", controller, err)
+	} else if first == nil {
+		return nil, fmt.Errorf("no 'first' event record returned for controller %d", controller)
+	}
+
+	last, err := u.UHPPOTE.GetEvent(controller, 0xffffffff)
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve 'last' event for controller %d (%w)", controller, err)
+	} else if first == nil {
+		return nil, fmt.Errorf("no 'last' event record returned for controller %d", controller)
+	}
+
+	if last.Index >= first.Index {
+		from = min(max(from, first.Index), last.Index)
+		to = min(max(to, first.Index), last.Index)
+	}
+
+	events := []Event{}
+	for index := from; index <= to; index++ {
+		record, err := u.UHPPOTE.GetEvent(controller, index)
+		if err != nil {
+			u.warn("fetch-events", fmt.Errorf("failed to retrieve event for controller %d, ID %d (%w)", controller, index, err))
+		} else if record == nil {
+			u.warn("fetch-events", fmt.Errorf("no event record for controller %d, index %d", controller, index))
+		} else if record.Index != index {
+			u.warn("fetch-events", fmt.Errorf("no event record for controller %d, index %d", controller, index))
+		} else {
+			events = append(events, Event{
+				DeviceID:   uint32(record.SerialNumber),
+				Index:      record.Index,
+				Type:       record.Type,
+				Granted:    record.Granted,
+				Door:       record.Door,
+				Direction:  record.Direction,
+				CardNumber: record.CardNumber,
+				Timestamp:  record.Timestamp,
+				Reason:     record.Reason,
+			})
+		}
+	}
+
+	return events, nil
+}
