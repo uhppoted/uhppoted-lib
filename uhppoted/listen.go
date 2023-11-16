@@ -295,7 +295,7 @@ func (m *EventMap) Load() error {
 }
 
 func (m *EventMap) store() error {
-	if m.file == "" || IsDevNull(m.file) {
+	if m.file == "" || lib.IsDevNull(m.file) {
 		return nil
 	}
 

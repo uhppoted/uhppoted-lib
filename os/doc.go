@@ -5,9 +5,9 @@
 /*
 The os package implements replacement functions for the Go [os/https://pkg.go.dev/os] package.
 
-It currently only implemants a replacement function for os.Rename to workaround the
-'invalid cross-device link' error when renaming across file-systems
-
-	(cf. https://github.com/uhppoted/uhppoted-httpd/issues/20)
+It currently implements:
+  - a replacement function for os.Rename to workaround the 'invalid cross-device link' error
+    when renaming across file-systems (cf. https://github.com/uhppoted/uhppoted-httpd/issues/20)
+  - IsDevNull function to check if a filepath corresponds to the system /dev/null device
 */
 package os

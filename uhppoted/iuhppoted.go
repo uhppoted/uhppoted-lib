@@ -36,6 +36,7 @@ type IUHPPOTED interface {
 	GetEventIndices(controller uint32) (uint32, uint32, uint32, error)
 	GetEvent(controller uint32, index uint32) (*Event, error)
 	GetEvents(controller uint32, N int) ([]Event, error)
+	FetchEvents(controller uint32, from, N uint32) ([]types.Event, error)
 	RecordSpecialEvents(controller uint32, enable bool) (bool, error)
 	PutCard(controller uint32, card types.Card) (bool, error)
 }
