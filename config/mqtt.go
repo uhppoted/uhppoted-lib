@@ -41,11 +41,12 @@ type Connection struct {
 }
 
 type Topics struct {
-	Root     string `conf:"root"`
-	Requests string `conf:"requests"`
-	Replies  string `conf:"replies"`
-	Events   string `conf:"events"`
-	System   string `conf:"system"`
+	Root           string `conf:"root"`
+	Requests       string `conf:"requests"`
+	Replies        string `conf:"replies"`
+	EventsFeed     string `conf:"events"`
+	RealTimeEvents string `conf:"events.real-time"`
+	System         string `conf:"system"`
 }
 
 type Alerts struct {
@@ -113,11 +114,12 @@ func NewMQTT() *MQTT {
 			ClientKey:         mqttClientKey,
 		},
 		Topics: Topics{
-			Root:     "uhppoted/gateway",
-			Requests: "./requests",
-			Replies:  "./replies",
-			Events:   "./events",
-			System:   "./system",
+			Root:           "uhppoted/gateway",
+			Requests:       "./requests",
+			Replies:        "./replies",
+			EventsFeed:     "./events",
+			RealTimeEvents: "./events/live",
+			System:         "./system",
 		},
 		Alerts: Alerts{
 			QOS:      1,
