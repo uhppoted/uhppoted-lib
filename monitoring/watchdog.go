@@ -87,7 +87,7 @@ func (w *Watchdog) Exec(handler MonitoringHandler) error {
 	if errors > 0 && warnings > 0 {
 		warnf("watchdog", "%v, %v", Errors(errors), Warnings(warnings))
 	} else if errors > 0 {
-		warnf("watchdog", "%%v", Errors(errors))
+		warnf("watchdog", "%v", Errors(errors))
 	} else if warnings > 0 {
 		warnf("watchdog", "%v", Warnings(warnings))
 	} else {
