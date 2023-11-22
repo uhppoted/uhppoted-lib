@@ -36,7 +36,7 @@ mqtt.connection.client.key = mqtt-client.key
 mqtt.topic.root = uhppoted-qwerty
 mqtt.topic.replies = /uiop
 mqtt.topic.events = ./asdf
-mqtt.topic.events.real-time = ./eekvents
+mqtt.topic.events.live = ./eekvents
 mqtt.topic.system = sys
 
 # AWS
@@ -165,12 +165,12 @@ func TestConfigUnmarshal(t *testing.T) {
 			},
 
 			Topics: Topics{
-				Root:           "uhppoted-qwerty",
-				Requests:       "./requests",
-				Replies:        "/uiop",
-				EventsFeed:     "./asdf",
-				RealTimeEvents: "./eekvents",
-				System:         "sys",
+				Root:       "uhppoted-qwerty",
+				Requests:   "./requests",
+				Replies:    "/uiop",
+				EventsFeed: "./asdf",
+				LiveEvents: "./eekvents",
+				System:     "sys",
 			},
 		},
 
@@ -237,8 +237,8 @@ func TestConfigUnmarshal(t *testing.T) {
 		t.Errorf("Expected 'mqtt::topic.events' %v, got:%v", "uhppoted-qwerty/asdf", config.Topics.Resolve(config.Topics.EventsFeed))
 	}
 
-	if config.Topics.Resolve(config.Topics.RealTimeEvents) != "uhppoted-qwerty/eekvents" {
-		t.Errorf("Expected 'mqtt::topic.events.real-time' %v, got:%v", "uhppoted-qwerty/eekvents", config.Topics.Resolve(config.Topics.RealTimeEvents))
+	if config.Topics.Resolve(config.Topics.LiveEvents) != "uhppoted-qwerty/eekvents" {
+		t.Errorf("Expected 'mqtt::topic.events.live' %v, got:%v", "uhppoted-qwerty/eekvents", config.Topics.Resolve(config.Topics.LiveEvents))
 	}
 
 	if config.Topics.Resolve(config.Topics.System) != "uhppoted-qwerty/sys" {
@@ -348,7 +348,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; mqtt.topic.requests = ./requests
 ; mqtt.topic.replies = ./replies
 ; mqtt.topic.events = ./events
-; mqtt.topic.events.real-time = ./events/live
+; mqtt.topic.events.live = ./events/live
 ; mqtt.topic.system = ./system
 ; mqtt.translation.locale = 
 ; mqtt.protocol.version = 
@@ -543,7 +543,7 @@ timeout = %[4]v
 ; mqtt.topic.requests = ./requests
 ; mqtt.topic.replies = ./replies
 ; mqtt.topic.events = ./events
-; mqtt.topic.events.real-time = ./events/live
+; mqtt.topic.events.live = ./events/live
 ; mqtt.topic.system = ./system
 ; mqtt.translation.locale = 
 ; mqtt.protocol.version = 
