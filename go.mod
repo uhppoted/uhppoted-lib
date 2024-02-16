@@ -1,8 +1,8 @@
 module github.com/uhppoted/uhppoted-lib
 
-go 1.21
+go 1.22
 
 require (
-	github.com/uhppoted/uhppote-core v0.8.7
-	golang.org/x/sys v0.15.0
+	github.com/uhppoted/uhppote-core v0.8.8-0.20240215183313-d631a62bd158
+	golang.org/x/sys v0.17.0
 )

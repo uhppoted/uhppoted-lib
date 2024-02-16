@@ -39,6 +39,7 @@ type IUHPPOTED interface {
 	FetchEvents(controller uint32, from, N uint32) ([]types.Event, error)
 	RecordSpecialEvents(controller uint32, enable bool) (bool, error)
 	PutCard(controller uint32, card types.Card) (bool, error)
+	RestoreDefaultParameters(controller uint32) error
 }
 
 type GetDevicesRequest struct {

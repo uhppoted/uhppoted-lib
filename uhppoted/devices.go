@@ -118,6 +118,23 @@ func (u *UHPPOTED) SetEventListener(deviceID uint32, address types.ListenAddr) (
 	return true, nil
 }
 
+// Unwraps the request and dispatches the corresponding controller command to restore the
+// manufacturer default configuration.
+func (u *UHPPOTED) RestoreDefaultParameters(controller uint32) error {
+	u.debug("restore-default-parameters", fmt.Sprintf("%v", controller))
+
+	reset, err := u.UHPPOTE.RestoreDefaultParameters(controller)
+	if err != nil {
+		return fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error resetting controller to manufacturer default configuration (%w)", controller, err))
+	} else if !reset {
+		return fmt.Errorf("%w: %v", ErrFailed, fmt.Errorf("%v  failed to reset controller to manufacturer default configuration", controller))
+	}
+
+	u.debug("restore-default-parameters", fmt.Sprintf("reset %v", reset))
+
+	return nil
+}
+
 func identify(deviceID types.SerialNumber) string {
 	id := strconv.FormatUint(uint64(deviceID), 10)
 

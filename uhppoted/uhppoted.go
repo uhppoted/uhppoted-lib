@@ -21,6 +21,7 @@ var (
 	ErrNotFound            = errors.New("not found")
 	ErrUnauthorized        = errors.New("not authorized")
 	ErrInternalServerError = errors.New("internal server error")
+	ErrFailed              = errors.New("request failed")
 )
 
 type UHPPOTED struct {

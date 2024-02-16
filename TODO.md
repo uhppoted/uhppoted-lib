@@ -1,15 +1,10 @@
 # TODO
 
-- [x] Implement `set-door-passcodes` (cf. https://github.com/uhppoted/uhppoted/issues/40)
-
-- [x] Replace Event pointer in GetStatusResponse with zero value  (cf. https://github.com/uhppoted/uhppote-core/issues/18)
-      - [x] `GetStatus`
+- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
+      - [x] wrapper function
       - [x] CHANGELOG
 
-- [x] Fix [old event published on each card swipe](https://github.com/uhppoted/uhppoted-mqtt/issues/15)
-
 - [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
-      - [x] FetchEvents API function
       - [ ] Remove unnecessary Event struct in uhppoted.events
             - (?) JSON tags to core type
       - [ ] Remove ListenBatchSize

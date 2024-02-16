@@ -150,6 +150,10 @@ func (m *mock) SetPCControl(controller uint32, enable bool) (bool, error) {
 	return true, nil
 }
 
+func (m *mock) RestoreDefaultParameters(controller uint32) (bool, error) {
+	return true, nil
+}
+
 func (m *mock) DeviceList() map[uint32]uhppote.Device {
 	return map[uint32]uhppote.Device{}
 }

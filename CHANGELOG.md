@@ -2,13 +2,19 @@
 
 ## Unreleased
 
+### Added
+1. `RestoreDefaultParameters` API function to reset controller to manufacturer default configuration.
+
+### Updated
+1. Bumped Go version to 1.22
+
 
 ## [0.8.7](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.7) - 2023-12-01
 
 ### Added
-1. Added `SetDoorPasscodes` API function to set door supervisor passcodes.
+1. `SetDoorPasscodes` API function to set door supervisor passcodes.
 
-### Updates
+### Updated
 1. Reworked `nil` Event pointer in `GetStatus` as a zero value.
 2. Fixed _double_ events in `events::Listen` (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/15)
 3. Added _FetchEvents_ API function to retrieve a batch of events from a controller.

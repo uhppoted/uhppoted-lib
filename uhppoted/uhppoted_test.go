@@ -180,6 +180,10 @@ func (m *stub) SetPCControl(controller uint32, enable bool) (bool, error) {
 	return true, nil
 }
 
+func (m *stub) RestoreDefaultParameters(controller uint32) (bool, error) {
+	return true, nil
+}
+
 func (m *stub) Listen(listener uhppote.Listener, q chan os.Signal) error {
 	return nil
 }
