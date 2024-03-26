@@ -13,13 +13,11 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 ### Current Release
 
-**[v0.8.7](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.7) - 2023-12-01**
+**[v0.8.8](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.8) - 2024-03-26**
 
-1. Added `SetDoorPasscodes` API function to set door supervisor passcodes.
-2. Reworked `nil` Event pointer in `GetStatus` as a zero value.
-3. Fixed _double_ events in `events::Listen` (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/15)
-4. Added _FetchEvents_ API function to retrieve a batch of events from a controller.
-5. Removed events listen API (no longer used).
+1. `RestoreDefaultParameters` API function to reset controller to manufacturer default configuration.
+2. Bumped Go version to 1.22
+
 
 ## Development
 
