@@ -2,6 +2,7 @@ package uhppoted
 
 import (
 	"net"
+	"net/netip"
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
@@ -62,7 +63,7 @@ type GetDeviceResponse struct {
 	MacAddress types.MacAddress `json:"mac-address"`
 	Version    types.Version    `json:"version"`
 	Date       types.Date       `json:"date"`
-	Address    net.UDPAddr      `json:"address"`
+	Address    netip.Addr       `json:"address"`
 	TimeZone   *time.Location   `json:"timezone,omitempty"`
 }
 

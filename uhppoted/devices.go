@@ -14,7 +14,7 @@ import (
 type DeviceSummary struct {
 	DeviceType string `json:"device-type"`
 	Address    net.IP `json:"ip-address"`
-	Port       int    `json:"port"`
+	Port       uint16 `json:"port"`
 }
 
 func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, error) {
@@ -35,7 +35,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 				list.Store(uint32(device.SerialNumber), DeviceSummary{
 					DeviceType: identify(device.SerialNumber),
 					Address:    device.IpAddress,
-					Port:       device.Address.Port,
+					Port:       device.Address.Port(),
 				})
 			}
 		}()
@@ -51,7 +51,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 				list.Store(uint32(d.SerialNumber), DeviceSummary{
 					DeviceType: identify(d.SerialNumber),
 					Address:    d.IpAddress,
-					Port:       d.Address.Port,
+					Port:       d.Address.Port(),
 				})
 			}
 		}
@@ -94,7 +94,7 @@ func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, erro
 		MacAddress: device.MacAddress,
 		Version:    device.Version,
 		Date:       device.Date,
-		Address:    device.Address,
+		Address:    device.Address.Addr(),
 		TimeZone:   device.TimeZone,
 	}
 

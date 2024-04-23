@@ -1,17 +1,14 @@
 # TODO
 
-- [x] [`restore-default-parameters`](https://github.com/uhppoted/uhppoted/issues/48)
-      - [x] wrapper function
-      - [x] CHANGELOG
+- [ ] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
+      - [ ] _conf_ file
+      - [ ] CHANGELOG
+      - [ ] README
 
 - [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
       - [ ] Remove unnecessary Event struct in uhppoted.events
             - (?) JSON tags to core type
       - [ ] Remove ListenBatchSize
-
-- [ ] Windows logging
-      - https://github.com/tc-hib/go-winres
-      - https://hjr265.me/blog/adding-icons-for-go-built-windows-executable/
 
 ## TODO
 
