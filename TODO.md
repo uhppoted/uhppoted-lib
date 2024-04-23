@@ -1,7 +1,7 @@
 # TODO
 
 - [ ] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
-      - [ ] _conf_ file
+      - [x] Add protocol to _conf_ file 'Devices' section
       - [ ] CHANGELOG
       - [ ] README
 

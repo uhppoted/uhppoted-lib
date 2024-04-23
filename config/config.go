@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"net/netip"
 	"os"
 	"regexp"
 	"strconv"
@@ -23,9 +24,10 @@ type DeviceMap map[uint32]*Device
 
 type Device struct {
 	Name     string
-	Address  *net.UDPAddr
+	Address  *netip.AddrPort
 	Doors    []string
 	TimeZone string
+	Protocol string
 }
 
 type kv struct {
@@ -354,14 +356,20 @@ func (f DeviceMap) MarshalConf(tag string) ([]byte, error) {
 	if len(f) > 0 {
 		fmt.Fprintf(&s, "# DEVICES\n")
 		for id, device := range f {
-			fmt.Fprintf(&s, "UTO311-L0x.%d.name = %s\n", id, device.Name)
+			fmt.Fprintf(&s, "UT0311-L0x.%d.name = %s\n", id, device.Name)
 
 			if device.Address != nil {
-				fmt.Fprintf(&s, "UTO311-L0x.%d.address = %s\n", id, device.Address)
+				if device.Protocol == "udp" {
+					fmt.Fprintf(&s, "UT0311-L0x.%d.address = udp:%s\n", id, device.Address)
+				} else if device.Protocol == "tcp" {
+					fmt.Fprintf(&s, "UT0311-L0x.%d.address = tcp:%s\n", id, device.Address)
+				} else {
+					fmt.Fprintf(&s, "UT0311-L0x.%d.address = %s\n", id, device.Address)
+				}
 			}
 
 			for d, door := range device.Doors {
-				fmt.Fprintf(&s, "UTO311-L0x.%d.door.%d = %s\n", id, d+1, door)
+				fmt.Fprintf(&s, "UT0311-L0x.%d.door.%d = %s\n", id, d+1, door)
 			}
 			fmt.Fprintf(&s, "\n")
 		}
@@ -384,6 +392,7 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (any, er
 
 	for key, value := range values {
 		match := re.FindStringSubmatch(key)
+
 		if len(match) > 1 {
 			id, err := strconv.ParseUint(match[1], 10, 32)
 			if err != nil {
@@ -404,17 +413,11 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (any, er
 				d.Name = value
 
 			case "address":
-				address, err := net.ResolveUDPAddr("udp", value)
-				if err != nil {
+				if address, protocol, err := resolve(value); err != nil {
 					return f, fmt.Errorf("device %v, invalid address '%s': %v", id, value, err)
 				} else {
-					d.Address = &net.UDPAddr{
-						IP:   make(net.IP, net.IPv4len),
-						Port: address.Port,
-						Zone: "",
-					}
-
-					copy(d.Address.IP, address.IP.To4())
+					d.Address = address
+					d.Protocol = protocol
 				}
 
 			case "door.1":
@@ -436,4 +439,20 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (any, er
 	}
 
 	return f, nil
+}
+
+func resolve(addr string) (*netip.AddrPort, string, error) {
+	if strings.HasPrefix(addr, "udp:") {
+		address, err := netip.ParseAddrPort(addr[4:])
+
+		return &address, "udp", err
+	} else if strings.HasPrefix(addr, "tcp:") {
+		address, err := netip.ParseAddrPort(addr[4:])
+
+		return &address, "tcp", err
+	} else {
+		address, err := netip.ParseAddrPort(addr)
+
+		return &address, "udp", err
+	}
 }

@@ -3,7 +3,7 @@ package config
 import (
 	"bytes"
 	"fmt"
-	"net"
+	"net/netip"
 	"reflect"
 	"regexp"
 	"testing"
@@ -264,11 +264,7 @@ func TestConfigUnmarshal(t *testing.T) {
 			t.Errorf("Expected 'device.name' %s for ID '%v', got:'%v'", "Q405419896", 405419896, d.Name)
 		}
 
-		address := net.UDPAddr{
-			IP:   []byte{192, 168, 1, 100},
-			Port: 60000,
-			Zone: "",
-		}
+		address := netip.MustParseAddrPort("192.168.1.100:60000")
 
 		if !reflect.DeepEqual(d.Address, &address) {
 			t.Errorf("Expected 'device.address' %s for ID '%v', got:'%v'", &address, 405419896, d.Address)
@@ -668,12 +664,8 @@ UT0311-L0x.405419896.timezone = France/Paris
 
 	config.Devices = DeviceMap{
 		405419896: &Device{
-			Name: "Z405419896",
-			Address: &net.UDPAddr{
-				IP:   []byte{192, 168, 1, 100},
-				Port: 60000,
-				Zone: "",
-			},
+			Name:     "Z405419896",
+			Address:  addrport("192.168.1.100:60000"),
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 			TimeZone: "France/Paris",
 		},
@@ -861,4 +853,10 @@ UT0311-L0x.405419896.timezone = France/Paris
 	if err := config.Validate(); err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
+}
+
+func addrport(addr string) *netip.AddrPort {
+	address := netip.MustParseAddrPort("192.168.1.100:60000")
+
+	return &address
 }
