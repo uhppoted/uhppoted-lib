@@ -76,44 +76,6 @@ UT0311-L0x.{{$id}}.timezone = {{$device.TimeZone}}
 # UT0311-L0x.405419896.timezone = UTC+2
 {{end}}`
 
-// const dump = `# SYSTEM{{range .system}}
-// {{.Key}} = {{.Value}}{{end}}
-//
-// # REST{{range .rest}}
-// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-//
-// # MQTT{{range .mqtt}}
-// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-//
-// # AWS{{range .aws}}
-// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-//
-// # HTTPD{{range .httpd}}
-// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-//
-// # WildApricot{{range .wildapricot}}
-// {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
-//
-// # OPEN API{{range .openapi}}
-// {{if .IsDefault}}# {{end}}{{.Key}} = {{.Value}}{{end}}
-//
-// # DEVICES{{range $id,$device := .devices}}
-// UT0311-L0x.{{$id}}.name = {{$device.Name}}
-// UT0311-L0x.{{$id}}.address = {{$device.Address}}
-// UT0311-L0x.{{$id}}.door.1 = {{index $device.Doors 0}}
-// UT0311-L0x.{{$id}}.door.2 = {{index $device.Doors 1}}
-// UT0311-L0x.{{$id}}.door.3 = {{index $device.Doors 2}}
-// UT0311-L0x.{{$id}}.door.4 = {{index $device.Doors 3}}
-// {{else}}
-// # Example configuration for UTO311-L04 with serial number 405419896
-// # UT0311-L0x.405419896.name = D405419896
-// # UT0311-L0x.405419896.address = 192.168.1.100:60000
-// # UT0311-L0x.405419896.door.1 = Front Door
-// # UT0311-L0x.405419896.door.2 = Side Door
-// # UT0311-L0x.405419896.door.3 = Garage
-// # UT0311-L0x.405419896.door.4 = Workshop
-// {{end}}`
-
 type Config struct {
 	System      `conf:""`
 	Devices     DeviceMap `conf:"/^UT0311-L0x\\.([0-9]+)\\.(.*)/"`
