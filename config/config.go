@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
 	"github.com/uhppoted/uhppoted-lib/encoding/conf"
 	"github.com/uhppoted/uhppoted-lib/monitoring"
 )
@@ -401,6 +402,26 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (any, er
 	}
 
 	return f, nil
+}
+
+func (f DeviceMap) ToControllers() []uhppote.Device {
+	controllers := []uhppote.Device{}
+
+	for k, v := range f {
+		if v != nil {
+			deviceID := k
+			name := v.Name
+			address := v.Address
+			protocol := v.Protocol
+			doors := v.Doors
+
+			if controller := uhppote.NewDevice(name, deviceID, address, protocol, doors); controller != nil {
+				controllers = append(controllers, *controller)
+			}
+		}
+	}
+
+	return controllers
 }
 
 func resolve(addr string) (*netip.AddrPort, string, error) {
