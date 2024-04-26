@@ -10,6 +10,7 @@ import (
 	"net/netip"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"text/template"
@@ -404,10 +405,22 @@ func (f *DeviceMap) UnmarshalConf(tag string, values map[string]string) (any, er
 	return f, nil
 }
 
+/*
+ * Returns a list of uhppote.Device sorted by controller ID (required for ACLs)
+ *
+ */
 func (f DeviceMap) ToControllers() []uhppote.Device {
+	keys := []uint32{}
+	for id := range f {
+		keys = append(keys, id)
+	}
+
+	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+
 	controllers := []uhppote.Device{}
 
-	for k, v := range f {
+	for _, k := range keys {
+		v := f[k]
 		if v != nil {
 			deviceID := k
 			name := v.Name
