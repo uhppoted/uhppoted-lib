@@ -140,9 +140,11 @@ func TestDefaultConfig(t *testing.T) {
 }
 
 func TestConfigUnmarshal(t *testing.T) {
+	bind := types.BindAddr(netip.MustParseAddrPort("192.168.1.100:54321"))
+
 	expected := Config{
 		System: System{
-			BindAddress:         &types.BindAddr{IP: []byte{192, 168, 1, 100}, Port: 54321},
+			BindAddress:         &bind,
 			BroadcastAddress:    &types.BroadcastAddr{IP: []byte{192, 168, 1, 255}, Port: 30000},
 			ListenAddress:       &types.ListenAddr{IP: []byte{192, 168, 1, 100}, Port: 12345},
 			Timeout:             3750 * time.Millisecond,

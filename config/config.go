@@ -38,6 +38,8 @@ type kv struct {
 	IsDefault bool
 }
 
+var INADDR_ANY = netip.IPv4Unspecified()
+
 const pretty = `# SYSTEM{{range .system}}
 {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
 
@@ -165,17 +167,14 @@ func (c *Config) Load(path string) error {
 func (c *Config) Validate() error {
 	if c != nil {
 		// validate bind.address port
-		port := c.System.BindAddress.Port
-
+		port := (*netip.AddrPort)(c.System.BindAddress).Port() // FIXME add Port() to BindAddr
 		if port == 60000 {
 			return fmt.Errorf("port %v is not a valid port for bind.address", port)
-		}
-
-		if port != 0 && port == c.System.BroadcastAddress.Port {
+		} else if port != 0 && int(port) == c.System.BroadcastAddress.Port {
 			return fmt.Errorf("bind.address port (%v) must not be the same as the broadcast.address port", port)
 		}
 
-		if port != 0 && port == c.System.ListenAddress.Port {
+		if port != 0 && int(port) == c.System.ListenAddress.Port {
 			return fmt.Errorf("bind.address port (%v) must not be the same as the listen.address port", port)
 		}
 
@@ -266,11 +265,7 @@ func listify(parent string, s interface{}) []kv {
 
 // Ref. https://stackoverflow.com/questions/23529663/how-to-get-all-addresses-and-masks-from-local-interfaces-in-go
 func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr) {
-	bind := types.BindAddr{
-		IP:   make(net.IP, net.IPv4len),
-		Port: 0,
-		Zone: "",
-	}
+	bind := types.BindAddr(netip.AddrPortFrom(INADDR_ANY, 0))
 
 	broadcast := types.BroadcastAddr{
 		IP:   make(net.IP, net.IPv4len),
@@ -284,7 +279,6 @@ func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr
 		Zone: "",
 	}
 
-	copy(bind.IP, net.IPv4zero)
 	copy(broadcast.IP, net.IPv4bcast)
 	copy(listen.IP, net.IPv4zero)
 
@@ -296,7 +290,10 @@ func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr
 					switch v := a.(type) {
 					case *net.IPNet:
 						if v.IP.To4() != nil && i.Flags&net.FlagLoopback == 0 {
-							copy(bind.IP, v.IP.To4())
+							ipv4 := []byte(v.IP.To4())
+							addr := netip.AddrFrom4([4]byte(ipv4[0:4]))
+							port := netip.AddrPort(bind).Port()
+							bind = types.BindAddr(netip.AddrPortFrom(addr, port))
 							copy(listen.IP, v.IP.To4())
 							if i.Flags&net.FlagBroadcast != 0 {
 								addr := v.IP.To4()
