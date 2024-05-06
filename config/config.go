@@ -167,7 +167,7 @@ func (c *Config) Load(path string) error {
 func (c *Config) Validate() error {
 	if c != nil {
 		// validate bind.address port
-		port := (*netip.AddrPort)(c.System.BindAddress).Port() // FIXME add Port() to BindAddr
+		port := c.System.BindAddress.Port()
 		if port == 60000 {
 			return fmt.Errorf("port %v is not a valid port for bind.address", port)
 		} else if port != 0 && int(port) == c.System.BroadcastAddress.Port {
