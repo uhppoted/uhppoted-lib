@@ -140,7 +140,7 @@ func TestDefaultConfig(t *testing.T) {
 }
 
 func TestConfigUnmarshal(t *testing.T) {
-	bind := types.BindAddr(netip.MustParseAddrPort("192.168.1.100:54321"))
+	bind := types.MustParseBindAddr("192.168.1.100:54321")
 
 	expected := Config{
 		System: System{

@@ -265,7 +265,7 @@ func listify(parent string, s interface{}) []kv {
 
 // Ref. https://stackoverflow.com/questions/23529663/how-to-get-all-addresses-and-masks-from-local-interfaces-in-go
 func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr) {
-	bind := types.BindAddr(netip.AddrPortFrom(INADDR_ANY, 0))
+	bind := types.BindAddrFrom(INADDR_ANY, 0)
 
 	broadcast := types.BroadcastAddr{
 		IP:   make(net.IP, net.IPv4len),
@@ -292,8 +292,8 @@ func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr
 						if v.IP.To4() != nil && i.Flags&net.FlagLoopback == 0 {
 							ipv4 := []byte(v.IP.To4())
 							addr := netip.AddrFrom4([4]byte(ipv4[0:4]))
-							port := netip.AddrPort(bind).Port()
-							bind = types.BindAddr(netip.AddrPortFrom(addr, port))
+							port := bind.Port()
+							bind = types.BindAddrFrom(addr, port)
 							copy(listen.IP, v.IP.To4())
 							if i.Flags&net.FlagBroadcast != 0 {
 								addr := v.IP.To4()
