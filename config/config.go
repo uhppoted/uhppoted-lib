@@ -38,7 +38,8 @@ type kv struct {
 	IsDefault bool
 }
 
-var INADDR_ANY = netip.IPv4Unspecified()
+var INADDR_ANY = netip.AddrFrom4([4]byte{0, 0, 0, 0})
+var BROADCAST_ADDR = netip.AddrFrom4([4]byte{255, 255, 255, 255})
 
 const pretty = `# SYSTEM{{range .system}}
 {{if .IsDefault}}; {{end}}{{.Key}} = {{.Value}}{{end}}
@@ -168,9 +169,9 @@ func (c *Config) Validate() error {
 	if c != nil {
 		// validate bind.address port
 		port := c.System.BindAddress.Port()
-		if port == 60000 {
+		if port == uint16(60000) {
 			return fmt.Errorf("port %v is not a valid port for bind.address", port)
-		} else if port != 0 && int(port) == c.System.BroadcastAddress.Port {
+		} else if port != 0 && port == c.System.BroadcastAddress.Port() {
 			return fmt.Errorf("bind.address port (%v) must not be the same as the broadcast.address port", port)
 		}
 
@@ -179,8 +180,8 @@ func (c *Config) Validate() error {
 		}
 
 		// validate broadcast.address port
-		if c.System.BroadcastAddress.Port == 0 {
-			return fmt.Errorf("port %v is not a valid port for broadcast.address", c.System.BroadcastAddress.Port)
+		if c.System.BroadcastAddress.Port() == 0 {
+			return fmt.Errorf("port %v is not a valid port for broadcast.address", c.System.BroadcastAddress.Port())
 		}
 
 		// validate listen.address port
@@ -266,12 +267,7 @@ func listify(parent string, s interface{}) []kv {
 // Ref. https://stackoverflow.com/questions/23529663/how-to-get-all-addresses-and-masks-from-local-interfaces-in-go
 func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr) {
 	bind := types.BindAddrFrom(INADDR_ANY, 0)
-
-	broadcast := types.BroadcastAddr{
-		IP:   make(net.IP, net.IPv4len),
-		Port: 60000,
-		Zone: "",
-	}
+	broadcast := types.BroadcastAddrFrom(BROADCAST_ADDR, 60000)
 
 	listen := types.ListenAddr{
 		IP:   make(net.IP, net.IPv4len),
@@ -279,7 +275,6 @@ func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr
 		Zone: "",
 	}
 
-	copy(broadcast.IP, net.IPv4bcast)
 	copy(listen.IP, net.IPv4zero)
 
 	if ifaces, err := net.Interfaces(); err == nil {
@@ -297,8 +292,13 @@ func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr
 							copy(listen.IP, v.IP.To4())
 							if i.Flags&net.FlagBroadcast != 0 {
 								addr := v.IP.To4()
+								port := broadcast.Port()
 								mask := v.Mask
-								binary.BigEndian.PutUint32(broadcast.IP, binary.BigEndian.Uint32(addr)|^binary.BigEndian.Uint32(mask))
+								bytes := [4]byte{0, 0, 0, 0}
+
+								binary.BigEndian.PutUint32(bytes[:], binary.BigEndian.Uint32(addr)|^binary.BigEndian.Uint32(mask))
+
+								broadcast = types.BroadcastAddrFrom(netip.AddrFrom4(bytes), port)
 							}
 							break loop
 						}

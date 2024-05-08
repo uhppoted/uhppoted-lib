@@ -347,7 +347,7 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 				if v, err := types.ResolveBroadcastAddr(value); err != nil {
 					return err
 				} else {
-					f.Set(reflect.ValueOf(v))
+					f.Set(reflect.ValueOf(&v))
 				}
 			}
 

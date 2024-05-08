@@ -141,11 +141,12 @@ func TestDefaultConfig(t *testing.T) {
 
 func TestConfigUnmarshal(t *testing.T) {
 	bind := types.MustParseBindAddr("192.168.1.100:54321")
+	broadcast := types.MustParseBroadcastAddr("192.168.1.255:30000")
 
 	expected := Config{
 		System: System{
 			BindAddress:         &bind,
-			BroadcastAddress:    &types.BroadcastAddr{IP: []byte{192, 168, 1, 255}, Port: 30000},
+			BroadcastAddress:    &broadcast,
 			ListenAddress:       &types.ListenAddr{IP: []byte{192, 168, 1, 100}, Port: 12345},
 			Timeout:             3750 * time.Millisecond,
 			HealthCheckInterval: 31 * time.Second,
