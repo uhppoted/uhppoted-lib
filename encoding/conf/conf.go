@@ -335,7 +335,7 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 
 		case pBindAddr:
 			if value, ok := values[tag]; ok {
-				if v, err := types.ResolveBindAddr(value); err != nil {
+				if v, err := types.ParseBindAddr(value); err != nil {
 					return err
 				} else {
 					f.Set(reflect.ValueOf(&v))
@@ -344,7 +344,7 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 
 		case pBroadcastAddr:
 			if value, ok := values[tag]; ok {
-				if v, err := types.ResolveBroadcastAddr(value); err != nil {
+				if v, err := types.ParseBroadcastAddr(value); err != nil {
 					return err
 				} else {
 					f.Set(reflect.ValueOf(&v))
