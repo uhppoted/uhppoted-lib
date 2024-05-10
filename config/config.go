@@ -175,7 +175,7 @@ func (c *Config) Validate() error {
 			return fmt.Errorf("bind.address port (%v) must not be the same as the broadcast.address port", port)
 		}
 
-		if port != 0 && int(port) == c.System.ListenAddress.Port {
+		if port != 0 && port == c.System.ListenAddress.Port() {
 			return fmt.Errorf("bind.address port (%v) must not be the same as the listen.address port", port)
 		}
 
@@ -185,8 +185,8 @@ func (c *Config) Validate() error {
 		}
 
 		// validate listen.address port
-		if c.System.ListenAddress.Port == 0 {
-			return fmt.Errorf("port %v is not a valid port for listen.address", c.System.ListenAddress.Port)
+		if c.System.ListenAddress.Port() == 0 {
+			return fmt.Errorf("port %v is not a valid port for listen.address", c.System.ListenAddress.Port())
 		}
 
 		// check for duplicate doors
@@ -268,14 +268,7 @@ func listify(parent string, s interface{}) []kv {
 func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr) {
 	bind := types.BindAddrFrom(INADDR_ANY, 0)
 	broadcast := types.BroadcastAddrFrom(BROADCAST_ADDR, 60000)
-
-	listen := types.ListenAddr{
-		IP:   make(net.IP, net.IPv4len),
-		Port: 60001,
-		Zone: "",
-	}
-
-	copy(listen.IP, net.IPv4zero)
+	listen := types.ListenAddrFrom(INADDR_ANY, 60001)
 
 	if ifaces, err := net.Interfaces(); err == nil {
 	loop:
@@ -287,9 +280,8 @@ func DefaultIpAddresses() (types.BindAddr, types.BroadcastAddr, types.ListenAddr
 						if v.IP.To4() != nil && i.Flags&net.FlagLoopback == 0 {
 							ipv4 := []byte(v.IP.To4())
 							addr := netip.AddrFrom4([4]byte(ipv4[0:4]))
-							port := bind.Port()
-							bind = types.BindAddrFrom(addr, port)
-							copy(listen.IP, v.IP.To4())
+							bind = types.BindAddrFrom(addr, bind.Port())
+							listen = types.ListenAddrFrom(addr, listen.Port())
 							if i.Flags&net.FlagBroadcast != 0 {
 								addr := v.IP.To4()
 								port := broadcast.Port()

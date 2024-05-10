@@ -353,10 +353,10 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 
 		case pListenAddr:
 			if value, ok := values[tag]; ok {
-				if v, err := types.ResolveListenAddr(value); err != nil {
+				if v, err := types.ParseListenAddr(value); err != nil {
 					return err
 				} else {
-					f.Set(reflect.ValueOf(v))
+					f.Set(reflect.ValueOf(&v))
 				}
 			}
 

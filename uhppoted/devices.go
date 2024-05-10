@@ -106,8 +106,9 @@ func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, erro
 func (u *UHPPOTED) SetEventListener(deviceID uint32, address types.ListenAddr) (bool, error) {
 	u.debug("set-event-listener", fmt.Sprintf("%v %v", deviceID, address))
 
-	result, err := u.UHPPOTE.SetListener(deviceID, net.UDPAddr(address))
-	if err != nil {
+	if addr := net.UDPAddrFromAddrPort(address.AddrPort); addr == nil {
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v %w", deviceID, fmt.Errorf("invalid address (%v)", address)))
+	} else if result, err := u.UHPPOTE.SetListener(deviceID, *addr); err != nil {
 		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v %w", deviceID, err))
 	} else if result == nil {
 		return false, fmt.Errorf("%w: %v", ErrNotFound, fmt.Errorf("set-event-listener: %v  no response", deviceID))
