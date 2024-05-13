@@ -437,34 +437,7 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 func (h *HealthCheck) resolve() {
 	infof("health-check", "refreshing interface IP address list")
 
-	list := []netip.AddrPort{}
-
-	listen := h.uhppote.ListenAddr()
-	if listen != nil {
-		addr, ok := netip.AddrFromSlice(listen.IP.To4())
-		port := uint16(listen.Port)
-
-		if ok && !addr.IsUnspecified() {
-			list = append(list, netip.AddrPortFrom(addr, port))
-		} else if ok {
-			if ifaces, err := net.Interfaces(); err == nil {
-				for _, i := range ifaces {
-					if addrs, err := i.Addrs(); err == nil {
-						for _, a := range addrs {
-							switch v := a.(type) {
-							case *net.IPNet:
-								if v.IP.To4() != nil && i.Flags&net.FlagLoopback == 0 {
-									if addr, ok := netip.AddrFromSlice(v.IP.To4()); ok {
-										list = append(list, netip.AddrPortFrom(addr, port))
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	list := h.uhppote.ListenAddrList()
 
 	cache.Lock()
 	defer cache.Unlock()

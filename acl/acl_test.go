@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net"
+	"net/netip"
 	"os"
 	"testing"
 	"time"
@@ -158,7 +159,7 @@ func (m *mock) DeviceList() map[uint32]uhppote.Device {
 	return map[uint32]uhppote.Device{}
 }
 
-func (m *mock) ListenAddr() *net.UDPAddr {
+func (m *mock) ListenAddrList() []netip.AddrPort {
 	return nil
 }
 

@@ -3,6 +3,7 @@ package uhppoted
 import (
 	"fmt"
 	"net"
+	"net/netip"
 	"os"
 	"time"
 
@@ -24,7 +25,7 @@ func (m *stub) DeviceList() map[uint32]uhppote.Device {
 	return nil
 }
 
-func (m *stub) ListenAddr() *net.UDPAddr {
+func (m *stub) ListenAddrList() []netip.AddrPort {
 	return nil
 }
 
