@@ -61,6 +61,12 @@ UT0311-L0x.405419896.door.2 = Side Door
 UT0311-L0x.405419896.door.3 = Garage
 UT0311-L0x.405419896.door.4 = Workshop
 UT0311-L0x.405419896.timezone = France/Paris
+
+UT0311-L0x.303986753.name = Q303986753
+UT0311-L0x.303986753.door.1 = Left Door
+UT0311-L0x.303986753.door.2 = Right Door
+UT0311-L0x.303986753.door.3 = Top Door
+UT0311-L0x.303986753.door.4 = Bottom Door
 `)
 
 func TestDefaultConfig(t *testing.T) {
@@ -261,6 +267,10 @@ func TestConfigUnmarshal(t *testing.T) {
 		t.Errorf("Incorrect httpd retention:\nexpected:%+v,\ngot:     %+v", expected.HTTPD.Retention, config.HTTPD.Retention)
 	}
 
+	if len(config.Devices) != 2 {
+		t.Errorf("Expected %v controllers, got:%v", 2, len(config.Devices))
+	}
+
 	if d := config.Devices[405419896]; d == nil {
 		t.Errorf("Expected 'device' for ID '%v', got:'%v'", 405419896, d)
 	} else {
@@ -270,12 +280,12 @@ func TestConfigUnmarshal(t *testing.T) {
 
 		address := netip.MustParseAddrPort("192.168.1.100:60000")
 
-		if !reflect.DeepEqual(d.Address, &address) {
+		if d.Address == nil || *d.Address != address {
 			t.Errorf("Expected 'device.address' %s for ID '%v', got:'%v'", &address, 405419896, d.Address)
 		}
 
 		if len(d.Doors) != 4 {
-			t.Errorf("Expected 4 entries for 'device.door' %s for ID '%v', got:%v", &address, 405419896, len(d.Doors))
+			t.Errorf("Expected 4 entries for 'device.door' for ID '%v', got:%v", 405419896, len(d.Doors))
 		} else {
 			if d.Doors[0] != "Front Door" {
 				t.Errorf("Expected 'device.door[0]' %s for ID '%v', got:'%s'", "Front Door", 405419896, d.Doors[0])
@@ -296,6 +306,42 @@ func TestConfigUnmarshal(t *testing.T) {
 
 		if d.TimeZone != "France/Paris" {
 			t.Errorf("Expected 'device.timezone' %s for ID '%v', got:'%v'", "France/Paris", 405419896, d.TimeZone)
+		}
+	}
+
+	if d := config.Devices[303986753]; d == nil {
+		t.Errorf("Expected 'device' for ID '%v', got:'%v'", 303986753, d)
+	} else {
+		if d.Name != "Q303986753" {
+			t.Errorf("Expected 'device.name' %s for ID '%v', got:'%v'", "Q303986753", 303986753, d.Name)
+		}
+
+		if d.Address != nil {
+			t.Errorf("Expected nil 'device.address' for ID '%v', got:'%v'", 303986753, d.Address)
+		}
+
+		if len(d.Doors) != 4 {
+			t.Errorf("Expected 4 entries for 'device.door' for ID '%v', got:%v", 303986753, len(d.Doors))
+		} else {
+			if d.Doors[0] != "Left Door" {
+				t.Errorf("Expected 'device.door[0]' %s for ID '%v', got:'%s'", "Left Door", 303986753, d.Doors[0])
+			}
+
+			if d.Doors[1] != "Right Door" {
+				t.Errorf("Expected 'device.door[1]' %s for ID '%v', got:'%s'", "Right Door", 303986753, d.Doors[1])
+			}
+
+			if d.Doors[2] != "Top Door" {
+				t.Errorf("Expected 'device.door[2]' %s for ID '%v', got:'%s'", "Top Door", 303986753, d.Doors[2])
+			}
+
+			if d.Doors[3] != "Bottom Door" {
+				t.Errorf("Expected 'device.door[3]' %s for ID '%v', got:'%s'", "Bottom Door", 303986753, d.Doors[3])
+			}
+		}
+
+		if d.TimeZone != "" {
+			t.Errorf("Expected 'device.timezone' %s for ID '%v', got:'%v'", "", 303986753, d.TimeZone)
 		}
 
 	}
