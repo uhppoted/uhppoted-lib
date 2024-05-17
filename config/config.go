@@ -413,12 +413,12 @@ func (f DeviceMap) ToControllers() []uhppote.Device {
 		if v != nil {
 			deviceID := k
 			name := v.Name
-			address := netip.AddrPort{}
+			address := types.ControllerAddr{}
 			protocol := v.Protocol
 			doors := v.Doors
 
 			if v.Address != nil && v.Address.IsValid() {
-				address = *v.Address
+				address = types.ControllerAddrFrom(v.Address.Addr(), v.Address.Port())
 			}
 
 			if controller := uhppote.NewDevice(name, deviceID, address, protocol, doors); controller != nil {
