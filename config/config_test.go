@@ -3,7 +3,6 @@ package config
 import (
 	"bytes"
 	"fmt"
-	"net/netip"
 	"reflect"
 	"regexp"
 	"testing"
@@ -278,10 +277,10 @@ func TestConfigUnmarshal(t *testing.T) {
 			t.Errorf("Expected 'device.name' %s for ID '%v', got:'%v'", "Q405419896", 405419896, d.Name)
 		}
 
-		address := netip.MustParseAddrPort("192.168.1.100:60000")
+		address := types.MustParseControllerAddr("192.168.1.100:60000")
 
-		if d.Address == nil || *d.Address != address {
-			t.Errorf("Expected 'device.address' %s for ID '%v', got:'%v'", &address, 405419896, d.Address)
+		if !d.Address.IsValid() || d.Address != address {
+			t.Errorf("Expected 'device.address' %s for ID '%v', got:'%v'", address, 405419896, d.Address)
 		}
 
 		if len(d.Doors) != 4 {
@@ -316,8 +315,8 @@ func TestConfigUnmarshal(t *testing.T) {
 			t.Errorf("Expected 'device.name' %s for ID '%v', got:'%v'", "Q303986753", 303986753, d.Name)
 		}
 
-		if d.Address != nil {
-			t.Errorf("Expected nil 'device.address' for ID '%v', got:'%v'", 303986753, d.Address)
+		if d.Address.IsValid() {
+			t.Errorf("Expected invalid 'device.address' for ID '%v', got:'%v'", 303986753, d.Address)
 		}
 
 		if len(d.Doors) != 4 {
@@ -687,6 +686,7 @@ httpd.retention = 5h30m0s
 
 # DEVICES
 UT0311-L0x.303986753.name = Q303986753
+UT0311-L0x.303986753.address = 
 UT0311-L0x.303986753.door.1 = A
 UT0311-L0x.303986753.door.2 = B
 UT0311-L0x.303986753.door.3 = C
@@ -694,7 +694,7 @@ UT0311-L0x.303986753.door.4 = D
 UT0311-L0x.303986753.timezone = UTC
 
 UT0311-L0x.405419896.name = Z405419896
-UT0311-L0x.405419896.address = 192.168.1.100:60000
+UT0311-L0x.405419896.address = 192.168.1.100
 UT0311-L0x.405419896.door.1 = D1
 UT0311-L0x.405419896.door.2 = D2
 UT0311-L0x.405419896.door.3 = D3
@@ -715,7 +715,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 	config.Devices = DeviceMap{
 		405419896: &Device{
 			Name:     "Z405419896",
-			Address:  addrport("192.168.1.100:60000"),
+			Address:  types.MustParseControllerAddr("192.168.1.100:60000"),
 			Doors:    []string{"D1", "D2", "D3", "D4"},
 			TimeZone: "France/Paris",
 		},
@@ -903,10 +903,4 @@ UT0311-L0x.405419896.timezone = France/Paris
 	if err := config.Validate(); err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
-}
-
-func addrport(addr string) *netip.AddrPort {
-	address := netip.MustParseAddrPort("192.168.1.100:60000")
-
-	return &address
 }

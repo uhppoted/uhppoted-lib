@@ -3,12 +3,14 @@ package config
 import (
 	"reflect"
 	"testing"
+
+	"github.com/uhppoted/uhppote-core/types"
 )
 
 func TestDeviceMarshal(t *testing.T) {
 	expected := `# DEVICES
 UT0311-L0x.405419896.name = test
-UT0311-L0x.405419896.address = 192.168.1.100:60000
+UT0311-L0x.405419896.address = 192.168.1.100
 UT0311-L0x.405419896.door.1 = Gryffindor
 UT0311-L0x.405419896.door.2 = Ravenclaw
 UT0311-L0x.405419896.door.3 = Hufflepuff
@@ -17,7 +19,7 @@ UT0311-L0x.405419896.door.4 = Slytherin
 `
 	device := Device{
 		Name:     "test",
-		Address:  addrport("192.168.1.100:60000"),
+		Address:  types.MustParseControllerAddr("192.168.1.100:60000"),
 		Doors:    []string{"Gryffindor", "Ravenclaw", "Hufflepuff", "Slytherin"},
 		TimeZone: "UTC",
 	}
@@ -68,7 +70,7 @@ UT0311-L0x.405419896.door.4 = Slytherin
 func TestDeviceMarshalTCP(t *testing.T) {
 	expected := `# DEVICES
 UT0311-L0x.405419896.name = test
-UT0311-L0x.405419896.address = tcp:192.168.1.100:60000
+UT0311-L0x.405419896.address = tcp:192.168.1.100
 UT0311-L0x.405419896.door.1 = Gryffindor
 UT0311-L0x.405419896.door.2 = Ravenclaw
 UT0311-L0x.405419896.door.3 = Hufflepuff
@@ -77,7 +79,7 @@ UT0311-L0x.405419896.door.4 = Slytherin
 `
 	device := Device{
 		Name:     "test",
-		Address:  addrport("192.168.1.100:60000"),
+		Address:  types.MustParseControllerAddr("192.168.1.100:60000"),
 		Doors:    []string{"Gryffindor", "Ravenclaw", "Hufflepuff", "Slytherin"},
 		TimeZone: "UTC",
 		Protocol: "tcp",
@@ -112,7 +114,7 @@ func TestDeviceUnmarshal(t *testing.T) {
 	expected := DeviceMap{
 		405419896: &Device{
 			Name:     "Alpha",
-			Address:  addrport("192.168.1.100:60000"),
+			Address:  types.MustParseControllerAddr("192.168.1.100:60000"),
 			Doors:    []string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"},
 			TimeZone: "CEST",
 			Protocol: "udp",
@@ -163,7 +165,7 @@ func TestDeviceUnmarshalUDP(t *testing.T) {
 	expected := DeviceMap{
 		405419896: &Device{
 			Name:     "Alpha",
-			Address:  addrport("192.168.1.100:60000"),
+			Address:  types.MustParseControllerAddr("192.168.1.100:60000"),
 			Doors:    []string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"},
 			TimeZone: "CEST",
 			Protocol: "udp",
@@ -214,7 +216,7 @@ func TestDeviceUnmarshalTCP(t *testing.T) {
 	expected := DeviceMap{
 		405419896: &Device{
 			Name:     "Alpha",
-			Address:  addrport("192.168.1.100:60000"),
+			Address:  types.MustParseControllerAddr("192.168.1.100:60000"),
 			Doors:    []string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"},
 			TimeZone: "CEST",
 			Protocol: "tcp",

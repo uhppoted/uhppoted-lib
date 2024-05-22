@@ -26,7 +26,7 @@ type DeviceMap map[uint32]*Device
 
 type Device struct {
 	Name     string
-	Address  *netip.AddrPort
+	Address  types.ControllerAddr
 	Doors    []string
 	TimeZone string
 	Protocol string
@@ -311,7 +311,7 @@ func (f DeviceMap) MarshalConf(tag string) ([]byte, error) {
 		for id, device := range f {
 			fmt.Fprintf(&s, "UT0311-L0x.%d.name = %s\n", id, device.Name)
 
-			if device.Address != nil {
+			if device.Address.IsValid() {
 				if device.Protocol == "udp" {
 					fmt.Fprintf(&s, "UT0311-L0x.%d.address = udp:%s\n", id, device.Address)
 				} else if device.Protocol == "tcp" {
@@ -417,12 +417,12 @@ func (f DeviceMap) ToControllers() []uhppote.Device {
 			protocol := v.Protocol
 			doors := v.Doors
 
-			if v.Address != nil && v.Address.IsValid() {
+			if v.Address.IsValid() {
 				address = types.ControllerAddrFrom(v.Address.Addr(), v.Address.Port())
 			}
 
-			if controller := uhppote.NewDevice(name, deviceID, address, protocol, doors); controller != nil {
-				controllers = append(controllers, *controller)
+			if controller := uhppote.NewDevice(name, deviceID, address, protocol, doors); controller.IsValid() {
+				controllers = append(controllers, controller)
 			}
 		}
 	}
@@ -430,18 +430,18 @@ func (f DeviceMap) ToControllers() []uhppote.Device {
 	return controllers
 }
 
-func resolve(addr string) (*netip.AddrPort, string, error) {
+func resolve(addr string) (types.ControllerAddr, string, error) {
 	if strings.HasPrefix(addr, "udp:") {
-		address, err := netip.ParseAddrPort(addr[4:])
+		address, err := types.ParseControllerAddr(addr[4:])
 
-		return &address, "udp", err
+		return address, "udp", err
 	} else if strings.HasPrefix(addr, "tcp:") {
-		address, err := netip.ParseAddrPort(addr[4:])
+		address, err := types.ParseControllerAddr(addr[4:])
 
-		return &address, "tcp", err
+		return address, "tcp", err
 	} else {
-		address, err := netip.ParseAddrPort(addr)
+		address, err := types.ParseControllerAddr(addr)
 
-		return &address, "udp", err
+		return address, "udp", err
 	}
 }
