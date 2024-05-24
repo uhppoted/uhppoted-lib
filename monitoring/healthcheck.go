@@ -3,7 +3,6 @@ package monitoring
 import (
 	"fmt"
 	"math"
-	"net"
 	"net/netip"
 	"sync"
 	"time"
@@ -37,7 +36,7 @@ type status struct {
 
 type listener struct {
 	Touched time.Time
-	Address net.UDPAddr
+	Address netip.AddrPort
 }
 
 type alerts struct {
@@ -164,9 +163,9 @@ func (h *HealthCheck) update(now time.Time) {
 		}
 
 		l, err := h.uhppote.GetListener(id)
-		if err == nil && l != nil {
+		if err == nil && l.IsValid() {
 			h.state.Devices.Listener.Store(id, listener{
-				Address: l.Address,
+				Address: l,
 				Touched: now,
 			})
 		}
@@ -403,10 +402,7 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 		}
 
 		for _, expected := range cache.addresses {
-			addr, ok := netip.AddrFromSlice(address.IP.To4())
-			port := uint16(address.Port)
-
-			if ok && expected == netip.AddrPortFrom(addr, port) {
+			if expected == address {
 				if alerted.listener {
 					if info(h, handler, id, "listener address/port correct") {
 						alerted.listener = false

@@ -63,8 +63,8 @@ func (m *mock) ActivateKeypads(controller uint32, keypads map[uint8]bool) (bool,
 	return false, nil
 }
 
-func (m *mock) GetListener(controller uint32) (*types.Listener, error) {
-	return nil, nil
+func (m *mock) GetListener(controller uint32) (netip.AddrPort, error) {
+	return netip.AddrPort{}, nil
 }
 
 func (m *mock) SetListener(controller uint32, address net.UDPAddr) (*types.Result, error) {

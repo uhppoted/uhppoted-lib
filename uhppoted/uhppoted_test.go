@@ -49,8 +49,8 @@ func (m *stub) SetTime(serialNumber uint32, datetime time.Time) (*types.Time, er
 	return nil, nil
 }
 
-func (m *stub) GetListener(controller uint32) (*types.Listener, error) {
-	return nil, nil
+func (m *stub) GetListener(controller uint32) (netip.AddrPort, error) {
+	return netip.AddrPort{}, nil
 }
 
 func (m *stub) SetListener(controller uint32, address net.UDPAddr) (*types.Result, error) {
