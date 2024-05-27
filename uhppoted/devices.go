@@ -3,6 +3,7 @@ package uhppoted
 import (
 	"fmt"
 	"net"
+	"net/netip"
 	"strconv"
 	"strings"
 	"sync"
@@ -103,17 +104,13 @@ func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, erro
 	return &response, nil
 }
 
-func (u *UHPPOTED) SetEventListener(deviceID uint32, address types.ListenAddr) (bool, error) {
-	u.debug("set-event-listener", fmt.Sprintf("%v %v", deviceID, address))
+func (u *UHPPOTED) SetEventListener(controller uint32, addr netip.AddrPort) (bool, error) {
+	u.debug("set-event-listener", fmt.Sprintf("%v %v", controller, addr))
 
-	if addr := net.UDPAddrFromAddrPort(address.AddrPort); addr == nil {
-		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v %w", deviceID, fmt.Errorf("invalid address (%v)", address)))
-	} else if result, err := u.UHPPOTE.SetListener(deviceID, *addr); err != nil {
-		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v %w", deviceID, err))
-	} else if result == nil {
-		return false, fmt.Errorf("%w: %v", ErrNotFound, fmt.Errorf("set-event-listener: %v  no response", deviceID))
-	} else if !result.Succeeded {
-		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v  failed", deviceID))
+	if ok, err := u.UHPPOTE.SetListener(controller, addr); err != nil {
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v %w", controller, err))
+	} else if !ok {
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v  failed", controller))
 	}
 
 	return true, nil

@@ -53,8 +53,8 @@ func (m *stub) GetListener(controller uint32) (netip.AddrPort, error) {
 	return netip.AddrPort{}, nil
 }
 
-func (m *stub) SetListener(controller uint32, address net.UDPAddr) (*types.Result, error) {
-	return nil, nil
+func (m *stub) SetListener(controller uint32, address netip.AddrPort) (bool, error) {
+	return false, nil
 }
 
 func (m *stub) GetStatus(serialNumber uint32) (*types.Status, error) {

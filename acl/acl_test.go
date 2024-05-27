@@ -67,8 +67,8 @@ func (m *mock) GetListener(controller uint32) (netip.AddrPort, error) {
 	return netip.AddrPort{}, nil
 }
 
-func (m *mock) SetListener(controller uint32, address net.UDPAddr) (*types.Result, error) {
-	return nil, nil
+func (m *mock) SetListener(controller uint32, address netip.AddrPort) (bool, error) {
+	return false, nil
 }
 
 func (m *mock) GetStatus(controller uint32) (*types.Status, error) {
