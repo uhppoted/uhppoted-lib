@@ -3,8 +3,10 @@ package config
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/uhppoted/uhppote-core/types"
+	"github.com/uhppoted/uhppote-core/uhppote"
 )
 
 func TestDeviceMarshal(t *testing.T) {
@@ -249,5 +251,49 @@ func TestDeviceUnmarshalTCP(t *testing.T) {
 
 	if !reflect.DeepEqual(devices, expected) {
 		t.Errorf("incorrectly unmarshalled 'conf' controllers section\nexpected: %+v\ngot:      %+v", expected, devices)
+	}
+}
+
+func TestDeviceMapToControllers(t *testing.T) {
+	LA, _ := time.LoadLocation("America/Los_Angeles")
+
+	devices := DeviceMap{
+		405419896: &Device{
+			Name:     "Alpha",
+			Address:  types.MustParseControllerAddr("192.168.1.100:60000"),
+			Doors:    []string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"},
+			TimeZone: "America/Los_Angeles",
+			Protocol: "tcp",
+		},
+		303986753: &Device{
+			Name:    "Beta",
+			Address: types.MustParseControllerAddr("192.168.1.100:60000"),
+			Doors:   []string{"Great Hall", "Kitchen", "Dungeon", "Hogsmeade"},
+		},
+	}
+
+	expected := []uhppote.Device{
+		uhppote.Device{
+			Name:     "Beta",
+			DeviceID: 303986753,
+			Doors:    []string{"Great Hall", "Kitchen", "Dungeon", "Hogsmeade"},
+			Address:  types.MustParseControllerAddr("192.168.1.100:60000"),
+			TimeZone: time.Local,
+			Protocol: "udp",
+		},
+		uhppote.Device{
+			Name:     "Alpha",
+			DeviceID: 405419896,
+			Doors:    []string{"Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"},
+			Address:  types.MustParseControllerAddr("192.168.1.100:60000"),
+			TimeZone: LA,
+			Protocol: "tcp",
+		},
+	}
+
+	controllers := devices.ToControllers()
+
+	if !reflect.DeepEqual(controllers, expected) {
+		t.Errorf("invalid controllers list\n   expected: %v\n   got:      %v", expected, controllers)
 	}
 }

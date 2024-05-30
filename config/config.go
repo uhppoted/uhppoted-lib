@@ -416,12 +416,19 @@ func (f DeviceMap) ToControllers() []uhppote.Device {
 			address := types.ControllerAddr{}
 			protocol := v.Protocol
 			doors := v.Doors
+			timezone := time.Local
+
+			if v.TimeZone != "" {
+				if tz, err := time.LoadLocation(v.TimeZone); err == nil && tz != nil {
+					timezone = tz
+				}
+			}
 
 			if v.Address.IsValid() {
 				address = types.ControllerAddrFrom(v.Address.Addr(), v.Address.Port())
 			}
 
-			if controller := uhppote.NewDevice(name, deviceID, address, protocol, doors); controller.IsValid() {
+			if controller := uhppote.NewDevice(name, deviceID, address, protocol, doors, timezone); controller.IsValid() {
 				controllers = append(controllers, controller)
 			}
 		}
