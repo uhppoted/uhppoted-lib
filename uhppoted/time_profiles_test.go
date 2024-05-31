@@ -10,7 +10,7 @@ import (
 )
 
 func pdate(s string) *types.Date {
-	d, _ := types.DateFromString(s)
+	d, _ := types.ParseDate(s)
 
 	return &d
 }

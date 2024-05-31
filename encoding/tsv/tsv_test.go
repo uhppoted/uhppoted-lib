@@ -70,7 +70,7 @@ func TestTSVUnmarshalTimeProfiles(t *testing.T) {
 	expected := []profile{
 		profile{
 			ID:        2,
-			From:      date("2021-04-01"),
+			From:      types.MustParseDate("2021-04-01"),
 			To:        pdate("2021-12-31"),
 			Monday:    false,
 			Tuesday:   false,
@@ -90,7 +90,7 @@ func TestTSVUnmarshalTimeProfiles(t *testing.T) {
 
 		profile{
 			ID:        3,
-			From:      date("2021-04-01"),
+			From:      types.MustParseDate("2021-04-01"),
 			Monday:    true,
 			Tuesday:   true,
 			Wednesday: true,
@@ -109,7 +109,7 @@ func TestTSVUnmarshalTimeProfiles(t *testing.T) {
 
 		profile{
 			ID:        29,
-			From:      date("2021-04-01"),
+			From:      types.MustParseDate("2021-04-01"),
 			To:        pdate("2021-12-31"),
 			Monday:    true,
 			Tuesday:   false,
@@ -150,7 +150,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.DoorControlled,
 			Door:      4,
-			From:      date("2021-04-01"),
+			From:      types.MustParseDate("2021-04-01"),
 			To:        pdate("2021-12-31"),
 			Monday:    false,
 			Tuesday:   false,
@@ -165,7 +165,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.EnableTimeProfile,
 			Door:      4,
-			From:      date("2021-04-01"),
+			From:      types.MustParseDate("2021-04-01"),
 			To:        nil,
 			Monday:    true,
 			Tuesday:   true,
@@ -181,7 +181,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.CardNoPassword,
 			Door:      4,
-			From:      date("2023-07-12"),
+			From:      types.MustParseDate("2023-07-12"),
 			To:        nil,
 			Monday:    true,
 			Tuesday:   true,
@@ -196,7 +196,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.CardInPassword,
 			Door:      4,
-			From:      date("2023-07-13"),
+			From:      types.MustParseDate("2023-07-13"),
 			To:        nil,
 			Monday:    true,
 			Tuesday:   true,
@@ -211,7 +211,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.CardInOutPassword,
 			Door:      4,
-			From:      date("2023-07-14"),
+			From:      types.MustParseDate("2023-07-14"),
 			To:        nil,
 			Monday:    true,
 			Tuesday:   true,
@@ -226,7 +226,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.EnableMoreCards,
 			Door:      3,
-			From:      date("2021-01-01"),
+			From:      types.MustParseDate("2021-01-01"),
 			To:        pdate("2021-12-31"),
 			Monday:    true,
 			Tuesday:   false,
@@ -243,7 +243,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.DoorControlled,
 			Door:      4,
-			From:      date("2021-04-01"),
+			From:      types.MustParseDate("2021-04-01"),
 			To:        pdate("2021-12-31"),
 			Monday:    false,
 			Tuesday:   false,
@@ -259,7 +259,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.EnableTimeProfile,
 			Door:      4,
-			From:      date("2021-04-01"),
+			From:      types.MustParseDate("2021-04-01"),
 			To:        nil,
 			Monday:    true,
 			Tuesday:   true,
@@ -275,7 +275,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.CardNoPassword,
 			Door:      4,
-			From:      date("2023-07-12"),
+			From:      types.MustParseDate("2023-07-12"),
 			To:        nil,
 			Monday:    true,
 			Tuesday:   true,
@@ -290,7 +290,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.CardInPassword,
 			Door:      4,
-			From:      date("2023-07-13"),
+			From:      types.MustParseDate("2023-07-13"),
 			To:        nil,
 			Monday:    true,
 			Tuesday:   true,
@@ -305,7 +305,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.CardInOutPassword,
 			Door:      4,
-			From:      date("2023-07-14"),
+			From:      types.MustParseDate("2023-07-14"),
 			To:        nil,
 			Monday:    true,
 			Tuesday:   true,
@@ -320,7 +320,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 		task{
 			Task:      types.TriggerOnce,
 			Door:      3,
-			From:      date("2021-01-01"),
+			From:      types.MustParseDate("2021-01-01"),
 			To:        pdate("2021-12-31"),
 			Monday:    true,
 			Tuesday:   false,
@@ -353,14 +353,8 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 	}
 }
 
-func date(s string) types.Date {
-	d, _ := types.DateFromString(s)
-
-	return d
-}
-
 func pdate(s string) *types.Date {
-	d, _ := types.DateFromString(s)
+	d, _ := types.ParseDate(s)
 
 	return &d
 }

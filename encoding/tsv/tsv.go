@@ -147,7 +147,7 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 				}
 
 			case tDate:
-				if v, err := types.DateFromString(value); err != nil {
+				if v, err := types.ParseDate(value); err != nil {
 					return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 				} else if v.IsZero() {
 					return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
@@ -157,7 +157,7 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 
 			case tDatePtr:
 				if value != "" {
-					if v, err := types.DateFromString(value); err != nil {
+					if v, err := types.ParseDate(value); err != nil {
 						return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
 					} else if v.IsZero() {
 						return fmt.Errorf("record %v: invalid value '%s' for field '%s'", rid, value, tag)
