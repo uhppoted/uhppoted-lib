@@ -242,15 +242,17 @@ func (u *UHPPOTED) ClearTimeProfiles(request ClearTimeProfilesRequest) (*ClearTi
 }
 
 func validateTimeProfile(profile types.TimeProfile) error {
-	if profile.From == nil {
+	// NTS: zero value 'from' date may be valid
+	if profile.From.IsZero() {
 		return fmt.Errorf("invalid 'From' date (%v)", profile.From)
 	}
 
-	if profile.To == nil {
+	// NTS: zero value 'to' date may be valid
+	if profile.To.IsZero() {
 		return fmt.Errorf("invalid 'To' date (%v)", profile.To)
 	}
 
-	if profile.To.Before(*profile.From) {
+	if profile.To.Before(profile.From) {
 		return fmt.Errorf("'To' date (%v) is before 'From' date (%v)", profile.To, profile.From)
 	}
 
