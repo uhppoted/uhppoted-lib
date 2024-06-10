@@ -186,8 +186,8 @@ func TestParseRecord(t *testing.T) {
 	expected := map[uint32]types.Card{
 		12345: types.Card{
 			CardNumber: 8165535,
-			From:       date("2021-01-01"),
-			To:         date("2021-12-31"),
+			From:       types.MustParseDate("2021-01-01"),
+			To:         types.MustParseDate("2021-12-31"),
 			Doors: map[uint8]uint8{
 				1: 0,
 				2: 1,
@@ -223,8 +223,8 @@ func TestParseRecordWithPIN(t *testing.T) {
 	expected := map[uint32]types.Card{
 		12345: types.Card{
 			CardNumber: 8165535,
-			From:       date("2021-01-01"),
-			To:         date("2021-12-31"),
+			From:       types.MustParseDate("2021-01-01"),
+			To:         types.MustParseDate("2021-12-31"),
 			Doors: map[uint8]uint8{
 				1: 0,
 				2: 1,
@@ -261,8 +261,8 @@ func TestParseRecordWithBlankPIN(t *testing.T) {
 	expected := map[uint32]types.Card{
 		12345: types.Card{
 			CardNumber: 8165535,
-			From:       date("2021-01-01"),
-			To:         date("2021-12-31"),
+			From:       types.MustParseDate("2021-01-01"),
+			To:         types.MustParseDate("2021-12-31"),
 			Doors: map[uint8]uint8{
 				1: 0,
 				2: 1,

@@ -354,7 +354,7 @@ func TestTSVUnmarshalTasks(t *testing.T) {
 }
 
 func pdate(s string) *types.Date {
-	d, _ := types.ParseDate(s)
+	d := types.MustParseDate(s)
 
 	return &d
 }

@@ -163,14 +163,6 @@ func (m *mock) ListenAddrList() []netip.AddrPort {
 	return nil
 }
 
-var date = func(s string) types.Date {
-	if d, err := time.ParseInLocation("2006-01-02", s, time.Local); err != nil {
-		return types.Date{}
-	} else {
-		return types.Date(d)
-	}
-}
-
 var deviceA = uhppote.Device{
 	DeviceID: 12345,
 	Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
@@ -189,14 +181,14 @@ func TestACLPrintf(t *testing.T) {
 
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65531: types.Card{CardNumber: 65531, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-			65532: types.Card{CardNumber: 65532, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-			65533: types.Card{CardNumber: 65533, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			65531: types.Card{CardNumber: 65531, From: types.MustParseDate("2020-01-02"), To: types.MustParseDate("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+			65532: types.Card{CardNumber: 65532, From: types.MustParseDate("2020-02-03"), To: types.MustParseDate("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+			65533: types.Card{CardNumber: 65533, From: types.MustParseDate("2020-03-04"), To: types.MustParseDate("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 		67890: map[uint32]types.Card{
-			65531: types.Card{CardNumber: 65531, From: date("2020-01-02"), To: date("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
-			65532: types.Card{CardNumber: 65532, From: date("2020-02-03"), To: date("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
-			65534: types.Card{CardNumber: 65534, From: date("2020-03-04"), To: date("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+			65531: types.Card{CardNumber: 65531, From: types.MustParseDate("2020-01-02"), To: types.MustParseDate("2020-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+			65532: types.Card{CardNumber: 65532, From: types.MustParseDate("2020-02-03"), To: types.MustParseDate("2020-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+			65534: types.Card{CardNumber: 65534, From: types.MustParseDate("2020-03-04"), To: types.MustParseDate("2020-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 		},
 	}
 
