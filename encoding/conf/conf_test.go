@@ -364,7 +364,7 @@ func TestRange(t *testing.T) {
 		}
 		fmt.Fprintf(&err, "--------\n")
 
-		t.Errorf(err.String())
+		t.Errorf("%v", err.String())
 	}
 }
 
