@@ -20,6 +20,7 @@ type HTTPD struct {
 		CookieMaxAge  int    `conf:"cookie.max-age"`
 		LoginExpiry   string `conf:"login.expiry"`
 		SessionExpiry string `conf:"session.expiry"`
+		AdminRole     string `conf:"admin.role"`
 		OTP           struct {
 			Issuer string `conf:"issuer"`
 			Login  string `conf:"login"`
@@ -84,6 +85,7 @@ func NewHTTPD() *HTTPD {
 			CookieMaxAge  int    `conf:"cookie.max-age"`
 			LoginExpiry   string `conf:"login.expiry"`
 			SessionExpiry string `conf:"session.expiry"`
+			AdminRole     string `conf:"admin.role"`
 			OTP           struct {
 				Issuer string `conf:"issuer"`
 				Login  string `conf:"login"`
@@ -94,6 +96,7 @@ func NewHTTPD() *HTTPD {
 			CookieMaxAge:  24,
 			LoginExpiry:   "1m",
 			SessionExpiry: "60m",
+			AdminRole:     "admin",
 			OTP: struct {
 				Issuer string `conf:"issuer"`
 				Login  string `conf:"login"`

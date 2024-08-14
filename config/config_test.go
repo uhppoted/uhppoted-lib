@@ -444,6 +444,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.security.cookie.max-age = 24
 ; httpd.security.login.expiry = 1m
 ; httpd.security.session.expiry = 60m
+; httpd.security.admin.role = admin
 ; httpd.security.otp.issuer = uhppoted-httpd
 ; httpd.security.otp.login = allow
 ; httpd.request.timeout = 5s
@@ -639,6 +640,7 @@ timeout = %[4]v
 ; httpd.security.cookie.max-age = 24
 ; httpd.security.login.expiry = 1m
 ; httpd.security.session.expiry = 60m
+; httpd.security.admin.role = admin
 ; httpd.security.otp.issuer = uhppoted-httpd
 ; httpd.security.otp.login = allow
 ; httpd.request.timeout = 5s

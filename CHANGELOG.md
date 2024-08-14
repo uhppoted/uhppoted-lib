@@ -5,6 +5,7 @@
 ### Updated
 1. Renamed _master_ branch to _main_.
 2. Set default controller timezone from UTC to Local
+3. Added _httpd.security.admin.role_ to config.
 
 
 ## [0.8.8](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.8) - 2024-03-26
