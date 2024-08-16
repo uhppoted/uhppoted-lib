@@ -21,6 +21,7 @@ type HTTPD struct {
 		LoginExpiry   string `conf:"login.expiry"`
 		SessionExpiry string `conf:"session.expiry"`
 		AdminRole     string `conf:"admin.role"`
+		NoSetup       bool   `conf:"no-setup"`
 		OTP           struct {
 			Issuer string `conf:"issuer"`
 			Login  string `conf:"login"`
@@ -86,6 +87,7 @@ func NewHTTPD() *HTTPD {
 			LoginExpiry   string `conf:"login.expiry"`
 			SessionExpiry string `conf:"session.expiry"`
 			AdminRole     string `conf:"admin.role"`
+			NoSetup       bool   `conf:"no-setup"`
 			OTP           struct {
 				Issuer string `conf:"issuer"`
 				Login  string `conf:"login"`
@@ -97,6 +99,7 @@ func NewHTTPD() *HTTPD {
 			LoginExpiry:   "1m",
 			SessionExpiry: "60m",
 			AdminRole:     "admin",
+			NoSetup:       false,
 			OTP: struct {
 				Issuer string `conf:"issuer"`
 				Login  string `conf:"login"`
