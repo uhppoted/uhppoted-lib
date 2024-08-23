@@ -1,9 +1,7 @@
 # TODO
 
-- [ ] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
-      - [x] Add protocol to _conf_ file 'Devices' section
-      - [ ] CHANGELOG
-      - [ ] README
+- [x] TCP/IP protocol (cf. https://github.com/uhppoted/uhppote-core/issues/17)
+- [x] Update to Go 1.23 (cf. https://github.com/uhppoted/uhppoted/issues/53)
 
 - [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
       - [ ] Remove unnecessary Event struct in uhppoted.events
