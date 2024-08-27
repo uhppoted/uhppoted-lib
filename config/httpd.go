@@ -59,14 +59,22 @@ type HTTPD struct {
 			Users       string `conf:"users"`
 		} `conf:"rules"`
 	} `conf:"db"`
+
 	Audit struct {
 		File string `conf:"file"`
 	} `conf:"audit"`
+
 	Retention time.Duration `conf:"retention"`
 	Timezones string        `conf:"timezones"`
-	PIN       struct {
+
+	PIN struct {
 		Enabled bool `conf:"enabled"`
 	} `conf:"PIN"`
+
+	Cards struct {
+		DefaultStartDate string `conf:"default-start-date"`
+		DefaultEndDate   string `conf:"default-end-date"`
+	} `conf:"cards"`
 }
 
 func NewHTTPD() *HTTPD {
@@ -184,17 +192,28 @@ func NewHTTPD() *HTTPD {
 				Users:       httpdRulesUsers,
 			},
 		},
+
 		Audit: struct {
 			File string `conf:"file"`
 		}{
 			File: httpdAuditFile,
 		},
+
 		Retention: 6 * time.Hour,
 		Timezones: "",
+
 		PIN: struct {
 			Enabled bool `conf:"enabled"`
 		}{
 			Enabled: false,
+		},
+
+		Cards: struct {
+			DefaultStartDate string `conf:"default-start-date"`
+			DefaultEndDate   string `conf:"default-end-date"`
+		}{
+			DefaultStartDate: "",
+			DefaultEndDate:   "",
 		},
 	}
 }
