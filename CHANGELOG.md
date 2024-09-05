@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.9](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.9) - 2024-09-06
 
 ### Updated
 1. Renamed _master_ branch to _main_.

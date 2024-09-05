@@ -13,10 +13,12 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 ### Current Release
 
-**[v0.8.8](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.8) - 2024-03-26**
+**[v0.8.9](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.9) - 2024-09-06**
 
-1. `RestoreDefaultParameters` API function to reset controller to manufacturer default configuration.
-2. Bumped Go version to 1.22
+1. Added _httpd.security.admin.role_ to config.
+2. Added default card start/end dates to HTTPD configuration.
+3. Added admin role to HTTPD configuration.
+4. Updated to Go 1.23.
 
 
 ## Development
