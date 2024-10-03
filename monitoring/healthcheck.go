@@ -162,7 +162,7 @@ func (h *HealthCheck) update(now time.Time) {
 			})
 		}
 
-		l, err := h.uhppote.GetListener(id)
+		l, _, err := h.uhppote.GetListener(id)
 		if err == nil && l.IsValid() {
 			h.state.Devices.Listener.Store(id, listener{
 				Address: l,

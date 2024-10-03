@@ -107,7 +107,7 @@ func (u *UHPPOTED) GetDevice(request GetDeviceRequest) (*GetDeviceResponse, erro
 func (u *UHPPOTED) SetEventListener(controller uint32, addr netip.AddrPort) (bool, error) {
 	u.debug("set-event-listener", fmt.Sprintf("%v %v", controller, addr))
 
-	if ok, err := u.UHPPOTE.SetListener(controller, addr); err != nil {
+	if ok, err := u.UHPPOTE.SetListener(controller, addr, 0); err != nil {
 		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v %w", controller, err))
 	} else if !ok {
 		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("set-event-listener: %v  failed", controller))

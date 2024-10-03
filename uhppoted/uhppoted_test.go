@@ -49,11 +49,11 @@ func (m *stub) SetTime(serialNumber uint32, datetime time.Time) (*types.Time, er
 	return nil, nil
 }
 
-func (m *stub) GetListener(controller uint32) (netip.AddrPort, error) {
-	return netip.AddrPort{}, nil
+func (m *stub) GetListener(controller uint32) (netip.AddrPort, uint8, error) {
+	return netip.AddrPort{}, 0, nil
 }
 
-func (m *stub) SetListener(controller uint32, address netip.AddrPort) (bool, error) {
+func (m *stub) SetListener(controller uint32, address netip.AddrPort, interval uint8) (bool, error) {
 	return false, nil
 }
 
