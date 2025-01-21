@@ -24,6 +24,9 @@
 2. Rework healthcheck to remove need for IUHPPOTE::ListenAddr
 3. GetDevices: rename DeviceSummary.Address to IpAddress and use Address for IP+Port
 
+- https://chshersh.com/blog/2025-01-06-the-most-elegant-configuration-language.html
+   - https://github.com/chshersh/ccl
+
 ### uhppoted-lib
 
 - [ ] Logging
