@@ -1,9 +1,9 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.10](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.10) - 2025-01-29
 
 ## Updated
-1. Added auto-send interval to SetEventListener API function.
+1. Added auto-send interval to _SetEventListener_ API function.
 
 
 ## [0.8.9](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.9) - 2024-09-06

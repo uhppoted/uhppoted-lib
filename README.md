@@ -13,12 +13,9 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 ### Current Release
 
-**[v0.8.9](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.9) - 2024-09-06**
+**[v0.8.10](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.10) - 2025-01-29**
 
-1. Added _httpd.security.admin.role_ to config.
-2. Added default card start/end dates to HTTPD configuration.
-3. Added admin role to HTTPD configuration.
-4. Updated to Go 1.23.
+1. Added support for _auto-send interval_.
 
 
 ## Development
