@@ -2,6 +2,8 @@ name: build
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron:  '30 1 1 * *'
   push:
     branches: [ main ]
   pull_request:
