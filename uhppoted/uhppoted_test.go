@@ -181,6 +181,14 @@ func (m *stub) SetPCControl(controller uint32, enable bool) (bool, error) {
 	return true, nil
 }
 
+func (m *stub) GetAntiPassback(controller uint32) (types.AntiPassback, error) {
+	return types.Disabled, fmt.Errorf("NOT IMPLEMENTED")
+}
+
+func (m *stub) SetAntiPassback(controller uint32, antipassback types.AntiPassback) (bool, error) {
+	return false, fmt.Errorf("NOT IMPLEMENTED")
+}
+
 func (m *stub) RestoreDefaultParameters(controller uint32) (bool, error) {
 	return true, nil
 }

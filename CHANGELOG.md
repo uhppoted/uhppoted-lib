@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. Added `get/set-antipassback` to IUHPPOTE interface definition.
+
 ### Updated
 1. Bumped to Go 1.24.
 

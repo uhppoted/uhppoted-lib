@@ -40,6 +40,8 @@ type IUHPPOTED interface {
 	FetchEvents(controller uint32, from, N uint32) ([]types.Event, error)
 	RecordSpecialEvents(controller uint32, enable bool) (bool, error)
 	PutCard(controller uint32, card types.Card) (bool, error)
+	GetAntiPassback(controller uint32) (types.AntiPassback, error)
+	SetAntiPassback(controller uint32, antipassback types.AntiPassback) (bool, error)
 	RestoreDefaultParameters(controller uint32) error
 }
 

@@ -116,6 +116,34 @@ func (u *UHPPOTED) SetEventListener(controller uint32, addr netip.AddrPort, inte
 	return true, nil
 }
 
+// Unwraps the request and dispatches the corresponding controller command to retrieve the
+// controller anti-passback mode.
+func (u *UHPPOTED) GetAntiPassback(controller uint32) (types.AntiPassback, error) {
+	u.debug("get-antipassback", fmt.Sprintf("%v", controller))
+
+	if antipassback, err := u.UHPPOTE.GetAntiPassback(controller); err != nil {
+		return types.Disabled, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error retrieving antipassback (%w)", controller, err))
+	} else {
+		u.debug("get-antipassback", fmt.Sprintf("anti-passback %v", antipassback))
+
+		return antipassback, nil
+	}
+}
+
+// Unwraps the request and dispatches the corresponding controller command to set the
+// controller anti-passback mode.
+func (u *UHPPOTED) SetAntiPassback(controller uint32, antipassback types.AntiPassback) (bool, error) {
+	u.debug("set-antipassback", fmt.Sprintf("%v %v", controller, antipassback))
+
+	if ok, err := u.UHPPOTE.SetAntiPassback(controller, antipassback); err != nil {
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting antipassback (%w)", controller, err))
+	} else {
+		u.debug("set-antipassback", fmt.Sprintf("anti-passback %v %v", antipassback, ok))
+
+		return ok, nil
+	}
+}
+
 // Unwraps the request and dispatches the corresponding controller command to restore the
 // manufacturer default configuration.
 func (u *UHPPOTED) RestoreDefaultParameters(controller uint32) error {
