@@ -13,9 +13,10 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 ### Current Release
 
-**[v0.8.10](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.10) - 2025-01-29**
+**[v0.8.11](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.11) - 2025-06-30**
 
-1. Added support for _auto-send interval_.
+1. Added `get/set-antipassback` to IUHPPOTE interface definition.
+2. Updated to Go 1.24.
 
 
 ## Development

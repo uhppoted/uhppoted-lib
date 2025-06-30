@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.11](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.11) - 2025-06-30
 
 ### Added
 1. Added `get/set-antipassback` to IUHPPOTE interface definition.
