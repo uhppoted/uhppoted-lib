@@ -101,10 +101,14 @@ func TestDefaultConfig(t *testing.T) {
 				ClientTimeout time.Duration `conf:"client-timeout"`
 				Retries       int           `conf:"retries"`
 				RetryDelay    time.Duration `conf:"retry-delay"`
+				PageSize      int           `conf:"page-size"`
+				MaxPages      int           `conf:"max-pages"`
 			}{
 				ClientTimeout: 10 * time.Second,
 				Retries:       3,
 				RetryDelay:    5 * time.Second,
+				PageSize:      100,
+				MaxPages:      10,
 			},
 
 			Fields: struct {
@@ -194,10 +198,14 @@ func TestConfigUnmarshal(t *testing.T) {
 				ClientTimeout time.Duration `conf:"client-timeout"`
 				Retries       int           `conf:"retries"`
 				RetryDelay    time.Duration `conf:"retry-delay"`
+				PageSize      int           `conf:"page-size"`
+				MaxPages      int           `conf:"max-pages"`
 			}{
 				ClientTimeout: 12 * time.Second,
 				Retries:       6,
 				RetryDelay:    9 * time.Second,
+				PageSize:      100,
+				MaxPages:      10,
 			},
 
 			Fields: struct {
@@ -483,6 +491,8 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; wild-apricot.http.client-timeout = 10s
 ; wild-apricot.http.retries = 3
 ; wild-apricot.http.retry-delay = 5s
+; wild-apricot.http.page-size = 100
+; wild-apricot.http.max-pages = 10
 ; wild-apricot.fields.card-number = Card Number
 ; wild-apricot.fields.PIN = PIN
 ; wild-apricot.display-order.groups = 
@@ -682,6 +692,8 @@ httpd.retention = 5h30m0s
 ; wild-apricot.http.client-timeout = 10s
 ; wild-apricot.http.retries = 3
 ; wild-apricot.http.retry-delay = 5s
+; wild-apricot.http.page-size = 100
+; wild-apricot.http.max-pages = 10
 ; wild-apricot.fields.card-number = Card Number
 ; wild-apricot.fields.PIN = PIN
 ; wild-apricot.display-order.groups = 

@@ -9,6 +9,8 @@ type WildApricot struct {
 		ClientTimeout time.Duration `conf:"client-timeout"`
 		Retries       int           `conf:"retries"`
 		RetryDelay    time.Duration `conf:"retry-delay"`
+		PageSize      int           `conf:"page-size"`
+		MaxPages      int           `conf:"max-pages"`
 	} `conf:"http"`
 
 	Fields struct {
@@ -30,10 +32,14 @@ func NewWildApricot() *WildApricot {
 			ClientTimeout time.Duration `conf:"client-timeout"`
 			Retries       int           `conf:"retries"`
 			RetryDelay    time.Duration `conf:"retry-delay"`
+			PageSize      int           `conf:"page-size"`
+			MaxPages      int           `conf:"max-pages"`
 		}{
 			ClientTimeout: 10 * time.Second,
 			Retries:       3,
 			RetryDelay:    5 * time.Second,
+			PageSize:      100,
+			MaxPages:      10,
 		},
 
 		Fields: struct {
