@@ -1,9 +1,10 @@
 # CHANGELOG
 
-## Unreleased
+## [0.8.12](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.11) - 2025-11-20
 
 ### Updates
-1. Added `page-size` and `max-pages` to _uhppoted-app-wild-apricot_ configuration.
+1. Added `page-size`, `max-pages` and `page-delay` to _uhppoted-app-wild-apricot_ configuration.
+2. Bumped to Go 1.25.
 
 
 ## [0.8.11](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.11) - 2025-06-30

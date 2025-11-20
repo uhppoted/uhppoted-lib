@@ -13,10 +13,11 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 ### Current Release
 
-**[v0.8.11](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.11) - 2025-06-30**
+**[v0.8.12](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.12) - 2025-11-20**
 
-1. Added `get/set-antipassback` to IUHPPOTE interface definition.
-2. Updated to Go 1.24.
+1. Updated to Go 1.25.
+2. Added `page-size`, `max-pages` and `page-delay` to _uhppoted-app-wild-apricot_ configuration for
+   _Wild Apricot_ pagination support.
 
 
 ## Development

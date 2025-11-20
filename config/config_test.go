@@ -101,8 +101,8 @@ func TestDefaultConfig(t *testing.T) {
 				ClientTimeout time.Duration `conf:"client-timeout"`
 				Retries       int           `conf:"retries"`
 				RetryDelay    time.Duration `conf:"retry-delay"`
-				PageSize      int           `conf:"page-size"`
-				MaxPages      int           `conf:"max-pages"`
+				PageSize      uint32        `conf:"page-size"`
+				MaxPages      uint32        `conf:"max-pages"`
 				PageDelay     time.Duration `conf:"page-delay"`
 			}{
 				ClientTimeout: 10 * time.Second,
@@ -200,8 +200,8 @@ func TestConfigUnmarshal(t *testing.T) {
 				ClientTimeout time.Duration `conf:"client-timeout"`
 				Retries       int           `conf:"retries"`
 				RetryDelay    time.Duration `conf:"retry-delay"`
-				PageSize      int           `conf:"page-size"`
-				MaxPages      int           `conf:"max-pages"`
+				PageSize      uint32        `conf:"page-size"`
+				MaxPages      uint32        `conf:"max-pages"`
 				PageDelay     time.Duration `conf:"page-delay"`
 			}{
 				ClientTimeout: 12 * time.Second,
