@@ -1,11 +1,5 @@
 # TODO
 
-- [x] anti-passback (cf. https://github.com/uhppoted/uhppoted/issues/60)
-      - [x] `get-antipassback`
-      - [x] `set-antipassback`
-      - [x] CHANGELOG
-      - [x] README
-
 - [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
       - [ ] Remove unnecessary Event struct in uhppoted.events
             - (?) JSON tags to core type

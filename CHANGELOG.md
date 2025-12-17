@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+### Updates
+1. Bumped to Go 1.25.
+
+
 ## [0.8.12](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.11) - 2025-11-20
 
 ### Updates
