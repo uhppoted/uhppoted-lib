@@ -13,11 +13,9 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 ### Current Release
 
-**[v0.8.12](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.8.12) - 2025-11-20**
+**[v0.9.0](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.9.0) - 2026-01-27**
 
 1. Updated to Go 1.25.
-2. Added `page-size`, `max-pages` and `page-delay` to _uhppoted-app-wild-apricot_ configuration for
-   _Wild Apricot_ pagination support.
 
 
 ## Development
