@@ -3,6 +3,7 @@ package locales
 import (
 	"encoding/json"
 	"io/fs"
+	"maps"
 
 	"github.com/uhppoted/uhppoted-lib/locales/en"
 )
@@ -20,9 +21,7 @@ func Load(f fs.FS, file string) error {
 		return err
 	}
 
-	for k, v := range d.Dictionary {
-		dictionary[k] = v
-	}
+	maps.Copy(dictionary, d.Dictionary)
 
 	return nil
 }

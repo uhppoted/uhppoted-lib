@@ -19,7 +19,7 @@ func TestKVSLoad(t *testing.T) {
 K2  B
 K3  C`
 
-	kvs := NewKeyValueStore("test", func(v string) (interface{}, error) { return v, nil })
+	kvs := NewKeyValueStore("test", func(v string) (any, error) { return v, nil })
 	r := strings.NewReader(data)
 	err := kvs.load(r)
 
@@ -44,7 +44,7 @@ func TestKVSSave(t *testing.T) {
 		"K12345678901234567890": "Q",
 	}
 
-	kvs := NewKeyValueStore("test", func(v string) (interface{}, error) { return v, nil })
+	kvs := NewKeyValueStore("test", func(v string) (any, error) { return v, nil })
 	kvs.Put("K1", "X")
 	kvs.Put("K2", "Y")
 	kvs.Put("K3", "Z")

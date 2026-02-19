@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"maps"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -18,19 +19,19 @@ import (
 
 type KeyValueStore struct {
 	name      string
-	store     map[string]interface{}
+	store     map[string]any
 	version   uint64
 	stored    uint64
 	guard     sync.Mutex
 	writeLock sync.Mutex
 	re        *regexp.Regexp
-	f         func(string) (interface{}, error)
+	f         func(string) (any, error)
 }
 
-func NewKeyValueStore(name string, f func(string) (interface{}, error)) *KeyValueStore {
+func NewKeyValueStore(name string, f func(string) (any, error)) *KeyValueStore {
 	return &KeyValueStore{
 		name:      name,
-		store:     map[string]interface{}{},
+		store:     map[string]any{},
 		version:   0,
 		stored:    0,
 		guard:     sync.Mutex{},
@@ -40,7 +41,7 @@ func NewKeyValueStore(name string, f func(string) (interface{}, error)) *KeyValu
 	}
 }
 
-func (kv *KeyValueStore) Get(key string) (interface{}, bool) {
+func (kv *KeyValueStore) Get(key string) (any, bool) {
 	kv.guard.Lock()
 	defer kv.guard.Unlock()
 
@@ -49,19 +50,17 @@ func (kv *KeyValueStore) Get(key string) (interface{}, bool) {
 	return value, ok
 }
 
-func (kv *KeyValueStore) Put(key string, value interface{}) {
+func (kv *KeyValueStore) Put(key string, value any) {
 	kv.guard.Lock()
 	defer kv.guard.Unlock()
 
 	kv.store[key] = value
 
-	c := map[string]interface{}{}
-	for k, v := range kv.store {
-		c[k] = v
-	}
+	c := map[string]any{}
+	maps.Copy(c, kv.store)
 }
 
-func (kv *KeyValueStore) Store(key string, value interface{}, filepath string) {
+func (kv *KeyValueStore) Store(key string, value any, filepath string) {
 	kv.guard.Lock()
 	defer kv.guard.Unlock()
 
@@ -93,10 +92,8 @@ func (kv *KeyValueStore) save(file string) {
 	kv.guard.Lock()
 
 	version := kv.version
-	store := map[string]interface{}{}
-	for k, v := range kv.store {
-		store[k] = v
-	}
+	store := map[string]any{}
+	maps.Copy(store, kv.store)
 
 	kv.guard.Unlock()
 
@@ -208,7 +205,7 @@ func (kv *KeyValueStore) Watch(filepath string) {
 }
 
 func (kv *KeyValueStore) load(r io.Reader) error {
-	store := map[string]interface{}{}
+	store := map[string]any{}
 	s := bufio.NewScanner(r)
 	for s.Scan() {
 		match := kv.re.FindStringSubmatch(s.Text())
@@ -231,14 +228,12 @@ func (kv *KeyValueStore) load(r io.Reader) error {
 	return kv.merge(store)
 }
 
-func (kv *KeyValueStore) merge(store map[string]interface{}) error {
+func (kv *KeyValueStore) merge(store map[string]any) error {
 	kv.guard.Lock()
 	defer kv.guard.Unlock()
 
 	if !reflect.DeepEqual(store, kv.store) {
-		for k, v := range store {
-			kv.store[k] = v
-		}
+		maps.Copy(kv.store, store)
 
 		for k := range kv.store {
 			if _, ok := store[k]; !ok {

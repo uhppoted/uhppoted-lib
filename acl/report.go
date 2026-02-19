@@ -1,7 +1,7 @@
 package acl
 
 import (
-	"sort"
+	"slices"
 )
 
 type Report struct {
@@ -34,7 +34,7 @@ type ConsolidatedReport struct {
 }
 
 var usort = func(a []uint32) {
-	sort.Slice(a, func(i, j int) bool { return a[i] < a[j] })
+	slices.Sort(a)
 }
 
 func Summarize(report map[uint32]Report) ReportSummary {

@@ -27,9 +27,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 
 	for id := range devices {
 		deviceID := id
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		wg.Go(func() {
 			if device, err := u.UHPPOTE.GetDevice(deviceID); err != nil {
 				u.warn("find", fmt.Errorf("get-devices: %v %v", deviceID, err))
 			} else if device != nil {
@@ -39,12 +37,10 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 					Port:       device.Address.Port(),
 				})
 			}
-		}()
+		})
 	}
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
 		if devices, err := u.UHPPOTE.GetDevices(); err != nil {
 			u.warn("find", fmt.Errorf("get-devices: %v", err))
 		} else {
@@ -56,7 +52,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 				})
 			}
 		}
-	}()
+	})
 
 	wg.Wait()
 
@@ -64,7 +60,7 @@ func (u *UHPPOTED) GetDevices(request GetDevicesRequest) (*GetDevicesResponse, e
 		Devices: map[uint32]DeviceSummary{},
 	}
 
-	list.Range(func(key, value interface{}) bool {
+	list.Range(func(key, value any) bool {
 		response.Devices[key.(uint32)] = value.(DeviceSummary)
 		return true
 	})

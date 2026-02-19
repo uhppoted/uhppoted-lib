@@ -14,10 +14,10 @@ type Decoder struct {
 type decoder func(*node, string, reflect.Value) error
 
 var decoders = map[reflect.Type]decoder{
-	reflect.TypeOf(string("")):  decodeString,
-	reflect.TypeOf(bool(false)): decodeBool,
-	reflect.TypeOf(int(0)):      decodeInt,
-	reflect.TypeOf([]string{}):  decodeStringArray,
+	reflect.TypeFor[string]():   decodeString,
+	reflect.TypeFor[bool]():     decodeBool,
+	reflect.TypeFor[int]():      decodeInt,
+	reflect.TypeFor[[]string](): decodeStringArray,
 }
 
 func NewDecoder(r io.Reader) *Decoder {
@@ -26,7 +26,7 @@ func NewDecoder(r io.Reader) *Decoder {
 	}
 }
 
-func (d *Decoder) Decode(p interface{}) error {
+func (d *Decoder) Decode(p any) error {
 	doc, err := parse(d.reader)
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (d *Decoder) Decode(p interface{}) error {
 	if s.Kind() == reflect.Struct {
 		N := s.NumField()
 
-		for i := 0; i < N; i++ {
+		for i := range N {
 			f := s.Field(i)
 			t := s.Type().Field(i)
 			k := t.Name

@@ -92,12 +92,12 @@ type ACL struct {
 }
 
 func (t *Topics) Resolve(subtopic string) string {
-	if strings.HasPrefix(subtopic, "/") {
-		return strings.ReplaceAll(strings.TrimPrefix(subtopic, "/"), " ", "")
+	if after, ok := strings.CutPrefix(subtopic, "/"); ok {
+		return strings.ReplaceAll(after, " ", "")
 	}
 
-	if strings.HasPrefix(subtopic, "./") {
-		return strings.ReplaceAll(t.Root+"/"+strings.TrimPrefix(subtopic, "./"), " ", "")
+	if after, ok := strings.CutPrefix(subtopic, "./"); ok {
+		return strings.ReplaceAll(t.Root+"/"+after, " ", "")
 	}
 
 	return strings.ReplaceAll(t.Root+"/"+subtopic, " ", "")

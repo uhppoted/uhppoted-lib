@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"net/netip"
+	"slices"
 	"sync"
 	"time"
 
@@ -232,7 +233,7 @@ func (h *HealthCheck) unexpected(now time.Time, handler MonitoringHandler) (uint
 	errors := uint(0)
 	warnings := uint(0)
 
-	f := func(key, value interface{}) bool {
+	f := func(key, value any) bool {
 		alerted := alerts{
 			missing:      false,
 			unexpected:   false,
@@ -401,16 +402,14 @@ func (h *HealthCheck) checkListener(id uint32, now time.Time, alerted *alerts, h
 			return errors, warnings
 		}
 
-		for _, expected := range cache.addresses {
-			if expected == address {
-				if alerted.listener {
-					if info(h, handler, id, "listener address/port correct") {
-						alerted.listener = false
-					}
+		if slices.Contains(cache.addresses, address) {
+			if alerted.listener {
+				if info(h, handler, id, "listener address/port correct") {
+					alerted.listener = false
 				}
-
-				return errors, warnings
 			}
+
+			return errors, warnings
 		}
 
 		if known {

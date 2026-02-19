@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 	"reflect"
-	"sort"
+	"slices"
 	"strings"
 
 	"github.com/uhppoted/uhppote-core/types"
@@ -146,7 +146,7 @@ func MakeTable(acl ACL, devices []uhppote.Device) (*Table, error) {
 			keys = append(keys, k)
 		}
 
-		sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+		slices.Sort(keys)
 
 		records := [][]string{}
 		for _, k := range keys {
@@ -254,7 +254,7 @@ func MakeTableWithPIN(acl ACL, devices []uhppote.Device) (*Table, error) {
 			keys = append(keys, k)
 		}
 
-		sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+		slices.Sort(keys)
 
 		records := [][]string{}
 		for _, k := range keys {
@@ -307,7 +307,7 @@ func makeHeaderWithPIN(devices []uhppote.Device) ([]string, error) {
 		keys = append(keys, d.DeviceID)
 	}
 
-	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+	slices.Sort(keys)
 
 	header := []string{
 		"Card Number",
@@ -337,7 +337,7 @@ func makeHeader(devices []uhppote.Device) ([]string, error) {
 		keys = append(keys, d.DeviceID)
 	}
 
-	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+	slices.Sort(keys)
 
 	header := []string{
 		"Card Number",

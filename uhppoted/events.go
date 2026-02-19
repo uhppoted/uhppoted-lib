@@ -90,10 +90,7 @@ func (u *UHPPOTED) GetEvents(deviceID uint32, N int) ([]Event, error) {
 		current = v.Index
 	}
 
-	index := current + 1
-	if index < first {
-		index = first
-	}
+	index := max(current+1, first)
 
 	events := []Event{}
 

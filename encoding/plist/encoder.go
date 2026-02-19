@@ -16,10 +16,10 @@ type Encoder struct {
 type encoder func(*Encoder, reflect.Value) error
 
 var encoders = map[reflect.Type]encoder{
-	reflect.TypeOf(string("")):  encodeString,
-	reflect.TypeOf(bool(false)): encodeBool,
-	reflect.TypeOf(int(0)):      encodeInt,
-	reflect.TypeOf([]string{}):  encodeStringArray,
+	reflect.TypeFor[string]():   encodeString,
+	reflect.TypeFor[bool]():     encodeBool,
+	reflect.TypeFor[int]():      encodeInt,
+	reflect.TypeFor[[]string](): encodeStringArray,
 }
 
 var instruction = xml.ProcInst{
@@ -74,10 +74,10 @@ func NewEncoder(w io.Writer) *Encoder {
 	}
 }
 
-func (e *Encoder) Encode(p interface{}) error {
+func (e *Encoder) Encode(p any) error {
 	v := reflect.ValueOf(p)
 
-	if v.Type().Kind() == reflect.Ptr {
+	if v.Type().Kind() == reflect.Pointer {
 		return e.encode(v.Elem())
 	}
 
@@ -103,7 +103,7 @@ func (e *Encoder) encode(s reflect.Value) error {
 
 		N := s.NumField()
 
-		for i := 0; i < N; i++ {
+		for i := range N {
 			f := s.Field(i)
 			t := s.Type().Field(i)
 			k := t.Name

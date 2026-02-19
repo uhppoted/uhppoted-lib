@@ -29,7 +29,7 @@ type UHPPOTED struct {
 	ListenBatchSize int
 }
 
-func (u *UHPPOTED) debug(tag string, msg interface{}) {
+func (u *UHPPOTED) debug(tag string, msg any) {
 	log.Debugf("%-12s %v", tag, msg)
 }
 

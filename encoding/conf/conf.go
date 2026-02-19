@@ -16,7 +16,7 @@ import (
 )
 
 type Rangeable interface {
-	MapKV(tag string, g func(string, interface{}) bool) bool
+	MapKV(tag string, g func(string, any) bool) bool
 }
 
 type Marshaler interface {
@@ -24,29 +24,29 @@ type Marshaler interface {
 }
 
 type Unmarshaler interface {
-	UnmarshalConf(tag string, values map[string]string) (interface{}, error)
+	UnmarshalConf(tag string, values map[string]string) (any, error)
 }
 
 var (
-	tBool          = reflect.TypeOf(bool(false))
-	tByte          = reflect.TypeOf(byte(0))
-	tInt           = reflect.TypeOf(int(0))
-	tUint          = reflect.TypeOf(uint(0))
-	tUint16        = reflect.TypeOf(uint16(0))
-	tUint32        = reflect.TypeOf(uint32(0))
-	tUint64        = reflect.TypeOf(uint64(0))
-	tString        = reflect.TypeOf(string(""))
-	tDuration      = reflect.TypeOf(time.Duration(0))
-	pBindAddr      = reflect.TypeOf(&types.BindAddr{})
-	pBroadcastAddr = reflect.TypeOf(&types.BroadcastAddr{})
-	pListenAddr    = reflect.TypeOf(&types.ListenAddr{})
-	pUDPAddr       = reflect.TypeOf(&net.UDPAddr{})
+	tBool          = reflect.TypeFor[bool]()
+	tByte          = reflect.TypeFor[byte]()
+	tInt           = reflect.TypeFor[int]()
+	tUint          = reflect.TypeFor[uint]()
+	tUint16        = reflect.TypeFor[uint16]()
+	tUint32        = reflect.TypeFor[uint32]()
+	tUint64        = reflect.TypeFor[uint64]()
+	tString        = reflect.TypeFor[string]()
+	tDuration      = reflect.TypeFor[time.Duration]()
+	pBindAddr      = reflect.TypeFor[*types.BindAddr]()
+	pBroadcastAddr = reflect.TypeFor[*types.BroadcastAddr]()
+	pListenAddr    = reflect.TypeFor[*types.ListenAddr]()
+	pUDPAddr       = reflect.TypeFor[*net.UDPAddr]()
 )
 
-func Marshal(m interface{}) ([]byte, error) {
+func Marshal(m any) ([]byte, error) {
 	v := reflect.ValueOf(m)
 
-	if v.Type().Kind() == reflect.Ptr {
+	if v.Type().Kind() == reflect.Pointer {
 		return marshal(v.Elem())
 	} else {
 		return marshal(reflect.Indirect(v))
@@ -60,7 +60,7 @@ func marshal(s reflect.Value) ([]byte, error) {
 	if s.Kind() == reflect.Struct {
 		N := s.NumField()
 
-		for i := 0; i < N; i++ {
+		for i := range N {
 			f := s.Field(i)
 			t := s.Type().Field(i)
 			tag := strings.TrimSpace(t.Tag.Get("conf"))
@@ -80,7 +80,7 @@ func marshal(s reflect.Value) ([]byte, error) {
 			if m, ok := f.Interface().(Marshaler); ok {
 				// If f is a pointer type and the value is nil skips this field, leaving the buffer 'as is'
 				// i.e. 'omitempty' is the default implementation
-				if f.Kind() != reflect.Ptr || !f.IsNil() {
+				if f.Kind() != reflect.Pointer || !f.IsNil() {
 					if b, err := m.MarshalConf(tag); err == nil {
 						fmt.Fprintf(&c, "%s\n", string(b))
 					}
@@ -94,8 +94,8 @@ func marshal(s reflect.Value) ([]byte, error) {
 				if v, err := marshal(f); err != nil {
 					return []byte(c.String()), err
 				} else {
-					entries := strings.Split(string(v), "\n")
-					for _, e := range entries {
+					entries := strings.SplitSeq(string(v), "\n")
+					for e := range entries {
 						if e != "" {
 							if tag == "" {
 								fmt.Fprintf(&c, "%s\n", e)
@@ -160,7 +160,7 @@ func marshal(s reflect.Value) ([]byte, error) {
 	return []byte(c.String()), nil
 }
 
-func Unmarshal(b []byte, m interface{}) error {
+func Unmarshal(b []byte, m any) error {
 	v := reflect.ValueOf(m)
 	s := v.Elem()
 	if s.Kind() != reflect.Struct {
@@ -196,7 +196,7 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 	}
 
 	N := s.NumField()
-	for i := 0; i < N; i++ {
+	for i := range N {
 		f := s.Field(i)
 		t := s.Type().Field(i)
 		tag := t.Tag.Get("conf")
@@ -386,18 +386,18 @@ func unmarshal(s reflect.Value, prefix string, values map[string]string) error {
 func Range(m any, g func(string, any) bool) {
 	v := reflect.ValueOf(m)
 
-	if v.Type().Kind() == reflect.Ptr {
+	if v.Type().Kind() == reflect.Pointer {
 		iterate("", v.Elem(), g)
 	} else {
 		iterate("", reflect.Indirect(v), g)
 	}
 }
 
-func iterate(parent string, s reflect.Value, g func(string, interface{}) bool) bool {
+func iterate(parent string, s reflect.Value, g func(string, any) bool) bool {
 	if s.Kind() == reflect.Struct {
 		N := s.NumField()
 
-		for i := 0; i < N; i++ {
+		for i := range N {
 			f := s.Field(i)
 			t := s.Type().Field(i)
 			tag := t.Tag.Get("conf")
@@ -412,7 +412,7 @@ func iterate(parent string, s reflect.Value, g func(string, interface{}) bool) b
 
 			// Rangeable{} interface
 			if m, ok := f.Interface().(Rangeable); ok {
-				if f.Kind() != reflect.Ptr || !f.IsNil() {
+				if f.Kind() != reflect.Pointer || !f.IsNil() {
 					if !m.MapKV(tag, g) {
 						return false
 					}

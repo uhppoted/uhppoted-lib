@@ -537,11 +537,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 		re := regexp.MustCompile(`(\r)?\n`)
 		p := re.Split(s, -1)
 		q := re.Split(expected, -1)
-		N := len(q)
-
-		if N > len(p) {
-			N = len(p)
-		}
+		N := min(len(q), len(p))
 		i := 0
 		for i < N {
 			if p[i] != q[i] {
@@ -765,11 +761,7 @@ UT0311-L0x.405419896.timezone = France/Paris
 		re := regexp.MustCompile(`(\r)?\n`)
 		p := re.Split(s, -1)
 		q := re.Split(expected, -1)
-		N := len(q)
-
-		if N > len(p) {
-			N = len(p)
-		}
+		N := min(len(q), len(p))
 		i := 0
 		for i < N {
 			if p[i] != q[i] {

@@ -14,23 +14,23 @@ import (
 )
 
 type Unmarshaler interface {
-	UnmarshalTSV(string) (interface{}, error)
+	UnmarshalTSV(string) (any, error)
 }
 
 var (
-	tBool    = reflect.TypeOf(bool(false))
-	tUint8   = reflect.TypeOf(uint8(0))
-	tInt     = reflect.TypeOf(int(0))
-	tDate    = reflect.TypeOf(types.Date{})
-	tDatePtr = reflect.TypeOf((*types.Date)(nil))
-	tHHmm    = reflect.TypeOf(types.HHmm{})
-	tHHmmPtr = reflect.TypeOf((*types.HHmm)(nil))
+	tBool    = reflect.TypeFor[bool]()
+	tUint8   = reflect.TypeFor[uint8]()
+	tInt     = reflect.TypeFor[int]()
+	tDate    = reflect.TypeFor[types.Date]()
+	tDatePtr = reflect.TypeFor[*types.Date]()
+	tHHmm    = reflect.TypeFor[types.HHmm]()
+	tHHmmPtr = reflect.TypeFor[*types.HHmm]()
 )
 
-func Unmarshal(b []byte, array interface{}) error {
+func Unmarshal(b []byte, array any) error {
 	v := reflect.ValueOf(array)
 
-	if v.Kind() != reflect.Ptr || v.Elem().Kind() != reflect.Slice {
+	if v.Kind() != reflect.Pointer || v.Elem().Kind() != reflect.Slice {
 		return fmt.Errorf("cannot unmarshal TSV to value with kind '%s'", v.Type())
 	}
 
@@ -77,7 +77,7 @@ func unmarshal(rid int, record []string, index map[string]int, s reflect.Value) 
 	if s.Kind() == reflect.Struct {
 		N := s.NumField()
 
-		for i := 0; i < N; i++ {
+		for i := range N {
 			f := s.Field(i)
 			t := s.Type().Field(i)
 			tag := t.Tag.Get("tsv")

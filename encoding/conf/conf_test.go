@@ -23,14 +23,14 @@ type Embedded struct {
 
 type testKV struct {
 	key   string
-	value interface{}
+	value any
 }
 
 type testType struct {
 	value string
 }
 
-func (f testType) MapKV(tag string, g func(string, interface{}) bool) bool {
+func (f testType) MapKV(tag string, g func(string, any) bool) bool {
 	return g(tag, f.value)
 }
 
@@ -42,7 +42,7 @@ func (f testType) MarshalConf(tag string) ([]byte, error) {
 	return []byte(s.String()), nil
 }
 
-func (f *testType) UnmarshalConf(tag string, values map[string]string) (interface{}, error) {
+func (f *testType) UnmarshalConf(tag string, values map[string]string) (any, error) {
 	if v, ok := values[tag]; ok {
 		return &testType{v}, nil
 	}
@@ -347,7 +347,7 @@ func TestRange(t *testing.T) {
 	}
 
 	list := []testKV{}
-	Range(config, func(k string, v interface{}) bool {
+	Range(config, func(k string, v any) bool {
 		list = append(list, testKV{k, v})
 		return true
 	})
@@ -408,7 +408,7 @@ UT0311-L0x.54321.address = 192.168.1.101:60000
 	// DEVICE: 54321      BOARD2  192.168.1.101:60000
 }
 
-func (f *deviceMap) UnmarshalConf(tag string, values map[string]string) (interface{}, error) {
+func (f *deviceMap) UnmarshalConf(tag string, values map[string]string) (any, error) {
 	re := regexp.MustCompile(`^/(.*?)/$`)
 	match := re.FindStringSubmatch(tag)
 	if len(match) < 2 {

@@ -10,7 +10,7 @@ import (
 	"net/netip"
 	"os"
 	"regexp"
-	"sort"
+	"slices"
 	"strconv"
 	"strings"
 	"text/template"
@@ -34,7 +34,7 @@ type Device struct {
 
 type kv struct {
 	Key       string
-	Value     interface{}
+	Value     any
 	IsDefault bool
 }
 
@@ -228,7 +228,7 @@ func (c *Config) Write(w io.Writer) error {
 		"openapi":     listify("openapi.", &defc.OpenAPI),
 	}
 
-	config := map[string]interface{}{
+	config := map[string]any{
 		"system":      listify("", &c.System),
 		"rest":        listify("rest.", &c.REST),
 		"mqtt":        listify("mqtt.", &c.MQTT),
@@ -251,10 +251,10 @@ func (c *Config) Write(w io.Writer) error {
 	return template.Must(template.New("uhppoted.conf").Parse(pretty)).Execute(w, config)
 }
 
-func listify(parent string, s interface{}) []kv {
+func listify(parent string, s any) []kv {
 	list := []kv{}
 
-	g := func(tag string, v interface{}) bool {
+	g := func(tag string, v any) bool {
 		list = append(list, kv{parent + tag, fmt.Sprintf("%v", v), false})
 		return true
 	}
@@ -404,7 +404,7 @@ func (f DeviceMap) ToControllers() []uhppote.Device {
 		keys = append(keys, id)
 	}
 
-	sort.Slice(keys, func(i, j int) bool { return keys[i] < keys[j] })
+	slices.Sort(keys)
 
 	controllers := []uhppote.Device{}
 

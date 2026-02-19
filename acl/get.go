@@ -20,8 +20,7 @@ func GetACL(u uhppote.IUHPPOTE, devices []uhppote.Device) (ACL, []error) {
 
 	for _, d := range devices {
 		device := d
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			if cards, err := getACL(u, device.DeviceID); err != nil {
 				guard.Lock()
 				errors = append(errors, err)
@@ -30,14 +29,13 @@ func GetACL(u uhppote.IUHPPOTE, devices []uhppote.Device) (ACL, []error) {
 				acl.Store(device.DeviceID, cards)
 			}
 
-			wg.Done()
-		}()
+		})
 	}
 
 	wg.Wait()
 
 	a := make(ACL)
-	acl.Range(func(k, v interface{}) bool {
+	acl.Range(func(k, v any) bool {
 		a[k.(uint32)] = v.(map[uint32]types.Card)
 		return true
 	})

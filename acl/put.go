@@ -47,8 +47,7 @@ func putACLImpl(u uhppote.IUHPPOTE, acl ACL, dryrun bool, write put, eq equivale
 		id := k
 		cards := v
 
-		wg.Add(1)
-		go func() {
+		wg.Go(func() {
 			var rpt *Report
 			var err error
 
@@ -68,14 +67,13 @@ func putACLImpl(u uhppote.IUHPPOTE, acl ACL, dryrun bool, write put, eq equivale
 				guard.Unlock()
 			}
 
-			wg.Done()
-		}()
+		})
 	}
 
 	wg.Wait()
 
 	r := map[uint32]Report{}
-	report.Range(func(k, v interface{}) bool {
+	report.Range(func(k, v any) bool {
 		r[k.(uint32)] = v.(Report)
 		return true
 	})
