@@ -1,5 +1,7 @@
 # TODO
 
+- [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
+
 - [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
       - [ ] Remove unnecessary Event struct in uhppoted.events
             - (?) JSON tags to core type

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+1. Added _SetFirstCard_ API function.
+
 ### Updates
 1. Updated to Go v1.26.
 2. Updated to _modern_ Go with 'go fix'.

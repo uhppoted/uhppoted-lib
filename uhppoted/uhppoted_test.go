@@ -189,6 +189,10 @@ func (m *stub) SetAntiPassback(controller uint32, antipassback types.AntiPassbac
 	return false, fmt.Errorf("NOT IMPLEMENTED")
 }
 
+func (m *stub) SetFirstCard(controller uint32, door uint8, firstcard types.FirstCard) (bool, error) {
+	return false, fmt.Errorf("NOT IMPLEMENTED")
+}
+
 func (m *stub) RestoreDefaultParameters(controller uint32) (bool, error) {
 	return true, nil
 }

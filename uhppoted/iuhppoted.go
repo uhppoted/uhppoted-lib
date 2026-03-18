@@ -42,6 +42,7 @@ type IUHPPOTED interface {
 	PutCard(controller uint32, card types.Card) (bool, error)
 	GetAntiPassback(controller uint32) (types.AntiPassback, error)
 	SetAntiPassback(controller uint32, antipassback types.AntiPassback) (bool, error)
+	SetFirstCard(controller uint32, door uint8, firstcard types.FirstCard) (bool, error)
 	RestoreDefaultParameters(controller uint32) error
 }
 

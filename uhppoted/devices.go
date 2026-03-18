@@ -140,6 +140,20 @@ func (u *UHPPOTED) SetAntiPassback(controller uint32, antipassback types.AntiPas
 	}
 }
 
+// Unwraps the request and dispatches the corresponding controller command to set the
+// controller first card configuration mode.
+func (u *UHPPOTED) SetFirstCard(controller uint32, door uint8, firstcard types.FirstCard) (bool, error) {
+	u.debug("set-first-card", fmt.Sprintf("%v door:%v first-card:%v", controller, door, firstcard))
+
+	if ok, err := u.UHPPOTE.SetFirstCard(controller, door, firstcard); err != nil {
+		return false, fmt.Errorf("%w: %v", ErrInternalServerError, fmt.Errorf("%v  error setting first card (%w)", controller, err))
+	} else {
+		u.debug("set-first-card", fmt.Sprintf("anti-first-card %v %v %v", door, firstcard, ok))
+
+		return ok, nil
+	}
+}
+
 // Unwraps the request and dispatches the corresponding controller command to restore the
 // manufacturer default configuration.
 func (u *UHPPOTED) RestoreDefaultParameters(controller uint32) error {
