@@ -4,6 +4,7 @@
 
 ### Added
 1. Added _SetFirstCard_ API function.
+2. Added _first card_ privileges to card.
 
 ### Updates
 1. Updated to Go v1.26.

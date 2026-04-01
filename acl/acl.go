@@ -66,7 +66,44 @@ func (acl *ACL) Print(w io.Writer) {
 			fmt.Fprintf(w, "%v\n", k)
 			for _, c := range cards {
 				card := v[c]
-				fmt.Fprintf(w, "  %v %v\n", c, card)
+				// fmt.Fprintf(w, "  %v %v\n", c, card)
+
+				f := func(p uint8) string {
+					switch {
+					case p == 0:
+						return "N"
+
+					case p == 1:
+						return "Y"
+
+					case p >= 2 && p <= 254:
+						return fmt.Sprintf("%v", p)
+
+					default:
+						return "N"
+					}
+				}
+
+				var from string
+				if card.From.IsZero() {
+					from = "-"
+				} else {
+					from = fmt.Sprintf("%v", card.From)
+				}
+
+				var to string
+				if card.To.IsZero() {
+					to = "-"
+				} else {
+					to = fmt.Sprintf("%v", card.To)
+				}
+
+				if card.PIN == 0 || card.PIN > 999999 {
+					fmt.Fprintf(w, "  %v %-8v %-10v %-10v %v %v %v %v\n", c, card.CardNumber, from, to, f(card.Doors[1]), f(card.Doors[2]), f(card.Doors[3]), f(card.Doors[4]))
+				} else {
+					fmt.Fprintf(w, "  %v %-8v %-10v %-10v %v %v %v %v %v\n", c, card.CardNumber, from, to, f(card.Doors[1]), f(card.Doors[2]), f(card.Doors[3]), f(card.Doors[4]), card.PIN)
+				}
+
 			}
 		}
 	}
