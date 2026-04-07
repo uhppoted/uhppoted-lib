@@ -50,7 +50,7 @@ func (h *HelpV) Help() {
 	fmt.Println("    help          Displays this message")
 }
 
-func (h *HelpV) Execute(args ...interface{}) error {
+func (h *HelpV) Execute(args ...any) error {
 	if len(os.Args) > 2 {
 		if os.Args[2] == "commands" {
 			h.helpCommands()

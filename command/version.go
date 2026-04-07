@@ -21,7 +21,7 @@ func (cmd *Version) FlagSet() *flag.FlagSet {
 	return flag.NewFlagSet("version", flag.ExitOnError)
 }
 
-func (cmd *Version) Execute(args ...interface{}) error {
+func (cmd *Version) Execute(args ...any) error {
 	fmt.Printf("%v\n", cmd.Version)
 
 	return nil

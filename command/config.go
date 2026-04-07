@@ -43,7 +43,7 @@ func (cmd *Config) Help() {
 	fmt.Println()
 }
 
-func (cmd *Config) Execute(args ...interface{}) error {
+func (cmd *Config) Execute(args ...any) error {
 	if err := dump(cmd.Config, cmd.debug); err != nil {
 		return err
 	}
