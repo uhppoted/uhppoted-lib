@@ -25,9 +25,9 @@ func name(name string) string {
 }
 
 func alt(name string, arg string) bool {
-	tokens := strings.Split(name, "|")
+	tokens := strings.SplitSeq(name, "|")
 
-	for _, t := range tokens {
+	for t := range tokens {
 		if t == arg {
 			return true
 		}
