@@ -13,6 +13,7 @@ func TestCompareWithoutPIN(t *testing.T) {
 			823321456: types.Card{CardNumber: 823321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			623321456: types.Card{CardNumber: 623321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			523321456: types.Card{CardNumber: 523321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 7531},
+			423321456: types.Card{CardNumber: 423321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 1357},
 		},
 	}
 
@@ -22,6 +23,7 @@ func TestCompareWithoutPIN(t *testing.T) {
 			823321456: types.Card{CardNumber: 823321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 			723321456: types.Card{CardNumber: 723321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			523321456: types.Card{CardNumber: 523321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 1357},
+			423321456: types.Card{CardNumber: 423321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 7531, FirstCard: types.FirstCardPrivileges{Door1: true, Door2: false, Door3: false, Door4: false}},
 		},
 	}
 
@@ -32,6 +34,7 @@ func TestCompareWithoutPIN(t *testing.T) {
 				types.Card{CardNumber: 923321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Updated: []types.Card{
+				types.Card{CardNumber: 423321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 7531, FirstCard: types.FirstCardPrivileges{Door1: true, Door2: false, Door3: false, Door4: false}},
 				types.Card{CardNumber: 823321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 			},
 			Added: []types.Card{
@@ -64,7 +67,8 @@ func TestCompareWithPIN(t *testing.T) {
 			823321456: types.Card{CardNumber: 823321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			623321456: types.Card{CardNumber: 623321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			523321456: types.Card{CardNumber: 523321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 7531},
-			423321456: types.Card{CardNumber: 423321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 2468},
+			423321456: types.Card{CardNumber: 423321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 1357},
+			323321456: types.Card{CardNumber: 323321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 2468},
 		},
 	}
 
@@ -74,17 +78,19 @@ func TestCompareWithPIN(t *testing.T) {
 			823321456: types.Card{CardNumber: 823321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 			723321456: types.Card{CardNumber: 723321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			523321456: types.Card{CardNumber: 523321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 1375},
-			423321456: types.Card{CardNumber: 423321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 2468},
+			423321456: types.Card{CardNumber: 423321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 7531, FirstCard: types.FirstCardPrivileges{Door1: true, Door2: false, Door3: false, Door4: false}},
+			323321456: types.Card{CardNumber: 323321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 2468},
 		},
 	}
 
 	expected := map[uint32]Diff{
 		12345: Diff{
 			Unchanged: []types.Card{
-				types.Card{CardNumber: 423321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 2468},
+				types.Card{CardNumber: 323321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 2468},
 				types.Card{CardNumber: 923321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}},
 			},
 			Updated: []types.Card{
+				types.Card{CardNumber: 423321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 7531, FirstCard: types.FirstCardPrivileges{Door1: true, Door2: false, Door3: false, Door4: false}},
 				types.Card{CardNumber: 523321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 1, 4: 0}, PIN: 1375},
 				types.Card{CardNumber: 823321456, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
 			},

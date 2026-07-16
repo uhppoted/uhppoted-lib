@@ -150,6 +150,8 @@ func putCard(u uhppote.IUHPPOTE, deviceID uint32, c types.Card, formats ...types
 	card.To = c.To
 	card.Doors = c.Doors
 
+	// FIXME - firstcard
+
 	return u.PutCard(deviceID, *card, formats...)
 }
 
@@ -191,7 +193,7 @@ func equals(p, q types.Card) bool {
 		}
 	}
 
-	return true
+	return p.FirstCard.Equal(q.FirstCard)
 }
 
 /*
