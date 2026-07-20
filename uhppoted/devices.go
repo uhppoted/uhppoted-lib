@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/uhppoted/uhppote-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/types"
 )
 
 // TODO rename Address to IpAddress and use Address for IP:Port

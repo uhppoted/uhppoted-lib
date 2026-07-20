@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/uhppoted/uhppote-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/types"
 )
 
 func (u *UHPPOTED) GetTimeProfiles(request GetTimeProfilesRequest) (*GetTimeProfilesResponse, error) {

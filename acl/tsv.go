@@ -6,8 +6,8 @@ import (
 	"io"
 	"reflect"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 func ParseTSV(f io.Reader, devices []uhppote.Device, strict bool) (ACL, []error, error) {

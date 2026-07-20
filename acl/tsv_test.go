@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 const tsv = `Card Number	From	To	Workshop	Side Door	Front Door	Garage

@@ -3,8 +3,8 @@ package acl
 import (
 	"sync"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 func GetACL(u uhppote.IUHPPOTE, devices []uhppote.Device) (ACL, []error) {

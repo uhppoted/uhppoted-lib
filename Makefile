@@ -15,13 +15,13 @@ clean:
 	rm -rf bin
 
 update:
-	go get -u github.com/uhppoted/uhppote-core@main
+	go get -u codeberg.org/uhppoted/uhppoted-core@main
 	go get -u golang.org/x/sys
 	go mod tidy
 	go fix ./...
 
 update-release:
-	go get -u github.com/uhppoted/uhppote-core
+	go get -u codeberg.org/uhppoted/uhppoted-core
 	go get -u golang.org/x/sys
 	go mod tidy
 	go fix ./...

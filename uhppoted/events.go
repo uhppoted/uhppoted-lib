@@ -3,7 +3,7 @@ package uhppoted
 import (
 	"fmt"
 
-	"github.com/uhppoted/uhppote-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/types"
 )
 
 // FIXME: remove - superseded by reworked uhppote-core/types/Event

@@ -1,8 +1,8 @@
-module github.com/uhppoted/uhppoted-lib
+module codeberg.org/uhppoted/uhppoted-lib
 
 go 1.26
 
 require (
-	github.com/uhppoted/uhppote-core v0.9.1-0.20260716180112-03d5aa1f4663
+	codeberg.org/uhppoted/uhppoted-core v0.0.0-20260720170136-a2a15d8604fa
 	golang.org/x/sys v0.47.0
 )

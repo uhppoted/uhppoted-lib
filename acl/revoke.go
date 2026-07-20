@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 func Revoke(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, doors []string) error {

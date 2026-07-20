@@ -1,7 +1,7 @@
 package acl
 
 import (
-	"github.com/uhppoted/uhppote-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/types"
 )
 
 type SystemDiff map[uint32]Diff

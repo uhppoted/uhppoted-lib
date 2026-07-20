@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppoted-lib/encoding/conf"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-lib/encoding/conf"
 )
 
 var configuration = []byte(`# SYSTEM

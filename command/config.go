@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/uhppoted/uhppoted-lib/config"
+	"codeberg.org/uhppoted/uhppoted-lib/config"
 )
 
 type Config struct {

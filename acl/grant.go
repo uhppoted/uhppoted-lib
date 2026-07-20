@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to types.Date, profile int, doors []string) error {

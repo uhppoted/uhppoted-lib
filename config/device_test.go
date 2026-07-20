@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 func TestDeviceMarshal(t *testing.T) {

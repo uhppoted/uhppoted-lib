@@ -1,7 +1,7 @@
 package acl
 
 import (
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 func GetCard(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32) (map[string]Permission, error) {

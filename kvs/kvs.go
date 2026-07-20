@@ -13,8 +13,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/uhppoted/uhppoted-lib/log"
-	lib "github.com/uhppoted/uhppoted-lib/os"
+	"codeberg.org/uhppoted/uhppoted-lib/log"
+	lib "codeberg.org/uhppoted/uhppoted-lib/os"
 )
 
 type KeyValueStore struct {

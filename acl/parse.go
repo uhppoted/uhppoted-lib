@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 func parseHeader(header []string, devices []uhppote.Device) (*index, error) {

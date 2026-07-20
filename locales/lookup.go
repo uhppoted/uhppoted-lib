@@ -5,7 +5,7 @@ import (
 	"io/fs"
 	"maps"
 
-	"github.com/uhppoted/uhppoted-lib/locales/en"
+	"codeberg.org/uhppoted/uhppoted-lib/locales/en"
 )
 
 var dictionary = en.Dictionary

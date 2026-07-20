@@ -12,7 +12,7 @@ import (
 	"sync"
 	"time"
 
-	lib "github.com/uhppoted/uhppoted-lib/os"
+	lib "codeberg.org/uhppoted/uhppoted-lib/os"
 )
 
 var _ io.WriteCloser = (*Console)(nil)

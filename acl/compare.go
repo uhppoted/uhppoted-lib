@@ -3,7 +3,7 @@ package acl
 import (
 	"sort"
 
-	"github.com/uhppoted/uhppote-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/types"
 )
 
 func Compare(src, dst ACL) (map[uint32]Diff, error) {

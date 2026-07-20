@@ -9,6 +9,8 @@
 ### Updates
 1. Updated to Go v1.26.
 2. Updated to _modern_ Go with 'go fix'.
+3. Included _first card_ privileges in ACL compare.
+4. Migrated from _github/uhppoted-lib_ to _codeberg.org/uhppoted-lib_.
 
 
 ## [0.9.0](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.9.0) - 2026-01-27

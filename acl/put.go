@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool, formats ...types.CardFormat) (map[uint32]Report, []error) {

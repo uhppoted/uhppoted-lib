@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/uhppoted/uhppote-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
 func MakeFlatFile(acl ACL, devices []uhppote.Device, f io.Writer) error {

@@ -16,10 +16,10 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/uhppoted/uhppote-core/types"
-	"github.com/uhppoted/uhppote-core/uhppote"
-	"github.com/uhppoted/uhppoted-lib/encoding/conf"
-	"github.com/uhppoted/uhppoted-lib/monitoring"
+	"codeberg.org/uhppoted/uhppoted-core/types"
+	"codeberg.org/uhppoted/uhppoted-core/uhppote"
+	"codeberg.org/uhppoted/uhppoted-lib/encoding/conf"
+	"codeberg.org/uhppoted/uhppoted-lib/monitoring"
 )
 
 type DeviceMap map[uint32]*Device
