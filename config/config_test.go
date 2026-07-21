@@ -488,6 +488,7 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; httpd.retention = 6h0m0s
 ; httpd.timezones = 
 ; httpd.PIN.enabled = false
+; httpd.firstcard.enabled = false
 ; httpd.cards.default-start-date = 
 ; httpd.cards.default-end-date = 
 
@@ -686,6 +687,7 @@ timeout = %[4]v
 httpd.retention = 5h30m0s
 ; httpd.timezones = 
 ; httpd.PIN.enabled = false
+; httpd.firstcard.enabled = false
 ; httpd.cards.default-start-date = 
 ; httpd.cards.default-end-date = 
 

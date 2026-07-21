@@ -71,6 +71,10 @@ type HTTPD struct {
 		Enabled bool `conf:"enabled"`
 	} `conf:"PIN"`
 
+	FirstCard struct {
+		Enabled bool `conf:"enabled"`
+	} `conf:"firstcard"`
+
 	Cards struct {
 		DefaultStartDate string `conf:"default-start-date"`
 		DefaultEndDate   string `conf:"default-end-date"`
@@ -203,6 +207,12 @@ func NewHTTPD() *HTTPD {
 		Timezones: "",
 
 		PIN: struct {
+			Enabled bool `conf:"enabled"`
+		}{
+			Enabled: false,
+		},
+
+		FirstCard: struct {
 			Enabled bool `conf:"enabled"`
 		}{
 			Enabled: false,
