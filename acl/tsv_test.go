@@ -232,7 +232,7 @@ func TestMakeTSVWithMissingACL(t *testing.T) {
 
 	var w strings.Builder
 
-	err := MakeTSV(acl, devices, &w)
+	err := MakeTSV(acl, devices, false, false, &w)
 	if err == nil {
 		t.Fatalf("Expected error creating TSV")
 	}
@@ -275,7 +275,7 @@ func TestMakeTSV(t *testing.T) {
 
 	var w strings.Builder
 
-	err := MakeTSV(acl, devices, &w)
+	err := MakeTSV(acl, devices, false, false, &w)
 	if err != nil {
 		t.Fatalf("Unexpected error creating TSV: %v", err)
 	}

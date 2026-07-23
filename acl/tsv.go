@@ -10,9 +10,9 @@ import (
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
-func ParseTSV(f io.Reader, devices []uhppote.Device, strict bool) (ACL, []error, error) {
+func ParseTSV(f io.Reader, controllers []uhppote.Device, strict bool) (ACL, []error, error) {
 	acl := make(ACL)
-	for _, device := range devices {
+	for _, device := range controllers {
 		acl[device.DeviceID] = make(map[uint32]types.Card)
 	}
 
@@ -24,7 +24,7 @@ func ParseTSV(f io.Reader, devices []uhppote.Device, strict bool) (ACL, []error,
 		return nil, nil, err
 	}
 
-	index, err := parseHeader(header, devices)
+	index, err := parseHeader(header, controllers)
 	if err != nil {
 		return nil, nil, err
 	} else if index == nil {
@@ -89,8 +89,8 @@ func ParseTSV(f io.Reader, devices []uhppote.Device, strict bool) (ACL, []error,
 	return acl, warnings, nil
 }
 
-func MakeTSV(acl ACL, devices []uhppote.Device, f io.Writer) error {
-	t, err := MakeTable(acl, devices)
+func MakeTSV(acl ACL, controllers []uhppote.Device, withPIN bool, withFirstCard bool, f io.Writer) error {
+	t, err := MakeTable(acl, controllers, withPIN, withFirstCard)
 	if err != nil {
 		return err
 	}
@@ -113,8 +113,8 @@ func MakeTSV(acl ACL, devices []uhppote.Device, f io.Writer) error {
 	return nil
 }
 
-func MakeTSVWithPIN(acl ACL, devices []uhppote.Device, f io.Writer) error {
-	t, err := MakeTableWithPIN(acl, devices)
+func MakeTSVWithPIN(acl ACL, controllers []uhppote.Device, f io.Writer) error {
+	t, err := MakeTable(acl, controllers, true, false)
 	if err != nil {
 		return err
 	}

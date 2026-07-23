@@ -39,6 +39,7 @@ type card struct {
 	from       types.Date
 	to         types.Date
 	doors      []int
+	firstcard  bool
 }
 
 type equivalent = func(types.Card, types.Card) bool

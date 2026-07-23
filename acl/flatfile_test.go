@@ -29,7 +29,7 @@ func TestMakeFlatFileWithMissingACL(t *testing.T) {
 
 	var w strings.Builder
 
-	err := MakeFlatFile(acl, devices, &w)
+	err := MakeFlatFile(acl, devices, false, false, &w)
 	if err == nil {
 		t.Fatalf("Expected error creating flat file")
 	}
@@ -71,7 +71,7 @@ func TestMakeFlatFile(t *testing.T) {
 
 	var w strings.Builder
 
-	err := MakeFlatFile(acl, devices, &w)
+	err := MakeFlatFile(acl, devices, false, false, &w)
 	if err != nil {
 		t.Fatalf("Unexpected error creating flat file: %v", err)
 	}
@@ -118,7 +118,7 @@ func TestMakeFlatFileWithTimeProfiles(t *testing.T) {
 
 	var w strings.Builder
 
-	err := MakeFlatFile(acl, devices, &w)
+	err := MakeFlatFile(acl, devices, false, false, &w)
 	if err != nil {
 		t.Fatalf("Unexpected error creating flat file: %v", err)
 	}

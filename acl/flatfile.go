@@ -7,8 +7,8 @@ import (
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
-func MakeFlatFile(acl ACL, devices []uhppote.Device, f io.Writer) error {
-	t, err := MakeTable(acl, devices)
+func MakeFlatFile(acl ACL, controllers []uhppote.Device, withPIN bool, withFirstCard bool, f io.Writer) error {
+	t, err := MakeTable(acl, controllers, withPIN, withFirstCard)
 	if err != nil {
 		return err
 	}
@@ -47,8 +47,8 @@ func MakeFlatFile(acl ACL, devices []uhppote.Device, f io.Writer) error {
 	return nil
 }
 
-func MakeFlatFileWithPIN(acl ACL, devices []uhppote.Device, f io.Writer) error {
-	t, err := MakeTableWithPIN(acl, devices)
+func MakeFlatFileWithPIN(acl ACL, controllers []uhppote.Device, f io.Writer) error {
+	t, err := MakeTable(acl, controllers, true, false)
 	if err != nil {
 		return err
 	}
