@@ -18,6 +18,14 @@ type REST struct {
 	HOTP                      HOTP   `conf:"auth.hotp"`
 	Locale                    string `conf:"translation.locale"`
 	Protocol                  string `conf:"protocol.version"`
+
+	PIN struct {
+		Enabled bool `conf:"enabled"`
+	} `conf:"PIN"`
+
+	FirstCard struct {
+		Enabled bool `conf:"enabled"`
+	} `conf:"firstcard"`
 }
 
 type OpenAPI struct {
@@ -39,9 +47,22 @@ func NewREST() *REST {
 		AuthEnabled:               false,
 		Users:                     restUsers,
 		Groups:                    restGroups,
+
 		HOTP: HOTP{
 			Range:    8,
 			Counters: restHOTP,
+		},
+
+		PIN: struct {
+			Enabled bool `conf:"enabled"`
+		}{
+			Enabled: false,
+		},
+
+		FirstCard: struct {
+			Enabled bool `conf:"enabled"`
+		}{
+			Enabled: false,
 		},
 	}
 }
