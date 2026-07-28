@@ -106,7 +106,7 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 		}
 	}
 
-	if ok, err := putCard(u, deviceID, *card); err != nil {
+	if ok, err := putCard(u, deviceID, *card, false, false); err != nil {
 		return err
 	} else if !ok {
 		return fmt.Errorf("failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
@@ -128,7 +128,7 @@ func grantAll(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types
 		},
 	}
 
-	if ok, err := putCard(u, deviceID, card); err != nil {
+	if ok, err := putCard(u, deviceID, card, false, false); err != nil {
 		return err
 	} else if !ok {
 		return fmt.Errorf("failed to update access rights for card '%v' on device '%v'", cardID, deviceID)

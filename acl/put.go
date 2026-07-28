@@ -8,20 +8,42 @@ import (
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
-func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool, formats ...types.CardFormat) (map[uint32]Report, []error) {
+func PutACL(u uhppote.IUHPPOTE, acl ACL, dryrun bool, withPIN bool, withFirstCard bool, formats ...types.CardFormat) (map[uint32]Report, []error) {
 	f := func(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
-		return putCard(u, deviceID, c, formats...)
+		return putCard(u, deviceID, c, withPIN, withFirstCard, formats...)
 	}
 
-	return putACLImpl(u, acl, dryrun, f, equals)
-}
+	eq := func(p, q types.Card) bool {
+		if p.CardNumber != q.CardNumber {
+			return false
+		}
 
-func PutACLWithPIN(u uhppote.IUHPPOTE, acl ACL, dryrun bool, formats ...types.CardFormat) (map[uint32]Report, []error) {
-	f := func(u uhppote.IUHPPOTE, deviceID uint32, c types.Card) (bool, error) {
-		return putCardWithPIN(u, deviceID, c, formats...)
+		if !p.From.Equals(q.From) {
+			return false
+		}
+
+		if !p.To.Equals(q.To) {
+			return false
+		}
+
+		for _, i := range []uint8{1, 2, 3, 4} {
+			if p.Doors[i] != q.Doors[i] {
+				return false
+			}
+		}
+
+		if withPIN && p.PIN != q.PIN {
+			return false
+		}
+
+		if withFirstCard && !p.FirstCard.Equal(q.FirstCard) {
+			return false
+		}
+
+		return true
 	}
 
-	return putACLImpl(u, acl, dryrun, f, equalsWithPIN)
+	return putACLImpl(u, acl, dryrun, f, eq)
 }
 
 func putACLImpl(u uhppote.IUHPPOTE, acl ACL, dryrun bool, write put, eq equivalent) (map[uint32]Report, []error) {
@@ -52,7 +74,7 @@ func putACLImpl(u uhppote.IUHPPOTE, acl ACL, dryrun bool, write put, eq equivale
 			var err error
 
 			if dryrun {
-				rpt, err = fakePutACL(u, id, cards)
+				rpt, err = fakePutACL(u, id, cards, eq)
 			} else {
 				rpt, err = putACL(u, id, cards, write, eq)
 			}
@@ -149,13 +171,13 @@ func putACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card, wr
 	return &report, nil
 }
 
-func fakePutACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card) (*Report, error) {
+func fakePutACL(u uhppote.IUHPPOTE, deviceID uint32, cards map[uint32]types.Card, eq equivalent) (*Report, error) {
 	current, err := getACL(u, deviceID)
 	if err != nil {
 		return nil, err
 	}
 
-	diff := compare(deviceID, current, cards, equals)
+	diff := compare(deviceID, current, cards, eq)
 
 	report := Report{
 		Unchanged: []uint32{},

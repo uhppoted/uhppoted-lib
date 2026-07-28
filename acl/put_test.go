@@ -85,7 +85,7 @@ func TestPutACL(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, false, false)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -102,18 +102,105 @@ func TestPutACL(t *testing.T) {
 func TestPutACLWithPIN(t *testing.T) {
 	acl := ACL{
 		12345: map[uint32]types.Card{
-			65535: types.Card{CardNumber: 65535, From: types.MustParseDate("2023-01-01"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}},
-			65536: types.Card{CardNumber: 65536, From: types.MustParseDate("2023-03-04"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 7531},
-			65537: types.Card{CardNumber: 65537, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 7532},
-			65538: types.Card{CardNumber: 65538, From: types.MustParseDate("2023-02-03"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 7533},
+			65535: types.Card{
+				CardNumber: 65535,
+				From:       types.MustParseDate("2023-01-01"),
+				To:         types.MustParseDate("2023-12-31"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+				FirstCard: types.FirstCardPrivileges{
+					Door1: true,
+					Door2: false,
+					Door3: false,
+					Door4: false,
+				},
+			},
+
+			65536: types.Card{
+				CardNumber: 65536,
+				From:       types.MustParseDate("2023-03-04"),
+				To:         types.MustParseDate("2023-12-31"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+				PIN:        7531,
+			},
+
+			65537: types.Card{
+				CardNumber: 65537,
+				From:       types.MustParseDate("2023-01-02"),
+				To:         types.MustParseDate("2023-10-31"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
+				PIN:        7532,
+				FirstCard: types.FirstCardPrivileges{
+					Door1: true,
+					Door2: false,
+					Door3: false,
+					Door4: true,
+				},
+			},
+
+			65538: types.Card{
+				CardNumber: 65538,
+				From:       types.MustParseDate("2023-02-03"),
+				To:         types.MustParseDate("2023-12-31"),
+				Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+				PIN:        7533,
+				FirstCard: types.FirstCardPrivileges{
+					Door1: false,
+					Door2: true,
+					Door3: true,
+					Door4: false,
+				},
+			},
 		},
 	}
 
 	expected := []types.Card{
-		types.Card{CardNumber: 65535, From: types.MustParseDate("2023-01-01"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 0},
-		types.Card{CardNumber: 65537, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 7532},
-		types.Card{CardNumber: 65538, From: types.MustParseDate("2023-02-03"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}, PIN: 7533},
-		types.Card{CardNumber: 65536, From: types.MustParseDate("2023-03-04"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 7531},
+		types.Card{
+			CardNumber: 65535,
+			From:       types.MustParseDate("2023-01-01"),
+			To:         types.MustParseDate("2023-12-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+			PIN:        0,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: false,
+			},
+		},
+		types.Card{
+			CardNumber: 65537,
+			From:       types.MustParseDate("2023-01-02"),
+			To:         types.MustParseDate("2023-10-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
+			PIN:        7532,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: true,
+				Door4: true,
+			},
+		},
+		types.Card{
+			CardNumber: 65538,
+			From:       types.MustParseDate("2023-02-03"),
+			To:         types.MustParseDate("2023-12-31"),
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+			PIN:        7533,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: true,
+			},
+		},
+
+		types.Card{
+			CardNumber: 65536,
+			From:       types.MustParseDate("2023-03-04"),
+			To:         types.MustParseDate("2023-12-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+			PIN:        7531,
+		},
 	}
 
 	report := map[uint32]Report{
@@ -129,16 +216,65 @@ func TestPutACLWithPIN(t *testing.T) {
 	}
 
 	cards := []types.Card{
-		types.Card{CardNumber: 65535, From: types.MustParseDate("2023-01-01"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0}, PIN: 7530},
-		types.Card{CardNumber: 65537, From: types.MustParseDate("2023-01-02"), To: types.MustParseDate("2023-10-31"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}, PIN: 7532},
-		types.Card{CardNumber: 65538, From: types.MustParseDate("2023-02-03"), To: types.MustParseDate("2023-11-30"), Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}, PIN: 1234},
-		types.Card{CardNumber: 65539, From: types.MustParseDate("2023-03-04"), To: types.MustParseDate("2023-12-31"), Doors: map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+		types.Card{
+			CardNumber: 65535,
+			From:       types.MustParseDate("2023-01-01"),
+			To:         types.MustParseDate("2023-12-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+			PIN:        7530,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: false,
+			},
+		},
+
+		types.Card{
+			CardNumber: 65537,
+			From:       types.MustParseDate("2023-01-02"),
+			To:         types.MustParseDate("2023-10-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
+			PIN:        7532,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: true,
+				Door4: true,
+			},
+		},
+		types.Card{
+			CardNumber: 65538,
+			From:       types.MustParseDate("2023-02-03"),
+			To:         types.MustParseDate("2023-11-30"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
+			PIN:        1234,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: true,
+			},
+		},
+		types.Card{
+			CardNumber: 65539,
+			From:       types.MustParseDate("2023-03-04"),
+			To:         types.MustParseDate("2023-12-31"),
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+			FirstCard: types.FirstCardPrivileges{
+				Door1: false,
+				Door2: true,
+				Door3: true,
+				Door4: false,
+			},
+		},
 	}
 
 	u := mock{
 		getCards: func(deviceID uint32) (uint32, error) {
 			return uint32(len(cards)), nil
 		},
+
 		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
 			for _, c := range cards {
 				if c.CardNumber == cardID {
@@ -147,12 +283,14 @@ func TestPutACLWithPIN(t *testing.T) {
 			}
 			return nil, nil
 		},
+
 		getCardByIndex: func(deviceID, index uint32) (*types.Card, error) {
 			if int(index) < 0 || int(index) > len(cards) {
 				return nil, nil
 			}
 			return &cards[index-1], nil
 		},
+
 		putCard: func(deviceID uint32, card types.Card) (bool, error) {
 			for ix, c := range cards {
 				if c.CardNumber == card.CardNumber {
@@ -165,6 +303,7 @@ func TestPutACLWithPIN(t *testing.T) {
 
 			return true, nil
 		},
+
 		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
 			for ix, c := range cards {
 				if c.CardNumber == cardNumber {
@@ -177,7 +316,254 @@ func TestPutACLWithPIN(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACLWithPIN(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, true, false)
+	if len(err) > 0 {
+		t.Fatalf("Unexpected error putting ACL: %v", err)
+	}
+
+	if !reflect.DeepEqual(cards, expected) {
+		t.Errorf("Device internal card list not updated correctly:\n    expected:%+v\n    got:     %+v", expected, cards)
+	}
+
+	if !reflect.DeepEqual(rpt, report) {
+		t.Errorf("Returned report does not match expected:\n    expected:%+v\n    got:     %+v", report, rpt)
+	}
+}
+
+func TestPutACLWithFirstCard(t *testing.T) {
+	acl := ACL{
+		405419896: map[uint32]types.Card{
+			10058400: types.Card{
+				CardNumber: 10058400,
+				From:       types.MustParseDate("2026-01-01"),
+				To:         types.MustParseDate("2026-12-31"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+				PIN:        17530,
+				FirstCard: types.FirstCardPrivileges{
+					Door1: true,
+					Door2: true,
+					Door3: false,
+					Door4: true,
+				},
+			},
+
+			10058401: types.Card{
+				CardNumber: 10058401,
+				From:       types.MustParseDate("2026-03-04"),
+				To:         types.MustParseDate("2026-12-31"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+				PIN:        17531,
+				FirstCard: types.FirstCardPrivileges{
+					Door1: true,
+					Door2: false,
+					Door3: true,
+					Door4: true,
+				},
+			},
+
+			10058402: types.Card{
+				CardNumber: 10058402,
+				From:       types.MustParseDate("2026-01-02"),
+				To:         types.MustParseDate("2026-10-31"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
+				PIN:        17532,
+				FirstCard: types.FirstCardPrivileges{
+					Door1: true,
+					Door2: false,
+					Door3: false,
+					Door4: true,
+				},
+			},
+
+			10058403: types.Card{
+				CardNumber: 10058403,
+				From:       types.MustParseDate("2026-02-03"),
+				To:         types.MustParseDate("2026-12-31"),
+				Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+				PIN:        17533,
+				FirstCard: types.FirstCardPrivileges{
+					Door1: false,
+					Door2: true,
+					Door3: true,
+					Door4: false,
+				},
+			},
+		},
+	}
+
+	expected := []types.Card{
+		types.Card{
+			CardNumber: 10058400,
+			From:       types.MustParseDate("2026-01-01"),
+			To:         types.MustParseDate("2026-12-31"),
+			PIN:        7530,
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: true,
+				Door3: false,
+				Door4: true,
+			},
+		},
+
+		types.Card{
+			CardNumber: 10058402,
+			From:       types.MustParseDate("2026-01-02"),
+			To:         types.MustParseDate("2026-10-31"),
+			PIN:        7532,
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: true,
+			},
+		},
+
+		types.Card{
+			CardNumber: 10058403,
+			From:       types.MustParseDate("2026-02-03"),
+			To:         types.MustParseDate("2026-12-31"),
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+			PIN:        1234,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: false,
+				Door2: true,
+				Door3: true,
+				Door4: false,
+			},
+		},
+
+		types.Card{CardNumber: 10058401,
+			From:  types.MustParseDate("2026-03-04"),
+			To:    types.MustParseDate("2026-12-31"),
+			Doors: map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: true,
+				Door4: true,
+			},
+		},
+	}
+
+	report := map[uint32]Report{
+		405419896: Report{
+			Unchanged: []uint32{10058402},
+			Updated:   []uint32{10058400, 10058403},
+			Added:     []uint32{10058401},
+			Deleted:   []uint32{10058404},
+			Failed:    []uint32{},
+			Errored:   []uint32{},
+			Errors:    []error{},
+		},
+	}
+
+	cards := []types.Card{
+		types.Card{
+			CardNumber: 10058400,
+			From:       types.MustParseDate("2026-01-01"),
+			To:         types.MustParseDate("2026-12-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 1, 4: 0},
+			PIN:        7530,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: false,
+			},
+		},
+
+		types.Card{
+			CardNumber: 10058402,
+			From:       types.MustParseDate("2026-01-02"),
+			To:         types.MustParseDate("2026-10-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
+			PIN:        7532,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: true,
+			},
+		},
+
+		types.Card{CardNumber: 10058403,
+			From:  types.MustParseDate("2026-02-03"),
+			To:    types.MustParseDate("2026-11-30"),
+			Doors: map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
+			PIN:   1234,
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: false,
+			},
+		},
+
+		types.Card{
+			CardNumber: 10058404,
+			From:       types.MustParseDate("2026-03-04"),
+			To:         types.MustParseDate("2026-12-31"),
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: false,
+			},
+		},
+	}
+
+	// ---------
+
+	u := mock{
+		getCards: func(deviceID uint32) (uint32, error) {
+			return uint32(len(cards)), nil
+		},
+
+		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
+			for _, c := range cards {
+				if c.CardNumber == cardID {
+					return &c, nil
+				}
+			}
+			return nil, nil
+		},
+
+		getCardByIndex: func(deviceID, index uint32) (*types.Card, error) {
+			if int(index) < 0 || int(index) > len(cards) {
+				return nil, nil
+			}
+			return &cards[index-1], nil
+		},
+
+		putCard: func(deviceID uint32, card types.Card) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == card.CardNumber {
+					cards[ix] = card
+					return true, nil
+				}
+			}
+
+			cards = append(cards, card)
+
+			return true, nil
+		},
+
+		deleteCard: func(deviceID uint32, cardNumber uint32) (bool, error) {
+			for ix, c := range cards {
+				if c.CardNumber == cardNumber {
+					cards = append(cards[:ix], cards[ix+1:]...)
+					return true, nil
+				}
+			}
+
+			return false, nil
+		},
+	}
+
+	rpt, err := PutACL(&u, acl, false, false, true)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -273,7 +659,7 @@ func TestPutACLWithTimeProfiles(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, false, false)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -369,7 +755,7 @@ func TestPutACLWithInvalidTimeProfile(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, false, false)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -450,7 +836,7 @@ func TestPutACLDryRun(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, true)
+	rpt, err := PutACL(&u, acl, true, false, false)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -574,7 +960,7 @@ func TestPutACLWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, false, false)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -734,7 +1120,7 @@ func TestPutACLWithConcurrency(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, false, false)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -838,7 +1224,7 @@ func TestPutACLWithFailures(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, false, false)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -976,7 +1362,7 @@ func TestPutACLWithConcurrentErrors(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, false, false)
 	if !reflect.DeepEqual(err, errors) {
 		t.Errorf("Expected errors putting ACL - expected:%v, got:%v", errors, err)
 	}
@@ -1087,7 +1473,7 @@ func TestPutACLWithErrors(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, false, false)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
@@ -1170,7 +1556,7 @@ func TestPutACLWithNoCurrentPermissions(t *testing.T) {
 		},
 	}
 
-	rpt, err := PutACL(&u, acl, false)
+	rpt, err := PutACL(&u, acl, false, false, false)
 	if len(err) > 0 {
 		t.Fatalf("Unexpected error putting ACL: %v", err)
 	}
