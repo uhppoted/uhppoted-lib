@@ -24,7 +24,7 @@ func ParseTSV(f io.Reader, controllers []uhppote.Device, strict bool) (ACL, []er
 		return nil, nil, err
 	}
 
-	index, err := parseHeader(header, controllers)
+	index, err := parseHeader(header, controllers, false, false)
 	if err != nil {
 		return nil, nil, err
 	} else if index == nil {

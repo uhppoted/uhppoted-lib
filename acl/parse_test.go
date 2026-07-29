@@ -22,14 +22,14 @@ func TestParseHeader(t *testing.T) {
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage"}
 
-	devices := []uhppote.Device{
+	controllers := []uhppote.Device{
 		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
 	}
 
-	ix, err := parseHeader(header, devices)
+	ix, err := parseHeader(header, controllers, false, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing header: %v", err)
 	} else if ix == nil {
@@ -54,14 +54,80 @@ func TestParseHeaderWithPIN(t *testing.T) {
 
 	header := []string{"Card Number", "PIN", "From", "To", "Workshop", "Side Door", "Front Door", "Garage"}
 
-	devices := []uhppote.Device{
+	controllers := []uhppote.Device{
 		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
 	}
 
-	ix, err := parseHeader(header, devices)
+	ix, err := parseHeader(header, controllers, true, false)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing header: %v", err)
+	} else if ix == nil {
+		t.Fatalf("parseHeader returned 'nil'")
+	}
+
+	if !reflect.DeepEqual(*ix, expected) {
+		t.Errorf("Invalid index\n   expected: %+v\n   got:      %+v", expected, *ix)
+	}
+}
+
+func TestParseHeaderWithFirstCard(t *testing.T) {
+	expected := index{
+		cardnumber: 1,
+		from:       2,
+		to:         3,
+		doors: map[uint32][]int{
+			12345: []int{6, 5, 7, 4},
+		},
+		PIN:       0,
+		firstcard: 8,
+	}
+
+	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "FirstCard"}
+
+	controllers := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	ix, err := parseHeader(header, controllers, false, true)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing header: %v", err)
+	} else if ix == nil {
+		t.Fatalf("parseHeader returned 'nil'")
+	}
+
+	if !reflect.DeepEqual(*ix, expected) {
+		t.Errorf("Invalid index\n   expected: %+v\n   got:      %+v", expected, *ix)
+	}
+}
+
+func TestParseHeaderWithFirstCardAndPIN(t *testing.T) {
+	expected := index{
+		cardnumber: 1,
+		from:       3,
+		to:         4,
+		doors: map[uint32][]int{
+			12345: []int{7, 6, 8, 5},
+		},
+		PIN:       2,
+		firstcard: 9,
+	}
+
+	header := []string{"Card Number", "PIN", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "FirstCard"}
+
+	controllers := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 12345,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	ix, err := parseHeader(header, controllers, true, true)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing header: %v", err)
 	} else if ix == nil {
@@ -87,7 +153,7 @@ func TestParseHeaderWithMultipleDevices(t *testing.T) {
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "D1", "D2", "D3", "D4"}
 
-	devices := []uhppote.Device{
+	controllers := []uhppote.Device{
 		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
@@ -98,7 +164,7 @@ func TestParseHeaderWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	ix, err := parseHeader(header, devices)
+	ix, err := parseHeader(header, controllers, false, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing header: %v", err)
 	} else if ix == nil {
@@ -124,7 +190,7 @@ func TestParseHeaderWithMissingColumn(t *testing.T) {
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "D1", "D2", "D4"}
 
-	devices := []uhppote.Device{
+	controllers := []uhppote.Device{
 		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
@@ -135,7 +201,7 @@ func TestParseHeaderWithMissingColumn(t *testing.T) {
 		},
 	}
 
-	ix, err := parseHeader(header, devices)
+	ix, err := parseHeader(header, controllers, false, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing header: %v", err)
 	} else if ix == nil {
@@ -152,7 +218,7 @@ func TestParseHeaderWithInvalidColumn(t *testing.T) {
 
 	expected := fmt.Errorf("no configured door matches 'D3X'")
 
-	devices := []uhppote.Device{
+	controllers := []uhppote.Device{
 		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
@@ -163,7 +229,7 @@ func TestParseHeaderWithInvalidColumn(t *testing.T) {
 		},
 	}
 
-	ix, err := parseHeader(header, devices)
+	ix, err := parseHeader(header, controllers, false, false)
 	if err == nil {
 		t.Fatalf("Expected error parsing header with invalid column: %+v", *ix)
 	} else if err.Error() != expected.Error() {

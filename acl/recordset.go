@@ -19,13 +19,13 @@ func (e *DuplicateCardError) Error() string {
 	return fmt.Sprintf("%-10v Duplicate card number", e.CardNumber)
 }
 
-func ParseTable(table *Table, devices []uhppote.Device, strict bool) (*ACL, []error, error) {
+func ParseTable(table *Table, controllers []uhppote.Device, strict bool, withPINs bool, withFirstCard bool) (*ACL, []error, error) {
 	acl := make(ACL)
-	for _, device := range devices {
+	for _, device := range controllers {
 		acl[device.DeviceID] = make(map[uint32]types.Card)
 	}
 
-	index, err := parseHeader(table.Header, devices)
+	index, err := parseHeader(table.Header, controllers, withPINs, withFirstCard)
 	if err != nil {
 		return nil, nil, err
 	} else if index == nil {

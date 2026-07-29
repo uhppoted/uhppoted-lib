@@ -32,7 +32,148 @@ func TestParseTable(t *testing.T) {
 		},
 	}
 
-	list, warnings, err := ParseTable(&table, devices, true)
+	list, warnings, err := ParseTable(&table, devices, true, false, false)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing table: %v", err)
+	}
+
+	if len(warnings) != 0 {
+		t.Errorf("Returned warnings - expected:\n%+v\ngot:\n%+v\n", 0, warnings)
+	}
+
+	if list == nil {
+		t.Fatalf("ParseTable returned invalid result: %v", list)
+	}
+
+	if !reflect.DeepEqual(*list, expected) {
+		t.Errorf("Returned incorrect ACL - expected:\n%+v\ngot:\n%+v\n", expected, *list)
+	}
+}
+
+func TestParseTableWithPIN(t *testing.T) {
+	expected := ACL{
+		405419896: map[uint32]types.Card{
+			10058400: types.Card{
+				CardNumber: 10058400,
+				From:       types.MustParseDate("2026-01-02"),
+				To:         types.MustParseDate("2026-10-31"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
+				PIN:        7530,
+			},
+
+			10058401: types.Card{
+				CardNumber: 10058401,
+				From:       types.MustParseDate("2026-02-03"),
+				To:         types.MustParseDate("2026-11-30"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
+				PIN:        7531,
+			},
+
+			10058402: types.Card{
+				CardNumber: 10058402,
+				From:       types.MustParseDate("2026-03-04"),
+				To:         types.MustParseDate("2026-12-31"),
+				Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+				PIN:        0,
+			},
+		},
+	}
+
+	table := Table{
+		Header: []string{"Card Number", "PIN", "From", "To", "Front Door", "Side Door", "Garage", "Workshop"},
+		Records: [][]string{
+			[]string{"10058400", "7530", "2026-01-02", "2026-10-31", "Y", "N", "N", "N"},
+			[]string{"10058401", "7531", "2026-02-03", "2026-11-30", "Y", "N", "N", "Y"},
+			[]string{"10058402", "", "2026-03-04", "2026-12-31", "N", "N", "N", "N"},
+		},
+	}
+
+	devices := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 405419896,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	list, warnings, err := ParseTable(&table, devices, true, true, false)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing table: %v", err)
+	}
+
+	if len(warnings) != 0 {
+		t.Errorf("Returned warnings - expected:\n%+v\ngot:\n%+v\n", 0, warnings)
+	}
+
+	if list == nil {
+		t.Fatalf("ParseTable returned invalid result: %v", list)
+	}
+
+	if !reflect.DeepEqual(*list, expected) {
+		t.Errorf("Returned incorrect ACL - expected:\n%+v\ngot:\n%+v\n", expected, *list)
+	}
+}
+
+func TestParseTableWithFirstCard(t *testing.T) {
+	expected := ACL{
+		405419896: map[uint32]types.Card{
+			10058400: types.Card{
+				CardNumber: 10058400,
+				From:       types.MustParseDate("2026-01-02"),
+				To:         types.MustParseDate("2026-10-31"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
+				FirstCard: types.FirstCardPrivileges{
+					Door1: true,
+					Door2: false,
+					Door3: false,
+					Door4: true,
+				},
+			},
+
+			10058401: types.Card{
+				CardNumber: 10058401,
+				From:       types.MustParseDate("2026-02-03"),
+				To:         types.MustParseDate("2026-11-30"),
+				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
+				FirstCard: types.FirstCardPrivileges{
+					Door1: false,
+					Door2: false,
+					Door3: false,
+					Door4: false,
+				},
+			},
+
+			10058402: types.Card{
+				CardNumber: 10058402,
+				From:       types.MustParseDate("2026-03-04"),
+				To:         types.MustParseDate("2026-12-31"),
+				Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+				FirstCard: types.FirstCardPrivileges{
+					Door1: false,
+					Door2: false,
+					Door3: false,
+					Door4: false,
+				},
+			},
+		},
+	}
+
+	table := Table{
+		Header: []string{"Card Number", "From", "To", "Front Door", "Side Door", "Garage", "Workshop", "FirstCard"},
+		Records: [][]string{
+			[]string{"10058400", "2026-01-02", "2026-10-31", "Y", "N", "N", "Y", "Y"},
+			[]string{"10058401", "2026-02-03", "2026-11-30", "Y", "N", "N", "Y", "N"},
+			[]string{"10058402", "2026-03-04", "2026-12-31", "N", "N", "N", "N", "Y"},
+		},
+	}
+
+	devices := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 405419896,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	list, warnings, err := ParseTable(&table, devices, true, false, true)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing table: %v", err)
 	}
@@ -73,7 +214,7 @@ func TestParseTableWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	devices := []uhppote.Device{
+	controllers := []uhppote.Device{
 		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
@@ -84,7 +225,7 @@ func TestParseTableWithMultipleDevices(t *testing.T) {
 		},
 	}
 
-	list, warnings, err := ParseTable(&table, devices, true)
+	list, warnings, err := ParseTable(&table, controllers, true, false, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing table: %v", err)
 	}
@@ -124,14 +265,14 @@ func TestParseTableWithDuplicateCardNumbers(t *testing.T) {
 		},
 	}
 
-	devices := []uhppote.Device{
+	controllers := []uhppote.Device{
 		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
 	}
 
-	list, warnings, err := ParseTable(&table, devices, false)
+	list, warnings, err := ParseTable(&table, controllers, false, false, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing table: %v", err)
 	}
@@ -160,14 +301,14 @@ func TestParseTableWithDuplicateCardNumbersAndStrict(t *testing.T) {
 		},
 	}
 
-	devices := []uhppote.Device{
+	controllers := []uhppote.Device{
 		uhppote.Device{
 			DeviceID: 12345,
 			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
 		},
 	}
 
-	_, _, err := ParseTable(&table, devices, true)
+	_, _, err := ParseTable(&table, controllers, true, false, false)
 	if err == nil {
 		t.Fatalf("Expected error parsing table with duplicate card numbers and 'strict', got %v", err)
 	}

@@ -11,7 +11,7 @@ import (
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
-func parseHeader(header []string, devices []uhppote.Device) (*index, error) {
+func parseHeader(header []string, controllers []uhppote.Device, withPINs bool, withFirstCard bool) (*index, error) {
 	columns := make(map[string]struct {
 		door  string
 		index int
@@ -25,7 +25,7 @@ func parseHeader(header []string, devices []uhppote.Device) (*index, error) {
 		PIN:        0,
 	}
 
-	for _, d := range devices {
+	for _, d := range controllers {
 		index.doors[d.DeviceID] = make([]int, 4)
 	}
 
@@ -48,8 +48,8 @@ func parseHeader(header []string, devices []uhppote.Device) (*index, error) {
 
 loop:
 	for c, v := range columns {
-		if c != "cardnumber" && c != "from" && c != "to" && c != "pin" {
-			for _, device := range devices {
+		if c != "cardnumber" && c != "from" && c != "to" && (!withPINs || c != "pin") && (!withFirstCard || c != "firstcard") {
+			for _, device := range controllers {
 				for _, door := range device.Doors {
 					if d := clean(door); d == c {
 						continue loop
@@ -73,11 +73,15 @@ loop:
 		index.to = c.index
 	}
 
-	if c, ok := columns["pin"]; ok {
+	if c, ok := columns["pin"]; ok && withPINs {
 		index.PIN = c.index
 	}
 
-	for _, device := range devices {
+	if c, ok := columns["firstcard"]; ok && withFirstCard {
+		index.firstcard = c.index
+	}
+
+	for _, device := range controllers {
 		for i, door := range device.Doors {
 			if d := clean(door); d != "" {
 				if c, ok := columns[d]; ok {
@@ -91,12 +95,20 @@ loop:
 		return nil, fmt.Errorf("missing 'Card Number' column")
 	}
 
+	if withPINs && index.PIN == 0 {
+		return nil, fmt.Errorf("missing 'PIN' column")
+	}
+
 	if index.from == 0 {
 		return nil, fmt.Errorf("missing 'From' column")
 	}
 
 	if index.to == 0 {
 		return nil, fmt.Errorf("missing 'To' column")
+	}
+
+	if withFirstCard && index.firstcard == 0 {
+		return nil, fmt.Errorf("missing 'FirstCard' column")
 	}
 
 	//	for _, device := range devices {
@@ -141,12 +153,18 @@ func parseRecord(record []string, index index) (map[uint32]types.Card, error) {
 			return nil, err
 		}
 
+		firstcard, err := getFirstCard(record, index, doors)
+		if err != nil {
+			return nil, err
+		}
+
 		cards[k] = types.Card{
 			CardNumber: cardno,
 			From:       from,
 			To:         to,
 			Doors:      doors,
 			PIN:        types.PIN(pin),
+			FirstCard:  firstcard,
 		}
 	}
 
@@ -232,6 +250,23 @@ func getDoors(record []string, v []int) (map[uint8]uint8, error) {
 	}
 
 	return doors, nil
+}
+
+func getFirstCard(record []string, index index, doors map[uint8]uint8) (types.FirstCardPrivileges, error) {
+	if index.firstcard > 0 {
+		f := field(record, index.firstcard)
+
+		if f == "Y" || f == "y" {
+			return types.FirstCardPrivileges{
+				Door1: doors[1] > 0 && doors[1] < 255,
+				Door2: doors[2] > 0 && doors[2] < 255,
+				Door3: doors[3] > 0 && doors[3] < 255,
+				Door4: doors[4] > 0 && doors[4] < 255,
+			}, nil
+		}
+	}
+
+	return types.FirstCardPrivileges{}, nil
 }
 
 func field(record []string, ix int) string {

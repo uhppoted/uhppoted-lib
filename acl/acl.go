@@ -25,6 +25,7 @@ type index struct {
 	to         int
 	doors      map[uint32][]int
 	PIN        int
+	firstcard  int
 }
 
 type doormap map[string]struct {
