@@ -115,8 +115,7 @@ func TestParseHeaderWithFirstCardAndPIN(t *testing.T) {
 			12345: []int{7, 6, 8, 5},
 		},
 		PIN:       2,
-		firstcard: 9,
-	}
+		firstcard: 9}
 
 	header := []string{"Card Number", "PIN", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "FirstCard"}
 
@@ -148,20 +147,18 @@ func TestParseHeaderWithMultipleDevices(t *testing.T) {
 			12345: []int{6, 5, 7, 4},
 			54321: []int{8, 9, 10, 11},
 		},
-		PIN: 0,
-	}
+		PIN: 0}
 
 	header := []string{"Card Number", "From", "To", "Workshop", "Side Door", "Front Door", "Garage", "D1", "D2", "D3", "D4"}
 
 	controllers := []uhppote.Device{
 		uhppote.Device{
 			DeviceID: 12345,
-			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
-		},
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"}},
+
 		uhppote.Device{
 			DeviceID: 54321,
-			Doors:    []string{"D1", "D2", "D3", "D4"},
-		},
+			Doors:    []string{"D1", "D2", "D3", "D4"}},
 	}
 
 	ix, err := parseHeader(header, controllers, false, false)

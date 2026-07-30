@@ -58,24 +58,21 @@ func TestParseTableWithPIN(t *testing.T) {
 				From:       types.MustParseDate("2026-01-02"),
 				To:         types.MustParseDate("2026-10-31"),
 				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
-				PIN:        7530,
-			},
+				PIN:        7530},
 
 			10058401: types.Card{
 				CardNumber: 10058401,
 				From:       types.MustParseDate("2026-02-03"),
 				To:         types.MustParseDate("2026-11-30"),
 				Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
-				PIN:        7531,
-			},
+				PIN:        7531},
 
 			10058402: types.Card{
 				CardNumber: 10058402,
 				From:       types.MustParseDate("2026-03-04"),
 				To:         types.MustParseDate("2026-12-31"),
 				Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
-				PIN:        0,
-			},
+				PIN:        0},
 		},
 	}
 
@@ -125,9 +122,7 @@ func TestParseTableWithFirstCard(t *testing.T) {
 					Door1: true,
 					Door2: false,
 					Door3: false,
-					Door4: true,
-				},
-			},
+					Door4: true}},
 
 			10058401: types.Card{
 				CardNumber: 10058401,
@@ -138,9 +133,7 @@ func TestParseTableWithFirstCard(t *testing.T) {
 					Door1: false,
 					Door2: false,
 					Door3: false,
-					Door4: false,
-				},
-			},
+					Door4: false}},
 
 			10058402: types.Card{
 				CardNumber: 10058402,
@@ -151,9 +144,7 @@ func TestParseTableWithFirstCard(t *testing.T) {
 					Door1: false,
 					Door2: false,
 					Door3: false,
-					Door4: false,
-				},
-			},
+					Door4: false}},
 		},
 	}
 

@@ -6,8 +6,9 @@
 1. Added _SetFirstCard_ API function.
 2. Added _first card_ privileges to card.
 3. Added _REST_ `PIN.enabled` and  `firstcard.enabled` to _uhppoted.conf_.
-4. Optionally included _first-card_ privileges in `GetACL`.
-5. Optionally included _first-card_ privileges in `PutACL`.
+4. Optionally included _first-card_ privileges in `ACL::GetACL`.
+5. Optionally included _first-card_ privileges in `ACL::PutACL`.
+6. Optionally included _first-card_ privileges in `ACL::Grant`.
 
 ### Updates
 1. Updated to Go v1.26.

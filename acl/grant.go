@@ -9,7 +9,15 @@ import (
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
-func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to types.Date, profile int, doors []string) error {
+type FirstCardPermission int
+
+const (
+	FirstCardUnknown FirstCardPermission = iota
+	FirstCardGranted
+	FirstCardRevoked
+)
+
+func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to types.Date, profile int, doors []string, firstcard FirstCardPermission) error {
 	m, err := mapDeviceDoors(devices)
 	if err != nil {
 		return err
@@ -42,7 +50,7 @@ func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to
 			}
 		}
 
-		if err := grant(u, d.DeviceID, cardID, from, to, profile, l); err != nil {
+		if err := grant(u, d.DeviceID, cardID, from, to, profile, l, firstcard); err != nil {
 			return err
 		}
 	}
@@ -50,7 +58,7 @@ func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to
 	return nil
 }
 
-func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Date, profileID int, doors []uint8) error {
+func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Date, profileID int, doors []uint8, firstcard FirstCardPermission) error {
 	if len(doors) == 0 {
 		return nil
 	}
@@ -106,7 +114,18 @@ func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Da
 		}
 	}
 
-	if ok, err := putCard(u, deviceID, *card, false, false); err != nil {
+	withFirstCard := false
+	if firstcard == FirstCardGranted {
+		card.FirstCard = types.FirstCardPrivileges{
+			Door1: card.Doors[1] != 0,
+			Door2: card.Doors[2] != 0,
+			Door3: card.Doors[3] != 0,
+			Door4: card.Doors[4] != 0,
+		}
+		withFirstCard = true
+	}
+
+	if ok, err := putCard(u, deviceID, *card, false, withFirstCard); err != nil {
 		return err
 	} else if !ok {
 		return fmt.Errorf("failed to update access rights for card '%v' on device '%v'", cardID, deviceID)
