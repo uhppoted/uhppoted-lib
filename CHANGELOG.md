@@ -9,6 +9,7 @@
 4. Optionally included _first-card_ privileges in `ACL::GetACL`.
 5. Optionally included _first-card_ privileges in `ACL::PutACL`.
 6. Optionally included _first-card_ privileges in `ACL::Grant`.
+7. Included _first-card_ privileges in `ACL::Show`.
 
 ### Updates
 1. Updated to Go v1.26.

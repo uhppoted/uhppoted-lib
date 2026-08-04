@@ -47,6 +47,75 @@ func TestGetCard(t *testing.T) {
 	}
 }
 
+func TestGetCardWithFirstCard(t *testing.T) {
+	expected := map[string]Permission{
+		"Front Door": Permission{
+			From:      types.MustParseDate("2026-02-03"),
+			To:        types.MustParseDate("2026-11-30"),
+			FirstCard: true},
+
+		"Workshop": Permission{
+			From: types.MustParseDate("2026-02-03"),
+			To:   types.MustParseDate("2026-11-30")},
+	}
+
+	cards := []types.Card{
+		types.Card{
+			CardNumber: 10058400,
+			From:       types.MustParseDate("2026-01-02"),
+			To:         types.MustParseDate("2026-10-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
+		},
+
+		types.Card{
+			CardNumber: 10058401,
+			From:       types.MustParseDate("2026-02-03"),
+			To:         types.MustParseDate("2026-11-30"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: true,
+				Door4: false,
+			},
+		},
+
+		types.Card{
+			CardNumber: 10058402,
+			From:       types.MustParseDate("2026-03-04"),
+			To:         types.MustParseDate("2026-12-31"),
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+		},
+	}
+
+	u := mock{
+		getCardByID: func(deviceID, cardID uint32) (*types.Card, error) {
+			for _, c := range cards {
+				if c.CardNumber == cardID {
+					return &c, nil
+				}
+			}
+			return nil, nil
+		},
+	}
+
+	devices := []uhppote.Device{
+		uhppote.Device{
+			DeviceID: 405419896,
+			Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+		},
+	}
+
+	doors, err := GetCard(&u, devices, 10058401)
+	if err != nil {
+		t.Fatalf("Unexpected error getting card ACL: %v", err)
+	}
+
+	if !reflect.DeepEqual(doors, expected) {
+		t.Errorf("invalid ACL for card %v\n  expected: %v\n  got:      %v", 10058401, expected, doors)
+	}
+}
+
 func TestGetCardWithUnknownCard(t *testing.T) {
 	expected := map[string]Permission{}
 
