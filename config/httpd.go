@@ -67,13 +67,8 @@ type HTTPD struct {
 	Retention time.Duration `conf:"retention"`
 	Timezones string        `conf:"timezones"`
 
-	PIN struct {
-		Enabled bool `conf:"enabled"`
-	} `conf:"PIN"`
-
-	FirstCard struct {
-		Enabled bool `conf:"enabled"`
-	} `conf:"firstcard"`
+	PIN       PIN       `conf:"PIN"`
+	FirstCard FirstCard `conf:"firstcard"`
 
 	Cards struct {
 		DefaultStartDate string `conf:"default-start-date"`
@@ -206,15 +201,11 @@ func NewHTTPD() *HTTPD {
 		Retention: 6 * time.Hour,
 		Timezones: "",
 
-		PIN: struct {
-			Enabled bool `conf:"enabled"`
-		}{
+		PIN: PIN{
 			Enabled: false,
 		},
 
-		FirstCard: struct {
-			Enabled bool `conf:"enabled"`
-		}{
+		FirstCard: FirstCard{
 			Enabled: false,
 		},
 

@@ -1,4 +1,4 @@
-![build](https://github.com/uhppoted/uhppoted-lib/workflows/build/badge.svg)
+<!-- ![build](https://github.com/uhppoted/uhppoted-lib/workflows/build/badge.svg) -->
 
 # uhppoted-lib
 
@@ -13,7 +13,7 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 ### Current Release
 
-**[v0.9.0](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.9.0) - 2026-01-27**
+**[v0.9.0](https://codeberg.org/uhppoted/uhppoted-lib/releases/tag/v0.9.0) - 2026-01-27**
 
 1. Updated to Go 1.25.
 

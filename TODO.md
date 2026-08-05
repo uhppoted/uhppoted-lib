@@ -1,6 +1,6 @@
 # TODO
 
-- [x] 'first card' API (cf. https://github.com/uhppoted/uhppoted/issues/82)
+- [x] 'first card' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
     - [ ] ACL
        - [x] equals
        - [ ] putCard (// FIXME - firstcard)

@@ -27,6 +27,8 @@ type MQTT struct {
 	LockfileRemove  bool        `conf:"lockfile.remove"`
 	Disconnects     Disconnects `conf:"disconnects"`
 	ACL             ACL         `conf:"acl"`
+	PIN             PIN         `conf:"PIN"`
+	FirstCard       FirstCard   `conf:"firstcard"`
 }
 
 type Connection struct {
@@ -159,8 +161,17 @@ func NewMQTT() *MQTT {
 			Interval: 5 * time.Minute,
 			Max:      10,
 		},
+
 		ACL: ACL{
 			Verify: "RSA",
+		},
+
+		PIN: PIN{
+			Enabled: false,
+		},
+
+		FirstCard: FirstCard{
+			Enabled: false,
 		},
 	}
 }

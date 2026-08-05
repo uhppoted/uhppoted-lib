@@ -5,17 +5,18 @@
 ### Added
 1. Added _SetFirstCard_ API function.
 2. Added _first card_ privileges to card.
-3. Added _REST_ `PIN.enabled` and  `firstcard.enabled` to _uhppoted.conf_.
-4. Optionally included _first-card_ privileges in `ACL::GetACL`.
-5. Optionally included _first-card_ privileges in `ACL::PutACL`.
-6. Optionally included _first-card_ privileges in `ACL::Grant`.
-7. Included _first-card_ privileges in `ACL::Show`.
+3. Optionally included _first-card_ privileges in `ACL::GetACL`.
+4. Optionally included _first-card_ privileges in `ACL::PutACL`.
+5. Optionally included _first-card_ privileges in `ACL::Grant`.
+6. Included _first-card_ privileges in `ACL::Show`.
 
 ### Updates
 1. Updated to Go v1.26.
 2. Updated to _modern_ Go with 'go fix'.
 3. Included _first card_ privileges in ACL compare.
 4. Migrated from _github/uhppoted-lib_ to _codeberg.org/uhppoted-lib_.
+5. Added `rest.PIN.enabled` and  `rest.firstcard.enabled` to _uhppoted.conf_.
+6. Added `mqtt.PIN.enabled` and  `mqtt.firstcard.enabled` to _uhppoted.conf_.
 
 
 ## [0.9.0](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.9.0) - 2026-01-27

@@ -437,6 +437,8 @@ func TestDefaultConfigWrite(t *testing.T) {
 ; mqtt.disconnects.interval = 5m0s
 ; mqtt.disconnects.max = 10
 ; mqtt.acl.verify = RSA
+; mqtt.PIN.enabled = false
+; mqtt.firstcard.enabled = false
 
 # AWS
 ; aws.credentials = 
@@ -638,6 +640,8 @@ timeout = %[4]v
 ; mqtt.disconnects.interval = 5m0s
 ; mqtt.disconnects.max = 10
 ; mqtt.acl.verify = RSA
+; mqtt.PIN.enabled = false
+; mqtt.firstcard.enabled = false
 
 # AWS
 ; aws.credentials = 
