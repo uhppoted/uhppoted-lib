@@ -34,7 +34,7 @@ func ParseTable(table *Table, controllers []uhppote.Device, strict bool, withPIN
 
 	list := []map[uint32]types.Card{}
 	for row, record := range table.Records {
-		cards, err := parseRecord(record, *index)
+		cards, err := parseRecord(record, *index, withPINs, withFirstCard)
 		if err != nil {
 			return nil, nil, fmt.Errorf("error parsing table - row %d: %w", row+1, err)
 		}

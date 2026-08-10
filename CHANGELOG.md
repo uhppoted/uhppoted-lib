@@ -19,7 +19,7 @@
 6. Added `mqtt.PIN.enabled` and  `mqtt.firstcard.enabled` to _uhppoted.conf_.
 
 
-## [0.9.0](https://github.com/uhppoted/uhppoted-lib/releases/tag/v0.9.0) - 2026-01-27
+## [0.9.0](https://codeberg.org/uhppoted/uhppoted-lib/releases/tag/v0.9.0) - 2026-01-27
 
 ### Updates
 1. Updated to Go 1.25.

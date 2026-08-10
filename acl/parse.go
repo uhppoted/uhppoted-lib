@@ -124,7 +124,7 @@ loop:
 	return &index, nil
 }
 
-func parseRecord(record []string, index index) (map[uint32]types.Card, error) {
+func parseRecord(record []string, index index, withPINs bool, withFirstCard bool) (map[uint32]types.Card, error) {
 	cards := make(map[uint32]types.Card, 0)
 
 	for k, v := range index.doors {

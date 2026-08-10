@@ -10,16 +10,28 @@ import (
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
-const tsv = `Card Number	From	To	Workshop	Side Door	Front Door	Garage
+const TSV = `Card Number	From	To	Workshop	Side Door	Front Door	Garage
 65537	2020-01-02	2020-10-31	N	N	Y	N
 65538	2020-02-03	2020-11-30	Y	N	Y	N
 65539	2020-03-04	2020-12-31	N	N	N	N
 `
 
-const tsv2 = `Card Number	From	To	D1	D2	D3	D4	Workshop	Side Door	Front Door	Garage
+const TSV2 = `Card Number	From	To	D1	D2	D3	D4	Workshop	Side Door	Front Door	Garage
 65537	2020-01-02	2020-10-31	Y	Y	N	Y	N	N	Y	N
 65538	2020-02-03	2020-11-30	Y	N	Y	Y	Y	N	Y	N
 65539	2020-03-04	2020-12-31	N	Y	Y	Y	N	N	N	N
+`
+
+const TSV_WITH_PIN = `Card Number	PIN	From	To	Workshop	Side Door	Front Door	Garage
+10058400	54321	2026-01-02	2026-10-31	N	N	Y	N
+10058401		2026-02-03	2026-11-30	Y	N	Y	N
+10058402	43210	2026-03-04	2026-12-31	N	N	N	N
+`
+
+const TSV_WITH_FIRSTCARD = `Card Number	From	To	Workshop	Side Door	Front Door	Garage	FirstCard
+10058400	2026-01-02	2026-10-31	N	N	Y	N	Y
+10058401	2026-02-03	2026-11-30	Y	N	Y	N	N
+10058402	2026-03-04	2026-12-31	N	N	N	N	Y
 `
 
 func TestParseTSV(t *testing.T) {
@@ -35,9 +47,148 @@ func TestParseTSV(t *testing.T) {
 	}
 
 	devices := []uhppote.Device{d}
-	r := strings.NewReader(tsv)
+	r := strings.NewReader(TSV)
 
-	m, warnings, err := ParseTSV(r, devices, true)
+	m, warnings, err := ParseTSV(r, devices, true, false, false)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing TSV: %v", err)
+	}
+
+	if len(warnings) != 0 {
+		t.Errorf("Unexpected warnings: expected: %v\n  got:      %v", []error{}, warnings)
+	}
+
+	if len(m) != len(devices) {
+		t.Fatalf("ParseTSV returned invalid ACL (%v)", m)
+	}
+
+	for _, device := range devices {
+		if l := m[device.DeviceID]; l == nil {
+			t.Errorf("ACL missing access list for device ID %v", device.DeviceID)
+		} else {
+			if len(l) != len(expected) {
+				t.Errorf("device %v: record counts do not match - expected %d, got %d", device.DeviceID, len(expected), len(l))
+			}
+
+			for _, card := range expected {
+				if c, ok := l[card.CardNumber]; !ok {
+					t.Errorf("device %v: missing record for card %v", device.DeviceID, card.CardNumber)
+				} else if !reflect.DeepEqual(c, card) {
+					t.Errorf("device %v: invalid record for card %v\n  expected: %v\n  got:      %v", device.DeviceID, card.CardNumber, card, c)
+				}
+			}
+		}
+	}
+}
+
+func TestParseTSVWithPIN(t *testing.T) {
+	expected := []types.Card{
+		types.Card{
+			CardNumber: 10058400,
+			PIN:        54321,
+			From:       types.MustParseDate("2026-01-02"),
+			To:         types.MustParseDate("2026-10-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0}},
+
+		types.Card{
+			CardNumber: 10058401,
+			From:       types.MustParseDate("2026-02-03"),
+			To:         types.MustParseDate("2026-11-30"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1}},
+
+		types.Card{
+			CardNumber: 10058402,
+			PIN:        43210,
+			From:       types.MustParseDate("2026-03-04"),
+			To:         types.MustParseDate("2026-12-31"),
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0}},
+	}
+
+	d := uhppote.Device{
+		DeviceID: 405419896,
+		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+	}
+
+	devices := []uhppote.Device{d}
+	r := strings.NewReader(TSV_WITH_PIN)
+
+	m, warnings, err := ParseTSV(r, devices, true, true, false)
+	if err != nil {
+		t.Fatalf("Unexpected error parsing TSV: %v", err)
+	}
+
+	if len(warnings) != 0 {
+		t.Errorf("Unexpected warnings: expected: %v\n  got:      %v", []error{}, warnings)
+	}
+
+	if len(m) != len(devices) {
+		t.Fatalf("ParseTSV returned invalid ACL (%v)", m)
+	}
+
+	for _, device := range devices {
+		if l := m[device.DeviceID]; l == nil {
+			t.Errorf("ACL missing access list for device ID %v", device.DeviceID)
+		} else {
+			if len(l) != len(expected) {
+				t.Errorf("device %v: record counts do not match - expected %d, got %d", device.DeviceID, len(expected), len(l))
+			}
+
+			for _, card := range expected {
+				if c, ok := l[card.CardNumber]; !ok {
+					t.Errorf("device %v: missing record for card %v", device.DeviceID, card.CardNumber)
+				} else if !reflect.DeepEqual(c, card) {
+					t.Errorf("device %v: invalid record for card %v\n  expected: %v\n  got:      %v", device.DeviceID, card.CardNumber, card, c)
+				}
+			}
+		}
+	}
+}
+
+func TestParseTSVWithFirstCard(t *testing.T) {
+	expected := []types.Card{
+		types.Card{
+			CardNumber: 10058400,
+			From:       types.MustParseDate("2026-01-02"),
+			To:         types.MustParseDate("2026-10-31"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 0},
+			FirstCard: types.FirstCardPrivileges{
+				Door1: true,
+				Door2: false,
+				Door3: false,
+				Door4: false}},
+
+		types.Card{
+			CardNumber: 10058401,
+			From:       types.MustParseDate("2026-02-03"),
+			To:         types.MustParseDate("2026-11-30"),
+			Doors:      map[uint8]uint8{1: 1, 2: 0, 3: 0, 4: 1},
+			FirstCard: types.FirstCardPrivileges{
+				Door1: false,
+				Door2: false,
+				Door3: false,
+				Door4: false}},
+
+		types.Card{
+			CardNumber: 10058402,
+			From:       types.MustParseDate("2026-03-04"),
+			To:         types.MustParseDate("2026-12-31"),
+			Doors:      map[uint8]uint8{1: 0, 2: 0, 3: 0, 4: 0},
+			FirstCard: types.FirstCardPrivileges{
+				Door1: false,
+				Door2: false,
+				Door3: false,
+				Door4: false}},
+	}
+
+	d := uhppote.Device{
+		DeviceID: 405419896,
+		Doors:    []string{"Front Door", "Side Door", "Garage", "Workshop"},
+	}
+
+	devices := []uhppote.Device{d}
+	r := strings.NewReader(TSV_WITH_FIRSTCARD)
+
+	m, warnings, err := ParseTSV(r, devices, true, false, true)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing TSV: %v", err)
 	}
@@ -95,9 +246,9 @@ func TestParseTSVWithMultipleDevices(t *testing.T) {
 	}
 
 	devices := []uhppote.Device{d1, d2}
-	r := strings.NewReader(tsv2)
+	r := strings.NewReader(TSV2)
 
-	m, warnings, err := ParseTSV(r, devices, true)
+	m, warnings, err := ParseTSV(r, devices, true, false, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing TSV: %v", err)
 	}
@@ -156,7 +307,7 @@ func TestParseTSVWithDuplicateCards(t *testing.T) {
 	devices := []uhppote.Device{d}
 	r := strings.NewReader(tsv)
 
-	m, warnings, err := ParseTSV(r, devices, false)
+	m, warnings, err := ParseTSV(r, devices, false, false, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing TSV: %v", err)
 	}
@@ -204,7 +355,7 @@ func TestParseTSVWithDuplicateCardsAndStrict(t *testing.T) {
 	devices := []uhppote.Device{d}
 	r := strings.NewReader(tsv)
 
-	_, _, err := ParseTSV(r, devices, true)
+	_, _, err := ParseTSV(r, devices, true, false, false)
 	if err == nil {
 		t.Fatalf("Expected error parsing table with duplicate card numbers and 'strict', got %v", err)
 	}

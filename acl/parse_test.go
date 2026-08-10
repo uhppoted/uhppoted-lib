@@ -260,7 +260,7 @@ func TestParseRecord(t *testing.T) {
 		},
 	}
 
-	cards, err := parseRecord(record, ix)
+	cards, err := parseRecord(record, ix, false, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing valid record - %v", err)
 	}
@@ -298,7 +298,7 @@ func TestParseRecordWithPIN(t *testing.T) {
 		},
 	}
 
-	cards, err := parseRecord(record, ix)
+	cards, err := parseRecord(record, ix, true, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing valid record - %v", err)
 	}
@@ -336,7 +336,7 @@ func TestParseRecordWithBlankPIN(t *testing.T) {
 		},
 	}
 
-	cards, err := parseRecord(record, ix)
+	cards, err := parseRecord(record, ix, true, false)
 	if err != nil {
 		t.Fatalf("Unexpected error parsing record with blank PIN - %v", err)
 	}
@@ -358,7 +358,7 @@ func TestParseRecordWithInvalidPermission(t *testing.T) {
 
 	record := []string{"8165535", "2021-01-01", "2021-12-31", "Y", "Y", "X", "29", "N", "N", "Y", "Y"}
 
-	_, err := parseRecord(record, ix)
+	_, err := parseRecord(record, ix, false, false)
 	if err == nil {
 		t.Fatalf("Expected error parsing invalid record, got:%v", err)
 	}
@@ -376,7 +376,7 @@ func TestParseRecordWithInvalidTimeProfile(t *testing.T) {
 
 	record := []string{"8165535", "2021-01-01", "2021-12-31", "Y", "Y", "N", "1", "N", "N", "Y", "Y"}
 
-	_, err := parseRecord(record, ix)
+	_, err := parseRecord(record, ix, false, false)
 	if err == nil {
 		t.Fatalf("Expected error parsing invalid record, got:%v", err)
 	}

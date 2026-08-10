@@ -10,7 +10,7 @@ import (
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
 )
 
-func ParseTSV(f io.Reader, controllers []uhppote.Device, strict bool) (ACL, []error, error) {
+func ParseTSV(f io.Reader, controllers []uhppote.Device, strict bool, withPINs bool, withFirstCard bool) (ACL, []error, error) {
 	acl := make(ACL)
 	for _, device := range controllers {
 		acl[device.DeviceID] = make(map[uint32]types.Card)
@@ -24,7 +24,7 @@ func ParseTSV(f io.Reader, controllers []uhppote.Device, strict bool) (ACL, []er
 		return nil, nil, err
 	}
 
-	index, err := parseHeader(header, controllers, false, false)
+	index, err := parseHeader(header, controllers, withPINs, withFirstCard)
 	if err != nil {
 		return nil, nil, err
 	} else if index == nil {
@@ -42,7 +42,7 @@ func ParseTSV(f io.Reader, controllers []uhppote.Device, strict bool) (ACL, []er
 		}
 
 		line += 1
-		cards, err := parseRecord(record, *index)
+		cards, err := parseRecord(record, *index, withPINs, withFirstCard)
 		if err != nil {
 			return nil, nil, fmt.Errorf("error parsing TSV - line %d: %w", line, err)
 		}
