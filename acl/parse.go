@@ -124,48 +124,53 @@ loop:
 	return &index, nil
 }
 
-func parseRecord(record []string, index index, withPINs bool, withFirstCard bool) (map[uint32]types.Card, error) {
+func parseRecord(record []string, index index, withPIN bool, withFirstCard bool) (map[uint32]types.Card, error) {
 	cards := make(map[uint32]types.Card, 0)
 
 	for k, v := range index.doors {
-		cardno, err := getCardNumber(record, index)
-		if err != nil {
+		card := types.Card{}
+
+		if cardno, err := getCardNumber(record, index); err != nil {
 			return nil, err
+		} else {
+			card.CardNumber = cardno
 		}
 
-		pin, err := getPIN(record, index)
-		if err != nil {
+		if from, err := getFromDate(record, index); err != nil {
 			return nil, err
+		} else {
+			card.From = from
 		}
 
-		from, err := getFromDate(record, index)
-		if err != nil {
+		if to, err := getToDate(record, index); err != nil {
 			return nil, err
+		} else {
+			card.To = to
 		}
 
-		to, err := getToDate(record, index)
-		if err != nil {
+		if doors, err := getDoors(record, v); err != nil {
 			return nil, err
+		} else {
+			card.Doors = doors
 		}
 
-		doors, err := getDoors(record, v)
-		if err != nil {
-			return nil, err
+		if withPIN {
+			if pin, err := getPIN(record, index); err != nil {
+				return nil, err
+			} else {
+				card.PIN = types.PIN(pin)
+			}
 		}
 
-		firstcard, err := getFirstCard(record, index, doors)
-		if err != nil {
-			return nil, err
+		if withFirstCard {
+			if firstcard, err := getFirstCard(record, index, card.Doors); err != nil {
+				return nil, err
+			} else {
+				card.FirstCard = firstcard
+			}
 		}
 
-		cards[k] = types.Card{
-			CardNumber: cardno,
-			From:       from,
-			To:         to,
-			Doors:      doors,
-			PIN:        types.PIN(pin),
-			FirstCard:  firstcard,
-		}
+		cards[k] = card
 	}
 
 	return cards, nil

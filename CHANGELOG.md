@@ -5,10 +5,7 @@
 ### Added
 1. Added _SetFirstCard_ API function.
 2. Added _first card_ privileges to card.
-3. Optionally included _first-card_ privileges in `ACL::GetACL`.
-4. Optionally included _first-card_ privileges in `ACL::PutACL`.
-5. Optionally included _first-card_ privileges in `ACL::Grant`.
-6. Included _first-card_ privileges in `ACL::Show`.
+3. (Optionally) included _PIN_ and _first-card_ privileges in _ACL_ APIs.
 
 ### Updates
 1. Updated to Go v1.26.
