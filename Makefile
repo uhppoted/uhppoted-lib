@@ -14,10 +14,6 @@ clean:
 	go clean
 	rm -rf bin
 
-push:
-	git push
-	git push bitbucket
-
 update:
 	go get -u codeberg.org/uhppoted/uhppoted-core@main
 	go get -u golang.org/x/sys
