@@ -5,7 +5,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
 	"codeberg.org/uhppoted/uhppoted-core/types"
 	"codeberg.org/uhppoted/uhppoted-core/uhppote"
@@ -207,17 +206,21 @@ func getPIN(record []string, index index) (uint32, error) {
 func getFromDate(record []string, index index) (types.Date, error) {
 	f := field(record, index.from)
 
-	if date, err := time.ParseInLocation("2006-01-02", f, time.Local); err != nil {
+	if f == "" {
+		return types.Date{}, nil
+	} else if date, err := types.ParseDate(f); err != nil {
 		return types.Date{}, fmt.Errorf("invalid 'from' date '%s' (%w)", f, err)
 	} else {
-		return types.Date(date), nil
+		return date, nil
 	}
 }
 
 func getToDate(record []string, index index) (types.Date, error) {
 	f := field(record, index.to)
 
-	if date, err := time.ParseInLocation("2006-01-02", f, time.Local); err != nil {
+	if f == "" {
+		return types.Date{}, nil
+	} else if date, err := types.ParseDate(f); err != nil {
 		return types.Date{}, fmt.Errorf("invalid 'to' date '%s' (%w)", f, err)
 	} else {
 		return types.Date(date), nil
@@ -239,6 +242,7 @@ func getDoors(record []string, v []int) (map[uint8]uint8, error) {
 		}
 
 		v := field(record, d)
+
 		if v == "N" {
 			doors[uint8(i+1)] = 0
 		} else if v == "Y" {
