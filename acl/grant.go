@@ -59,9 +59,10 @@ func Grant(u uhppote.IUHPPOTE, devices []uhppote.Device, cardID uint32, from, to
 }
 
 func grant(u uhppote.IUHPPOTE, deviceID uint32, cardID uint32, from, to types.Date, profileID int, doors []uint8, firstcard FirstCardPermission) error {
-	if len(doors) == 0 {
-		return nil
-	}
+	// NTS: you can just grant 'first-card' to existing doors
+	// if len(doors) == 0 {
+	// 	return nil
+	// }
 
 	if profileID >= 2 && profileID <= 254 {
 		if profile, err := u.GetTimeProfile(deviceID, uint8(profileID)); err != nil {
