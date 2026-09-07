@@ -1,16 +1,15 @@
 # TODO
 
 - [x] 'first card' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
-    - [ ] ACL
-       - [x] equals
-       - [ ] putCard (// FIXME - firstcard)
+- [x] Implement retry on UDP/TCP connect-to-self (cf. https://codeberg.org/uhppoted/uhppoted/issues/4)
+
+
+## To Be Done
 
 - [ ] Rework events handling (cf. https://github.com/uhppoted/uhppoted-mqtt/issues/16)
       - [ ] Remove unnecessary Event struct in uhppoted.events
             - (?) JSON tags to core type
       - [ ] Remove ListenBatchSize
-
-## TODO
 
 - [ ] config.NewConfig should not return pointer
 - [ ] Simplify all the IUHPPOTED functions - no need to be so unsuccessfully generic
