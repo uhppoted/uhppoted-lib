@@ -1,7 +1,7 @@
 # TODO
 
 - [x] 'first card' API (cf. https://codeberg.org/uhppoted/uhppoted/issues/3)
-- [x] Implement retry on UDP/TCP connect-to-self (cf. https://codeberg.org/uhppoted/uhppoted/issues/4)
+- [x] Retry on UDP/TCP connect-to-self (cf. https://codeberg.org/uhppoted/uhppoted/issues/4)
 
 
 ## To Be Done
