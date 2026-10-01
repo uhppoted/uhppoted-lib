@@ -72,59 +72,49 @@ func TestDefaultConfig(t *testing.T) {
 	bind, broadcast, listen := DefaultIpAddresses()
 
 	expected := Config{
-		System: System{
-			BindAddress:         &bind,
-			BroadcastAddress:    &broadcast,
-			ListenAddress:       &listen,
-			Timeout:             2500 * time.Millisecond,
-			HealthCheckInterval: 15 * time.Second,
-			HealthCheckIdle:     60 * time.Second,
-			HealthCheckIgnore:   5 * time.Minute,
-			WatchdogInterval:    5 * time.Second,
-			CardFormat:          types.WiegandAny,
+		BindAddress:         &bind,
+		BroadcastAddress:    &broadcast,
+		ListenAddress:       &listen,
+		Timeout:             2500 * time.Millisecond,
+		HealthCheckInterval: 15 * time.Second,
+		HealthCheckIdle:     60 * time.Second,
+		HealthCheckIgnore:   5 * time.Minute,
+		WatchdogInterval:    5 * time.Second,
+		CardFormat:          types.WiegandAny,
+
+		Connection: Connection{
+			ClientID: "uhppoted-mqttd",
 		},
 
-		MQTT: MQTT{
-			Connection: Connection{
-				ClientID: "uhppoted-mqttd",
-			},
+		Credentials: "",
+		Profile:     "default",
+		Region:      "us-east-1",
+
+		HTTP: struct {
+			ClientTimeout time.Duration `conf:"client-timeout"`
+			Retries       int           `conf:"retries"`
+			RetryDelay    time.Duration `conf:"retry-delay"`
+			PageSize      uint32        `conf:"page-size"`
+			MaxPages      uint32        `conf:"max-pages"`
+			PageDelay     time.Duration `conf:"page-delay"`
+		}{
+			ClientTimeout: 10 * time.Second,
+			Retries:       3,
+			RetryDelay:    5 * time.Second,
+			PageSize:      100,
+			MaxPages:      10,
+			PageDelay:     100 * time.Millisecond,
 		},
 
-		AWS: AWS{
-			Credentials: "",
-			Profile:     "default",
-			Region:      "us-east-1",
+		Fields: struct {
+			CardNumber string `conf:"card-number"`
+			PIN        string `conf:"PIN"`
+		}{
+			CardNumber: "Card Number",
+			PIN:        "PIN",
 		},
 
-		WildApricot: WildApricot{
-			HTTP: struct {
-				ClientTimeout time.Duration `conf:"client-timeout"`
-				Retries       int           `conf:"retries"`
-				RetryDelay    time.Duration `conf:"retry-delay"`
-				PageSize      uint32        `conf:"page-size"`
-				MaxPages      uint32        `conf:"max-pages"`
-				PageDelay     time.Duration `conf:"page-delay"`
-			}{
-				ClientTimeout: 10 * time.Second,
-				Retries:       3,
-				RetryDelay:    5 * time.Second,
-				PageSize:      100,
-				MaxPages:      10,
-				PageDelay:     100 * time.Millisecond,
-			},
-
-			Fields: struct {
-				CardNumber string `conf:"card-number"`
-				PIN        string `conf:"PIN"`
-			}{
-				CardNumber: "Card Number",
-				PIN:        "PIN",
-			},
-		},
-
-		HTTPD: HTTPD{
-			Retention: 6 * time.Hour,
-		},
+		Retention: 6 * time.Hour,
 	}
 
 	config := NewConfig()
@@ -156,76 +146,66 @@ func TestConfigUnmarshal(t *testing.T) {
 	listen := types.MustParseListenAddr("192.168.1.100:12345")
 
 	expected := Config{
-		System: System{
-			BindAddress:         &bind,
-			BroadcastAddress:    &broadcast,
-			ListenAddress:       &listen,
-			Timeout:             3750 * time.Millisecond,
-			HealthCheckInterval: 31 * time.Second,
-			HealthCheckIdle:     67 * time.Second,
-			HealthCheckIgnore:   97 * time.Second,
-			WatchdogInterval:    23 * time.Second,
-			CardFormat:          types.Wiegand26,
+		BindAddress:         &bind,
+		BroadcastAddress:    &broadcast,
+		ListenAddress:       &listen,
+		Timeout:             3750 * time.Millisecond,
+		HealthCheckInterval: 31 * time.Second,
+		HealthCheckIdle:     67 * time.Second,
+		HealthCheckIgnore:   97 * time.Second,
+		WatchdogInterval:    23 * time.Second,
+		CardFormat:          types.Wiegand26,
+
+		Connection: Connection{
+			Broker:            "tls://127.0.0.63:8887",
+			ClientID:          "muppet",
+			Username:          "me",
+			Password:          "pickme",
+			BrokerCertificate: "mqtt-broker.cert",
+			ClientCertificate: "mqtt-client.cert",
+			ClientKey:         "mqtt-client.key",
 		},
 
-		MQTT: MQTT{
-			Connection: Connection{
-				Broker:            "tls://127.0.0.63:8887",
-				ClientID:          "muppet",
-				Username:          "me",
-				Password:          "pickme",
-				BrokerCertificate: "mqtt-broker.cert",
-				ClientCertificate: "mqtt-client.cert",
-				ClientKey:         "mqtt-client.key",
-			},
-
-			Topics: Topics{
-				Root:       "uhppoted-qwerty",
-				Requests:   "./requests",
-				Replies:    "/uiop",
-				EventsFeed: "./asdf",
-				LiveEvents: "./eekvents",
-				System:     "sys",
-			},
+		Topics: Topics{
+			Root:       "uhppoted-qwerty",
+			Requests:   "./requests",
+			Replies:    "/uiop",
+			EventsFeed: "./asdf",
+			LiveEvents: "./eekvents",
+			System:     "sys",
 		},
 
-		AWS: AWS{
-			Credentials: "",
-			Profile:     "default",
-			Region:      "us-west-2",
+		Credentials: "",
+		Profile:     "default",
+		Region:      "us-west-2",
+
+		HTTP: struct {
+			ClientTimeout time.Duration `conf:"client-timeout"`
+			Retries       int           `conf:"retries"`
+			RetryDelay    time.Duration `conf:"retry-delay"`
+			PageSize      uint32        `conf:"page-size"`
+			MaxPages      uint32        `conf:"max-pages"`
+			PageDelay     time.Duration `conf:"page-delay"`
+		}{
+			ClientTimeout: 12 * time.Second,
+			Retries:       6,
+			RetryDelay:    9 * time.Second,
+			PageSize:      100,
+			MaxPages:      10,
+			PageDelay:     100 * time.Millisecond,
 		},
 
-		WildApricot: WildApricot{
-			HTTP: struct {
-				ClientTimeout time.Duration `conf:"client-timeout"`
-				Retries       int           `conf:"retries"`
-				RetryDelay    time.Duration `conf:"retry-delay"`
-				PageSize      uint32        `conf:"page-size"`
-				MaxPages      uint32        `conf:"max-pages"`
-				PageDelay     time.Duration `conf:"page-delay"`
-			}{
-				ClientTimeout: 12 * time.Second,
-				Retries:       6,
-				RetryDelay:    9 * time.Second,
-				PageSize:      100,
-				MaxPages:      10,
-				PageDelay:     100 * time.Millisecond,
-			},
-
-			Fields: struct {
-				CardNumber string `conf:"card-number"`
-				PIN        string `conf:"PIN"`
-			}{
-				CardNumber: "Ye Olde Cardde Nymber",
-				PIN:        "LePIN",
-			},
-
-			FacilityCode: "89",
+		Fields: struct {
+			CardNumber string `conf:"card-number"`
+			PIN        string `conf:"PIN"`
+		}{
+			CardNumber: "Ye Olde Cardde Nymber",
+			PIN:        "LePIN",
 		},
 
-		HTTPD: HTTPD{
-			Retention: 285 * time.Minute,
-		},
+		FacilityCode: "89",
+
+		Retention: 285 * time.Minute,
 	}
 
 	config := NewConfig()

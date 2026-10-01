@@ -113,24 +113,22 @@ func NewConfig() *Config {
 	bind, broadcast, listen := DefaultIpAddresses()
 
 	c := Config{
-		System: System{
-			BindAddress:         &bind,
-			BroadcastAddress:    &broadcast,
-			ListenAddress:       &listen,
-			Timeout:             2500 * time.Millisecond,
-			HealthCheckInterval: 15 * time.Second,
-			HealthCheckIdle:     monitoring.IDLE,
-			HealthCheckIgnore:   monitoring.IGNORE,
-			WatchdogInterval:    5 * time.Second,
-			CardFormat:          types.WiegandAny,
-		},
-		REST:        *NewREST(),
-		MQTT:        *NewMQTT(),
-		AWS:         *NewAWS(),
-		HTTPD:       *NewHTTPD(),
-		WildApricot: *NewWildApricot(),
-		OpenAPI:     *NewOpenAPI(),
-		Devices:     make(DeviceMap, 0),
+		BindAddress:         &bind,
+		BroadcastAddress:    &broadcast,
+		ListenAddress:       &listen,
+		Timeout:             2500 * time.Millisecond,
+		HealthCheckInterval: 15 * time.Second,
+		HealthCheckIdle:     monitoring.IDLE,
+		HealthCheckIgnore:   monitoring.IGNORE,
+		WatchdogInterval:    5 * time.Second,
+		CardFormat:          types.WiegandAny,
+		REST:                *NewREST(),
+		MQTT:                *NewMQTT(),
+		AWS:                 *NewAWS(),
+		HTTPD:               *NewHTTPD(),
+		WildApricot:         *NewWildApricot(),
+		OpenAPI:             *NewOpenAPI(),
+		Devices:             make(DeviceMap, 0),
 	}
 
 	return &c

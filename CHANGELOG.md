@@ -8,7 +8,7 @@
 3. (Optionally) included _PIN_ and _first-card_ privileges in _ACL_ APIs.
 
 ### Updates
-1. Updated to Go v1.26.
+1. Updated to Go v1.27.
 2. Updated to _modern_ Go with 'go fix'.
 3. Included _first card_ privileges in ACL compare.
 4. Migrated from _github/uhppoted-lib_ to _codeberg.org/uhppoted-lib_.

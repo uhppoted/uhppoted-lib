@@ -110,10 +110,8 @@ func TestMarshal(t *testing.T) {
 		Unsigned64: 18446744073709551615,
 		String:     "asdfghjkl",
 		Duration:   23 * time.Second,
-		Embedded: Embedded{
-			Name: "zxcvb",
-			ID:   67890,
-		},
+		Name:       "zxcvb",
+		ID:         67890,
 	}
 
 	bytes, err := Marshal(config)
@@ -323,10 +321,8 @@ func TestRange(t *testing.T) {
 		Unsigned64: 18446744073709551615,
 		String:     "asdfghjkl",
 		Duration:   23 * time.Second,
-		Embedded: Embedded{
-			Name: "zxcvb",
-			ID:   67890,
-		},
+		Name:       "zxcvb",
+		ID:         67890,
 	}
 
 	expected := []testKV{
