@@ -21,8 +21,8 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 3. Added _SetFirstCard_ API function.
 4. Added _first card_ privileges to card.
 5. (Optionally) included _PIN_ and _first-card_ privileges in _ACL_ APIs.
-7. Added `rest.PIN.enabled` and  `rest.firstcard.enabled` to _uhppoted.conf_.
-8. Added `mqtt.PIN.enabled` and  `mqtt.firstcard.enabled` to _uhppoted.conf_.
+6. Added `rest.PIN.enabled` and  `rest.firstcard.enabled` to _uhppoted.conf_.
+7. Added `mqtt.PIN.enabled` and  `mqtt.firstcard.enabled` to _uhppoted.conf_.
 
 
 ## Development
