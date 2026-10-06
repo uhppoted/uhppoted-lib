@@ -14,9 +14,15 @@ Shared library that implements the functionality common to multiple _uhppoted_ s
 
 ### Current Release
 
-**[v0.9.0](https://codeberg.org/uhppoted/uhppoted-lib/releases/tag/v0.9.0) - 2026-01-27**
+## [0.9.1](https://codeberg.org/uhppoted/uhppoted-lib/releases/tag/v0.9.1) - 2026-10-06
 
-1. Updated to Go 1.25.
+1. Migrated from _github_ to _codeberg_.
+2. Updated to Go v1.27.
+3. Added _SetFirstCard_ API function.
+4. Added _first card_ privileges to card.
+5. (Optionally) included _PIN_ and _first-card_ privileges in _ACL_ APIs.
+7. Added `rest.PIN.enabled` and  `rest.firstcard.enabled` to _uhppoted.conf_.
+8. Added `mqtt.PIN.enabled` and  `mqtt.firstcard.enabled` to _uhppoted.conf_.
 
 
 ## Development

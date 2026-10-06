@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## [0.9.1](https://codeberg.org/uhppoted/uhppoted-lib/releases/tag/v0.9.1) - 2026-10-06
 
 ### Added
 1. Added _SetFirstCard_ API function.
