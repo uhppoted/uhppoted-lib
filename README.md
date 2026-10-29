@@ -5,7 +5,7 @@
 
 _The primary repository for this project is hosted on codeberg: https://codeberg.org/uhppoted/uhppoted-lib_
 
-_The [github repository](https://github.com/uhppoted/uhppote-lib) will be kept up to date and maintained as a courtesy (and for archival
+_The [github repository](https://github.com/uhppoted/uhppoted-lib) will be kept up to date and maintained as a courtesy (and for archival
 releases) but please use _codeberg_ for reporting issues, etc._
 </div>
 
